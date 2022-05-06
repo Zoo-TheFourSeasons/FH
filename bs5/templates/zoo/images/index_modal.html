@@ -1,0 +1,40 @@
+
+<!-- Image Operates Modal -->
+<div id="operates-modal" class="modal" tabindex="-1" aria-labelledby="operates-header" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-primary">
+                <h4 class="modal-title" id="operates-header">IMAGE OPERATE</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="p-1">
+                <div class="modal-body px-2 pt-2 pb-0">
+                    <form>
+                        <input type="text" hidden name="target">
+                        <div class="mb-2">
+                            <label class="form-label">OUT*</label>
+                            <input type="text" class="form-control" name="path_out" value="static/images/webp-resize-2000" placeholder="PATH OUT">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">OPERATE</label>
+                            <select class="form-control" name="operate">
+                                <option selected value="do_all">DO ALL</option>
+                                <option value="rotate">ROTATE</option>
+                                <option value="resize">RESIZE</option>
+                                <option value="ink">INK</option>
+                                <option value="render md">RENDER MD</option>
+                                <option value="render home">RENDER HOME</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="px-2 pb-1">
+                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i class="fas fa-fw fa-code-commit"></i> COMMIT
+                    </button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i class="fas fa-fw fa-cancel"></i>CANCEL</button>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

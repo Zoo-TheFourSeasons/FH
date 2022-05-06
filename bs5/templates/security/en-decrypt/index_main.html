@@ -1,0 +1,136 @@
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li><h3>ZOO></h3></li>
+                        <li><h3><strong>IMAGES</strong></h3></li>
+                    </ol>
+                </div>
+                <div class="btn-group">
+                    <button type="button" id="back" class="btn btn-outline-secondary"><i class="fas fa-fw fa-backward"></i>BACK</button>
+                    <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH</button>
+                    <button type="button" id="en-decrypt" class="btn btn-outline-warning"><i class="fas fa-fw fa-lock"></i>EN-DECRYPT</button>
+                </div>
+                <div id="parents" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered table-condensed table-no-bordered table-centered table-nowrap mb-0"
+                           id="en-decrypt-table"
+                           data-toggle="table"
+                           data-show-columns="true"
+                           data-locale="zh-CN"
+                           data-sticky-header="true"
+                           data-show-jumpto="true"
+                           data-icon-size="sm"
+                           data-page-size="20"
+                           data-url="/zoo/listdir"
+                           data-side-pagination="server"
+                           data-click-to-select="true"
+                           data-pagination="true"
+                           data-falign="center"
+                           data-search="true"
+                           data-id-field="id"
+                           data-sort-name="id"
+                           data-sort-order="desc"
+                           data-pagination-h-align="left"
+                           data-pagination-detail-h-align="right"
+                           data-unique-id="id"
+                           data-page-list="[20, 50, 500]">
+                        <thead class="table-light">
+                        <tr>
+                            <th data-align="center" data-field="state" data-width="52px" data-checkbox="true"></th>
+                            <th data-align="center" data-width="52px" data-formatter="iFormatter">num</th>
+                            <th data-align="center" data-field="id" data-visible="false">id</th>
+                            <th data-align="left" data-formatter="operateFormatter" data-width="140px">operation</th>
+                            <th data-align="left" data-field="_file" data-formatter="fileFormatter">file</th>
+                            <th data-align="center" data-field="_isdir" data-visible="false">isdir</th>
+                            <th data-align="right" data-field="_ctime">ctime</th>
+                            <th data-align="right" data-field="_mtime">mtime</th>
+                            <th data-align="right" data-field="_size">size</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div> <!-- end card-body-->
+            </div> <!-- end card-->
+        </div> <!-- end col -->
+    </div>
+    <!-- end row -->
+
+    {% include 'modal.html' %}
+
+</div> <!-- container -->
+<script>
+    let $table = $("#en-decrypt-table");
+    let $back = $("#back");
+    let target = $.url().param('target');
+
+    function iFormatter(value, row, index) {
+        let options = $table.bootstrapTable('getOptions');
+        return options.pageSize * (options.pageNumber - 1) + index + 1;
+    }
+
+    function fileFormatter(value, row) {
+        if (!row._isdir) {
+            return value
+        }
+        return '<a href="/webs/security/en-decrypt/index?target=' + row.id + '">' + value + '</a>'
+    }
+
+    function operateFormatter(value, row) {
+        if (row._isdir) {
+            return '';
+        }
+        return '<div class="btn-group" role="group">'
+            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
+            + 'View</button>'
+            + '</div>';
+    }
+
+
+    if (!target) {
+        $back.hide();
+    } else {
+        $back.on('click', function () {
+            history.back();
+        });
+    }
+
+    $(document).ready(function () {
+        $(".modal").draggable();
+        listdir($table, '/security/en-decrypt/listdir', target, '/webs/security/en-decrypt/index');
+
+        show_modal($("#en-decrypt"), $table, "en-decrypt-modal");
+
+        view('/security/en-decrypt/view');
+
+        $("#en-decrypt-modal .commit-btn").on('click', function () {
+            axios.request({
+                url: '/security/en-decrypt',
+                method: 'get',
+                params: {
+                    'psw_aes': $('#en-decrypt-modal input[name=psw_aes]').val(),
+                    'psw_stream': $('#en-decrypt-modal input[name=psw_stream]').val(),
+                    'nonce': $('#en-decrypt-modal input[name=nonce]').val(),
+                    'target': $('#en-decrypt-modal input[name=target]').val(),
+                    'type': $('#en-decrypt-modal select[name=type]').val(),
+                }
+            }).then(function (response) {
+            }).catch(function (error) {
+                console.log(error);
+            });
+        });
+
+    })
+</script>

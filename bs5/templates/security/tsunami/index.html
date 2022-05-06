@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% set title = 'TSUNAMI' %}
+{% set category = 'security' %}
+{% set link = 'tsunami' %}
+{% set folder = category + '/' + link %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block extend_css %}
+{% endblock %}
+
+{% block extend_js %}
+{% endblock %}
+
+{% block content %}
+    {% include folder + '/index_main.html' %}
+{% endblock %}
+
+

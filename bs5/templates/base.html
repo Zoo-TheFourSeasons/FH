@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html class="menuitem-active" lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="A fully featured admin theme which can be used to build CRM, CMS, etc." name="description">
+    <meta content="Coderthemes" name="author">
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="https://coderthemes.com/hyper/saas/assets/images/favicon.ico">
+
+    <!-- App css -->
+
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jquery-confirm.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/jquery-ui.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/icons.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/bootstrap-table.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/bootstrap-table-sticky-header.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/bootstrap-table-page-jump-to.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/app.css" rel="stylesheet" type="text/css" id="app-style">
+    <link href="/static/css/app2.css" rel="stylesheet" type="text/css" id="app-style">
+    {% block extend_css %}
+    {% endblock %}
+
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/jquery-confirm.js"></script>
+    <script src="/static/js/jquery-ui.min.js"></script>
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/purl.js"></script>
+    <script src="/static/js/bootstrap-table.min.js"></script>
+    <script src="/static/js/bootstrap-table-locale-all.min.js"></script>
+    <script src="/static/js/bootstrap-table-page-jump-to.min.js"></script>
+    <script src="/static/js/bootstrap-table-sticky-header.min.js"></script>
+    <script src="/static/js/all.min.js"></script>
+    <script src="/static/js/axios.min.js"></script>
+    <script src="/static/js/socket.io.min.js"></script>
+    <script src="/static/js/business.js"></script>
+    <!--    <script src="/static/js/app.js"></script>-->
+    <!--    <script src="/static/js/vendor.js"></script>-->
+    {% block extend_js %}
+    {% endblock %}
+</head>
+
+<body class="show" data-layout-color="light" data-layout-mode="fluid" data-rightbar-onstart="true"
+      data-leftbar-theme="dark">
+<!-- Begin page -->
+<div class="wrapper">
+    {% block left %}
+    {% include 'left.html' %}
+    {% endblock %}
+
+    <div class="content-page">
+        <div class="content">
+            {% block top %}
+            {% include 'top.html' %}
+            {% endblock %}
+
+            <!-- Start Content-->
+            {% block content %}
+            {% include 'content.html' %}
+            {% endblock %}
+        </div> <!-- content -->
+
+        <!-- Footer Start -->
+        {% block footer %}
+        {# {% include 'footer.html' %}#}
+        {% endblock %}
+        <!-- end Footer -->
+
+    </div>
+
+</div>
+
+{% block right %}
+{% include 'right.html' %}
+{% endblock %}
+
+</body>
+</html>

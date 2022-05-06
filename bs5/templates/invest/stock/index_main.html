@@ -1,0 +1,296 @@
+<div class="container-fluid" id="stocks-main">
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li><h3></h3></li>
+                        <li><h3>INVEST></h3></li>
+                        <li><h3><strong>STOCK</strong></h3></li>
+                    </ol>
+                </div>
+                <div class="btn-group mr-2">
+                    <button type="button" id="transfer-stocks-btn" class="btn btn-sm btn-outline-secondary">Transfer
+                    </button>
+                    <button type="button" id="hist-stocks-btn" class="btn btn-sm btn-outline-secondary">Hist</button>
+                    <button type="button" name="edit-stocks-btn" class="btn btn-sm btn-outline-secondary">Edit</button>
+                    <button type="button" id="delete-stocks-btn" class="btn btn-sm btn-outline-danger">Delete</button>
+                    <button type="button" id="update-stocks-btn" class="btn btn-sm btn-outline-secondary">Update
+                    </button>
+                    <button type="button" id="exclude-stocks-btn" class="btn btn-sm btn-outline-secondary">Exclude
+                    </button>
+                </div>
+                <div id="parents" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+    <!-- end page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-bordered table-condensed table-no-bordered table-centered table-nowrap mb-0"
+                           id="stocks-table"
+                           data-toggle="table"
+                           data-locale="zh-CN"
+                           data-sticky-header="true"
+                           data-show-jumpto="true"
+                           data-show-detail="true"
+                           data-icon-size="sm"
+                           data-page-size="20"
+                           data-side-pagination="server"
+                           data-click-to-select="true"
+                           data-pagination="true"
+                           data-falign="center"
+                           data-search="true"
+                           data-id-field="id"
+                           data-sort-name="id"
+                           data-sort-order="desc"
+                           data-detail-view="true"
+                           data-pagination-h-align="left"
+                           data-pagination-detail-h-align="right"
+                           data-unique-id="id"
+                           data-detail-formatter="detailFormatter"
+                           data-page-list="[20, 50, 500]">
+                        <thead class="table-light">
+                        <tr>
+{#"净利润率": 2.53
+{#"利润同比": 257.6
+{#"名称": "*ST东南"
+{#"固定资产": 15.77
+{#"地区": "浙江"
+{#"市净率": 1.86
+{#"市盈率": 147.97
+{#"总股本(万)": 18.78
+{#"总资产(万)": 25.45
+{#"收入同比": -25.02
+{#"未分配利润": -4.94
+{#"每股公积金": 0.43
+{#"每股净资": 1.19
+{#"每股收益": 0
+{#"每股未分配": -0.26
+{#"毛利率": 12.37
+{#"流动资产": 8.46
+{#"流通股本(万)": 18.78
+{#"细分行业": "塑料"
+{#"股东人数": 76623#}
+                            <th data-align="center" data-field="state" data-width="52px" data-checkbox="true"></th>
+                            <th data-align="center" data-width="52px" data-formatter="iFormatter">num</th>
+                            <th data-align="center" data-field="id" data-visible="false">id</th>
+                            <th data-align="left" data-field="key" data-sortable="true">key</th>
+                            <th data-align="right" data-field="净利润率" data-sortable="true">净利润率</th>
+                            <th data-align="right" data-field="利润同比" data-sortable="true">利润同比</th>
+                            <th data-align="right" data-field="固定资产" data-sortable="true">固定资产</th>
+                            <th data-align="right" data-field="市净率" data-sortable="true">市净率</th>
+                            <th data-align="right" data-field="市盈率" data-sortable="true">市盈率</th>
+                            <th data-align="right" data-field="每股净资" data-sortable="true">每股净资</th>
+                            <th data-align="right" data-field="每股收益" data-sortable="true">每股收益</th>
+                            <th data-align="right" data-field="细分行业" data-sortable="true">细分行业</th>
+                            <th data-align="right" data-field="股东人数" data-sortable="true">股东人数</th>
+                            <th data-align="right" data-field="总股本(万)" data-sortable="true">总股本(万)</th>
+                            <th data-align="right" data-field="总资产(万)" data-sortable="true">总资产(万)</th>
+                            <th data-align="right" data-formatter="operateFormatter">operation</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div> <!-- end card-body-->
+            </div> <!-- end card-->
+        </div> <!-- end col -->
+    </div>
+    <div id="temp-container">
+    </div>
+    <!-- end row -->
+</div> <!-- container -->
+<script>
+    let stocks_main = $("#stocks-main");
+    let $table = $('#stocks-table');
+
+    function iFormatter(value, row, index) {
+        let pageSize = $table.bootstrapTable('getOptions').pageSize;
+        let pageNumber = $table.bootstrapTable('getOptions').pageNumber;
+        return pageSize * (pageNumber - 1) + index + 1;
+    }
+
+    function detailFormatter(index, row) {
+        let container = $("#temp-container");
+        let v_id = "container" + row.id;
+        let k_type = 'hist_5m';
+
+        container.append('<div id="' + v_id + '"></div><div id="slider' + k_type + '"></div>');
+        let v_container = $("#" + v_id);
+        v_container.empty();
+
+        function success(response, p) {
+            let container = p.container;
+            let k_type = p.k_type;
+            let data = response.data[k_type];
+
+            console.log(data);
+            k_(data, container);
+        }
+
+        let params = {
+            'url': '/k/' + row.id,
+            'data': {},
+            'success': success,
+            'success_params': {
+                'container': v_id,
+                'k_type': k_type
+            }
+        };
+        get(params);
+
+        let detail = '<div></div>';
+        let tmp = $(detail);
+
+        tmp.append(v_container);
+
+        return tmp
+    }
+
+    $(document).ready(function () {
+        $table.bootstrapTable('refreshOptions', {
+            ajax: function (request) {
+                axios.request({url: '/invest/stock/index', method: 'get', params: request.data})
+                    .then(function (response) {
+                        request.success({
+                            row: response.data
+                        });
+                        console.log(response.data);
+                        $table.bootstrapTable('load', response.data);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+        });
+        search_move($table);
+        $(window).resize(function () {
+            adjust_height($table);
+        });
+    });
+
+
+    $("#delete-stocks-btn").confirm({
+        closeIcon: true,
+        theme: 'supervan',
+        title: "删除用户",
+        content: "确定删除已选用户?",
+        buttons: {
+            deleteKey: {
+                text: '删除',
+                action: function () {
+                    let form_id = 'stocks-delete-form';
+                    let action = '/stocks/delete';
+                    let callback_ = function (data, params) {
+                        $('#stocks-table').bootstrapTable('refresh');
+                    };
+                    post_ivs_in_form('stocks-table', form_id, action, callback_);
+
+                }
+            },
+            cancel: {text: '取消'}
+        }
+    });
+
+
+    $("#update-stocks-btn").confirm({
+        closeIcon: true,
+        theme: 'supervan',
+        title: "update stocks",
+        content: "Are you sure update all stocks?",
+        buttons: {
+            deleteKey: {
+                text: 'update',
+                action: function () {
+                    axios.request({url: '/invest/stock/update', method: 'get', params: request.data})
+                        .then(function (response) {
+                            if (response.data.status) {
+                                $('#stocks-table').bootstrapTable('refresh');
+                            }
+                            console.log(response.data);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            catch_error(error);
+                        });
+                }
+            },
+            cancel: {text: '取消'}
+        }
+    });
+
+
+    $("#transfer-stocks-btn").confirm({
+        closeIcon: true,
+        theme: 'supervan',
+        title: "transfer stocks",
+        content: "Are you sure transfer all stocks?",
+        buttons: {
+            transferKey: {
+                text: 'transfer',
+                action: function () {
+                    axios.request({url: '/invest/transfer', method: 'get', params: request.data})
+                        .then(function (response) {
+                            if (response.data.status) {
+                                alert('Ok')
+                            }
+                            console.log(response.data);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            catch_error(error);
+                        });
+                }
+            },
+            cancel: {text: '取消'}
+        }
+    });
+
+
+    $("#exclude-stocks-btn").confirm({
+        closeIcon: true,
+        theme: 'supervan',
+        title: "exclude stocks",
+        content: "Are you sure excluding stocks selected?",
+        buttons: {
+            deleteKey: {
+                text: 'exclude',
+                action: function () {
+                    let form_id = 'stocks-delete-form';
+                    let action = '/stocks/exclude';
+                    let callback_ = function (data, params) {
+                        $('#stocks-table').bootstrapTable('refresh');
+                    };
+                    post_ivs_in_form('stocks-table', form_id, action, callback_);
+                }
+            },
+            cancel: {text: '取消'}
+        }
+    });
+
+
+    $("#hist-stocks-btn").confirm({
+        closeIcon: true,
+        theme: 'supervan',
+        title: "hist stocks",
+        content: "Are you sure hist stocks selected?",
+        buttons: {
+            deleteKey: {
+                text: 'hist',
+                action: function () {
+                    let form_id = 'stocks-delete-form';
+                    let action = '/stocks/hist';
+                    let callback_ = function (data, params) {
+                        $('#stocks-table').bootstrapTable('refresh');
+                    };
+                    post_ivs_in_form('stocks-table', form_id, action, callback_);
+                }
+            },
+            cancel: {text: '取消'}
+        }
+    });
+</script>

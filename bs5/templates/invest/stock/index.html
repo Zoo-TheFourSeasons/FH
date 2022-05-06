@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% set title = 'stock' %}
+{% set category = 'invest' %}
+{% set link = 'stock' %}
+{% set folder = category + '/' + link %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block extend_css %}
+    <link href="/static/css/bootstrap-table.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block extend_js %}
+    <script src="/static/js/g2.min.js"></script>
+    <script src="/static/js/data-set.min.js"></script>
+    <script src="/static/js/axios.min.js"></script>
+    <script src="/static/js/purl.js"></script>
+    <script src="/static/js/bootstrap-table.js"></script>
+    <script src="/static/js/business.js"></script>
+{% endblock %}
+
+{% block content %}
+    {% include folder + '/index_main.html' %}
+{% endblock %}
+

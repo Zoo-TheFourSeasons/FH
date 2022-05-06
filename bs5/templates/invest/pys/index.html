@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% set title = 'PYS' %}
+{% set category = 'invest' %}
+{% set link = 'pys' %}
+{% set folder = category + '/' + link %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block extend_css %}
+{% endblock %}
+
+{% block extend_js %}
+{% endblock %}
+
+{% block content %}
+    {% include folder + '/index_main.html' %}
+{% endblock %}
+
