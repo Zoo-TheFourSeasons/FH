@@ -332,187 +332,255 @@ class PhotoHelper(CodeHelper):
         print('path: %s is a link or other file' % path_in)
         return
 
+    @classmethod
     @timer
-    def render_md_with_info(self, path_in: str, path_out: str, file_page_info: str, mds: list):
-        # 渲染页面单个页面
-        print('render_md_with_info')
-        if not self.site:
-            raise ValueError('site is empty')
-        # todo: windows file system does not match
-        # folder = path_in.split('/')[-1]
-        _, folder = os.path.split(path_in)
+    def render_markdown(cls, path_media):
+        path_images = os.path.join(path_media, 'images')
+        path_pages = os.path.join(path_media, 'pages.info')
+        path_site = os.path.join(path_media, 'site.info')
 
-        # 加载页面信息文件
-        if not os.path.exists(file_page_info):
-            raise ValueError('file_page_info not exist:', file_page_info)
-        with open(file_page_info, 'r', encoding='utf-8') as f:
-            page_info = json.load(f)
+        if not os.path.exists(path_pages):
+            raise ValueError('path_pages not exist:', path_pages)
+        with open(path_pages, 'r', encoding='utf-8') as f:
+            pages = json.load(f)
 
-        if folder not in page_info:
-            raise KeyError('page info not exist: %s' % path_in)
+        site = open(path_site).read().strip()
+        mix = os.path.join(path_images, 'mix')
 
-        info = page_info[folder]
+        md_head = """---
+layout: default
+---
+### 摄影: {author}
+### 描述: {remark}
+### 提交时间: {date}
+"""
+        md_item = """##### {size}, {photo_description}
+![{name}]({path})
 
-        path_out_head, tail = os.path.split(path_out)
-        self.mkdir_if_not_exist(path_out_head)
-
-        if not os.path.exists(path_in) or not os.path.isdir(path_in):
-            print('path: %s is not exist or is not dir' % path_in)
-            return
-
-        md_head, md_item, md_tail = mds
-
-        photos_description = info['photos_description']
-        md = md_head.format(author=info['author'],
-                            remark=info['remark'],
-                            date=info['date'])
-
-        # 先对文件按照名称排序
-        path_in_files = os.listdir(path_in)
-        path_in_files.sort()
-
-        for f in path_in_files:
-            # /home/xxx/static/images/webp/zzz/a.webp
-            path_abs_f = os.path.join(path_in, f)
-            # size = round(os.path.getsize(path_abs_f) / 1024 / 1024, 2)
-            # size_str = 'size: %sM' % size
-
-            # url_home/static/images/webp/zzz/a.webp
-            if 'static/images/' not in path_abs_f:
-                path = path_abs_f[path_abs_f.find('static\\images\\'):].replace('\\', '/')
-            else:
-                path = path_abs_f[path_abs_f.find('static/images/'):]
-
-            # 照片描述
-            i_description = photos_description[f] if f in photos_description else ''
-            item = md_item.format(
-                # size=size_str,
-                name=f,
-                photo_description=i_description,
-                path='/' + self.site + '/' + path)
-            md += item
-
-        md += md_tail
-        with open(os.path.join(path_out_head, tail), 'w') as f:
-            f.write(md)
-        return
-
-    @timer
-    def render_md_with_pages(self, path_in: str, path_out: str, md_item: str):
-        print('render_md_with_info')
-        # todo
-        # if not self.site:
-        #     print('site is empty')
-        #     return
-        # # folder = path_in.split('/')[-1]
-        # _, folder = os.path.split(path_in)
-        #
-        # path_out_head, tail = os.path.split(path_out)
-        # self.mkdir_if_not_exist(path_out_head)
-        #
-        # if not os.path.exists(path_in) or not os.path.isdir(path_in):
-        #     print('path: %s is not exist or is not dir' % path_in)
-        #     return
-        #
-        # md = ''
-        #
-        # # 先对文件按照名称排序
-        # path_in_files = os.listdir(path_in)
-        # path_in_files.sort()
-        #
-        # for f in path_in_files:
-        #     # /home/xxx/static/images/webp/zzz/a.webp
-        #     path_abs_f = os.path.join(path_in, f)
-        #
-        #     # url_home/static/images/webp/zzz/a.webp
-        #     if 'static/images/' not in path_abs_f:
-        #         path = path_abs_f[path_abs_f.find('static\\images\\'):].replace('\\', '/')
-        #     else:
-        #         path = path_abs_f[path_abs_f.find('static/images/'):]
-        #
-        #     # 照片描述
-        #     item = md_item.format(
-        #         name=f,
-        #         path='/' + self.site + '/' + path)
-        #     md += item
-        #
-        # with open(os.path.join(path_out_head, tail), 'w') as f:
-        #     f.write(md)
-        # return
+"""
+        md_tail = """
+[返回](/Zoo-HZ-Media-Volunteers)
+"""
+        for fd in os.listdir(mix):
+            if fd not in pages:
+                raise KeyError('page info not exist: %s' % fd)
+            info = pages[fd]
+            photos_description = info['photos_description']
+            md = md_head.format(author=info['author'],
+                                remark=info['remark'],
+                                date=info['date'])
+            path_in = os.path.join(mix, fd)
+            path_in_files = os.listdir(path_in)
+            path_in_files.sort()
+            for f in path_in_files:
+                # /home/xxx/images/mix/zzz/a.webp
+                path_abs_f = os.path.join(path_in, f)
+                size = round(os.path.getsize(path_abs_f) / 1024 / 1024, 2)
+                size_str = 'size: %s M' % size
+                # url_home/static/images/webp/zzz/a.webp
+                if 'images/mix/' not in path_abs_f:
+                    path = path_abs_f[path_abs_f.find('images\\mix\\'):].replace('\\', '/')
+                else:
+                    path = path_abs_f[path_abs_f.find('images/mix/'):]
+                # 照片描述
+                i_description = photos_description[f] if f in photos_description else ''
+                item = md_item.format(
+                    size=size_str,
+                    name=f,
+                    photo_description=i_description,
+                    path=site + '/' + path)
+                md += item
+            md += md_tail
+            with open(os.path.join(path_media, fd + '.md'), 'w') as f:
+                f.write(md)
 
     @classmethod
     @timer
-    def render_home_page(cls, path_in: str, path_template_home: str,
-                         path_template_div: str, path_page_info: str,
-                         path_index: str, path_order_render: str):
-        # 渲染主页面
-        print('render_home_page', path_in)
+    def render_index(cls, path_in, path_index: str):
+        print('render_index', path_in)
+        template_div = """
+                        <div class="col">
+                            <div class="card shadow-sm">
+                                <img class="bd-placeholder-img card-img-top" width="100%" height="225"
+                                     src="{path_thumbnail}"
+                                     role="img" aria-label="Placeholder: Thumbnail">
+                                    <rect width="100%" height="100%" fill="#55595c"></rect>
+                                    <text x="50%" y="50%" fill="#eceeef" dy=".3em"></text>
+                                </img>
+                                <div class="card-body">
+                                    <p class="card-text">{date} {title}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <a href="{path_md}"
+                                               class="btn btn-sm btn-outline-secondary">查看</a>
+                                        </div>
+                                        <small class="text-muted">by {author}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        """
+        template_home = """
+        <!DOCTYPE html>
+        <!-- saved from url=(0049)https://getbootstrap.com/docs/5.0/examples/album/ -->
+        <html lang="en">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <meta name="description" content="">
+            <meta name="author" content="ZooAtmosphereGroup and Bootstrap contributors">
+            <meta name="generator" content="Hugo 0.80.0">
+            <title>Zoo-HZ-Media-Volunteers</title>
+            <link href="./static/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+            <link rel="manifest" href="./static/manifest.json">
+            <meta name="theme-color" content="#7952b3">
+            <style>
+                .bd-placeholder-img {
+                    font-size: 1.125rem;
+                    text-anchor: middle;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    user-select: none;
+                }
+                @media (min-width: 768px) {
+                    .bd-placeholder-img-lg {
+                        font-size: 3.5rem;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+        <header>
+            <div class="bg-dark collapse hide" id="navbarHeader" style="">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8 col-md-7 py-4">
+                            <h4 class="text-white">About</h4>
+                            <p class="text-muted">这里是杭州动物园媒体组志愿者摄影记录分享网站</p>
+                            <p class="text-muted">2021-2022</p>
+                            <p class="text-muted">关于本站(github io page), 公开仓库, 无限空间, 无限时间, 无主机和相关费用. </p>
+                            <p class="text-muted">关于本站图片资源, 请勿用用于任何商业活动. 原图会经加密后存储在github, 密钥不上传. 未加密的压缩图则添加水印用于页面展示. </p>
+                            <p class="text-muted">本站内资源大多使用相对路径, 如需将资源切换到其它账户站点, 可较顺利迁移. </p>
+                            <p class="text-muted">当前站点, https://zooatmospheregroup.github.io/Zoo-HZ-Media-Volunteers/</p>
+                        </div>
+                        <div class="col-sm-4 offset-md-1 py-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar navbar-dark bg-dark shadow-sm">
+                <div class="container">
+                    <a href="https://zooatmospheregroup.github.io/Zoo-HZ-Media-Volunteers" class="navbar-brand d-flex align-items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor"
+                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2" aria-hidden="false" class="me-2"
+                             viewBox="0 0 24 24">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+                        <strong>Album</strong>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
+                            aria-controls="navbarHeader" aria-expanded="true" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <main>
+            <section class="py-5 container">
+                <div class="row py-lg-5">
+                    <div class="col-lg-6 col-md-8 mx-auto">
+                        <h1 class="fw-light">Zoo-HZ-Media-Volunteers</h1>
+                        <h1 class="fw-light">2021-2022</h1>
+                        <p class="lead text-muted">WELCOME!</p>
+                        <p class="lead text-muted">这里是杭州动物园媒体组志愿者摄影记录分享网站</p>
+                        <p class="lead text-muted">
+                            <a href="static/mds/2021plans">2021-2022媒体设计组活动计划</a>
+                        </p>
+                        <p class="lead text-muted">
+                            <a href="static/mds/notices">志愿活动及投稿事项</a>
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <div class="album py-5 bg-light">
+                <div class="container">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                        %s
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="text-muted py-5">
+            <div class="container">
+                <p class="float-end mb-1">
+                    <a href="/">Back to top</a>
+                </p>
+                <p class="mb-1">Album example is © Bootstrap</p>
+            </div>
+        </footer>
+        <script src="./static/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        </body>
+        </html>
+        """
+        page = ''
 
-        for _path in (path_in, path_template_home,
-                      path_template_div, path_page_info, path_order_render):
-            if not os.path.exists(_path):
-                raise ValueError('path: %s is not exist' % _path)
+        for media in os.listdir(path_in):
+            if not media.startswith('MEDIA-'):
+                continue
+            path_media = os.path.join(path_in, media)
+            path_pages = os.path.join(path_media, 'pages.info')
+            path_images = os.path.join(path_media, 'images')
+            path_mix = os.path.join(path_images, 'mix')
+            path_site = os.path.join(path_media, 'site.info')
+            site = open(path_site).read().strip()
 
-        with open(path_page_info, 'r', encoding='utf-8') as f:
-            page_info = json.load(f)
-        with open(path_template_div, 'r', encoding='utf-8') as f:
-            div_page = f.read()
-        with open(path_template_home, 'r', encoding='utf-8') as f:
-            home = f.read()
-        with open(path_order_render, 'r', encoding='utf-8') as f:
-            rendered = json.load(f)
+            with open(path_pages, 'r', encoding='utf-8') as f:
+                pages = json.load(f)
 
-        pages = ''
-        # 逆序
-        for page in rendered:
-            if page not in page_info:
-                raise KeyError('page info: %s is not exist' % page)
+            for fd in os.listdir(path_mix):
+                if fd not in pages:
+                    raise KeyError('page info: %s is not exist' % fd)
+                info = pages[fd]
+                path_author = info['path_author']
+                author = info['author']
+                remark = info['remark']
+                title = info['title']
+                date = info['date']
+                thumbnail = info['thumbnail']
+                path_thumbnail = '/'.join((site, 'images/mix', path_author, thumbnail))
+                path_md = '/'.join((site, path_author))
 
-            info = page_info[page]
-            path_author = info['path_author']
-            path_resize = info['path_resize']
-            author = info['author']
-            remark = info['remark']
-            title = info['title']
-            date = info['date']
-            thumbnail = info['thumbnail']
-            path_thumbnail = '/'.join(('static/images', path_resize, path_author, thumbnail))
-            path_md = '/'.join(('mds', path_resize, path_author))
-
-            pages += div_page.format(
-                path_md=path_md,
-                author=author,
-                title=title,
-                date=date,
-                path_thumbnail=path_thumbnail,
-                remark=remark
-            )
-        home = home % pages
-        # 写入
+                page += template_div.format(
+                    path_md=path_md,
+                    author=author,
+                    title=title,
+                    date=date,
+                    path_thumbnail=path_thumbnail,
+                    remark=remark
+                )
+        home = template_home % page
         with open(path_index, 'w', encoding='utf-8') as f:
             f.write(home)
 
     @staticmethod
     @timer
-    def create_page_info(path_in: str, path_page_info: str, ignore_rendered: bool = True):
+    def generate_pages(path_media: str, ignore_rendered: bool = False):
         # 创建页面信息
-        print('create_page_info', path_in)
-        # page_info = {
-        #     # dir: {'title': title, 'author': author,
-        #     #       'date': date, 'description': description
-        #     #       'folder': folder
-        #     #      }
-        # }
-        # 页面信息文件不存在, 则创建
-        if not os.path.exists(path_page_info):
-            with open(path_page_info, 'w', encoding='utf-8') as f:
+        print('generate_pages', path_media)
+        path_pages = os.path.join(path_media, 'pages.info')
+        path_images = os.path.join(path_media, 'images')
+        path_mix = os.path.join(path_images, 'mix')
+
+        if not os.path.exists(path_pages):
+            with open(path_pages, 'w', encoding='utf-8') as f:
                 json.dump({}, f)
 
-        with open(path_page_info, 'r', encoding='utf-8') as f:
-            page_info = json.load(f)
+        with open(path_pages, 'r', encoding='utf-8') as f:
+            pages = json.load(f)
 
         # 更新页面信息
-        for root, dirs, files in os.walk(path_in):
+        for root, dirs, files in os.walk(path_mix):
             # 跳过子目录
             if not files:
                 continue
@@ -520,30 +588,27 @@ class PhotoHelper(CodeHelper):
             _, folder = os.path.split(root)
             # folder = root.split('/')[-1]
             # 跳过已渲染
-            if ignore_rendered and folder in page_info:
+            if ignore_rendered and folder in pages:
                 print('ignore', folder)
                 continue
             print('create_page_info', folder)
             author = folder[8:]
             date = folder[:8]
-            path_author = root.replace(path_in, '')
-            page_info[folder] = {
+            pages[folder] = {
                 'thumbnail': '',
                 'title': '',
                 'author': author,
                 'date': date,
                 'remark': '',
-                'path_resize': 'webp-resize-2000',
-                'path_author': path_author,
+                'path_author': folder,
                 'photos_description': {
                 }
             }
-            page_info[folder]['photos_description'] = dict([(i, i) for i in files])
+            pages[folder]['photos_description'] = dict([(i, i) for i in files])
 
         # 保存页面信息
-        # todo: 按目录名称降序排序
-        with open(path_page_info, 'w', encoding='utf-8') as f:
-            json.dump(page_info, f, indent=4, ensure_ascii=False, sort_keys=True)
+        with open(path_pages, 'w', encoding='utf-8') as f:
+            json.dump(pages, f, indent=4, ensure_ascii=False, sort_keys=True)
         return
 
     @timer
@@ -577,7 +642,9 @@ class PhotoHelper(CodeHelper):
 
 if __name__ == '__main__':
     pass
-    # hp = HelloPhoto()
+    hp = PhotoHelper()
+    # hp.create_page_info('/home/zoo/Desktop/_Y/Zoo-HZ-Media-Volunteers/static/images/raw/2022/20220504HuangBingChan')
+    #
     # hp.ratio_ink = 500
     # hp.position_ink = 'bottom right'
     # hp.path_ink_white = '/home/zoo/_L/Zoo-HZ-Media-Volunteers/_files/white.png'

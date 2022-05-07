@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 from flask import Blueprint
 from flask import request
@@ -33,6 +34,31 @@ def delete():
     files = request.args.get('files')
     data = PhotoHelper.delete(files, PATH_ZOO)
     return jsonify(data)
+
+
+@zoo.route('/zoo/images/render', methods=['get'], endpoint='render')
+def render():
+    path_index = ''
+    for media in os.listdir(PATH_ZOO):
+        if media.startswith('Zoo-HZ-Media'):
+            path_zoo = os.path.join(PATH_ZOO, media)
+            path_index = os.path.join(path_zoo, 'index.html')
+        if not media.startswith('MEDIA-'):
+            continue
+        path_media = os.path.join(PATH_ZOO, media)
+        PhotoHelper.render_markdown(path_media)
+
+    PhotoHelper.render_index(PATH_ZOO, path_index)
+    return jsonify({'status': True})
+
+
+@zoo.route('/zoo/images/generate-pages', methods=['get'], endpoint='generate_pages')
+def generate_pages():
+    for media in os.listdir(PATH_ZOO):
+        if not media.startswith('MEDIA-'):
+            continue
+        PhotoHelper.generate_pages(os.path.join(PATH_ZOO, media))
+    return jsonify({'status': True})
 
 
 @zoo.route('/zoo/images/operate', methods=['get'], endpoint='operate')
