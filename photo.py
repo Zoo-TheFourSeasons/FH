@@ -525,7 +525,9 @@ layout: default
         """
         page = ''
 
-        for media in os.listdir(path_in):
+        medias = list(os.listdir(path_in))
+        medias.sort(reverse=True)
+        for media in medias:
             if not media.startswith('MEDIA-'):
                 continue
             path_media = os.path.join(path_in, media)
@@ -538,9 +540,12 @@ layout: default
             with open(path_pages, 'r', encoding='utf-8') as f:
                 pages = json.load(f)
 
-            for fd in os.listdir(path_mix):
+            fds = list(os.listdir(path_mix))
+            fds.sort(reverse=True)
+            for fd in fds:
                 if fd not in pages:
                     raise KeyError('page info: %s is not exist' % fd)
+                print(media, fd, site)
                 info = pages[fd]
                 path_author = info['path_author']
                 author = info['author']
@@ -594,16 +599,20 @@ layout: default
             print('create_page_info', folder)
             author = folder[8:]
             date = folder[:8]
-            pages[folder] = {
-                'thumbnail': '',
-                'title': '',
-                'author': author,
-                'date': date,
-                'remark': '',
-                'path_author': folder,
-                'photos_description': {
+            if folder in pages:
+                page = pages[folder]
+            else:
+                page = {
+                    'thumbnail': '',
+                    'title': '',
+                    'author': author,
+                    'date': date,
+                    'remark': '',
+                    'path_author': folder,
+                    'photos_description': {
+                    }
                 }
-            }
+            pages[folder] = page
             pages[folder]['photos_description'] = dict([(i, i) for i in files])
 
         # 保存页面信息
