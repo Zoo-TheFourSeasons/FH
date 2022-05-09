@@ -294,7 +294,7 @@ layout: default
                     size=size_str,
                     name=f,
                     photo_description=i_description,
-                    path=site + '/' + path)
+                    path=site + '/mds/' + path)
                 md += item
             md += md_tail
             with open(os.path.join(path_media, fd + '.md'), 'w') as f:
@@ -401,10 +401,10 @@ layout: default
                         <p class="lead text-muted">WELCOME!</p>
                         <p class="lead text-muted">这里是杭州动物园媒体组志愿者摄影记录分享网站</p>
                         <p class="lead text-muted">
-                            <a href="static/mds/2021plans">2021-2022媒体设计组活动计划</a>
+                            <a href="mds/2021plans">2021-2022媒体设计组活动计划</a>
                         </p>
                         <p class="lead text-muted">
-                            <a href="static/mds/notices">志愿活动及投稿事项</a>
+                            <a href="mds/notices">志愿活动及投稿事项</a>
                         </p>
                     </div>
                 </div>
@@ -460,7 +460,7 @@ layout: default
                 date = info['date']
                 thumbnail = info['thumbnail']
                 path_thumbnail = '/'.join((site, 'images/mix', path_author, thumbnail))
-                path_md = '/'.join(('mds', site, path_author))
+                path_md = '/'.join((site, path_author))
 
                 page += template_div.format(
                     path_md=path_md,
