@@ -71,35 +71,11 @@ def operate():
     hp.path_ink_black = '/home/zoo/Desktop/_Y/Zoo-HZ-Media-Volunteers/_files/black.png'
 
     func_map = {
-        'rotate': hp.rotate,
-        'resize': hp.resize,
-        'ink': hp.ink,
+        'rotate': hp.rotate_resize_add_ink,
+        'resize': hp.rotate_resize_add_ink,
+        'ink': hp.rotate_resize_add_ink,
+        'do_all': hp.rotate_resize_add_ink,
     }
-    data = func_map[_operate](
-        request.args.get('target'),
-        request.args.get('path_out'))
-    return jsonify(data)
-
-
-@zoo.route('/zoo/images/download', methods=['get'], endpoint='download')
-def download():
-    data = PhotoHelper.download(request.args.get('target', ''), PATH_ZOO)
-    return jsonify(data)
-
-
-@zoo.route('/zoo/images/rotate', methods=['get'], endpoint='rotate')
-def rotate():
-    data = PhotoHelper().rotate(request.args.get('target', ''), 'static/images/webp-resize-2000')
-    return jsonify(data)
-
-
-@zoo.route('/zoo/images/resize', methods=['get'], endpoint='resize')
-def resize():
-    data = PhotoHelper().resize(request.args.get('target', ''), 'static/images/webp-resize-2000')
-    return jsonify(data)
-
-
-@zoo.route('/zoo/images/ink', methods=['get'], endpoint='ink')
-def ink():
-    data = PhotoHelper().ink(request.args.get('target', ''), request.args.get('path_out', ''))
+    path_in = os.path.join(PATH_ZOO, request.args.get('target'))
+    data = func_map[_operate](path_in)
     return jsonify(data)

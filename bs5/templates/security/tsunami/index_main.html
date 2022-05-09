@@ -125,7 +125,7 @@
 
         listdir($table, '/security/tsunami/index', target, '/webs/security/tsunami/index');
         view('/security/tsunami/view');
-        confirm_do($("#delete"), $table, "DELETE", "/security/tsunami/delete", target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", "/security/tsunami/delete", target);
 
         $("#scan-modal .commit-btn").on('click', function () {
             task_io.emit('task', {

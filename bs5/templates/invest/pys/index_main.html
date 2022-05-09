@@ -123,8 +123,8 @@
         listdir($table, '/invest/pys/index', target, '/webs/invest/pys/index');
         view('/invest/pys/view');
         mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), '/invest/pys/mkdir', $table, target);
-        confirm_do($("#delete"), $table, "DELETE", "/invest/pys/delete", target);
-        confirm_do($("#execute"), $table, "EXECUTE", "/invest/pys/execute", target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", "/invest/pys/delete", target);
+        confirm_do_with_table($("#execute"), $table, "EXECUTE", "/invest/pys/execute", target);
 
         $("#touch-modal .commit-btn").on('click', function () {
             let text = $('#touch-modal textarea[name=text]').val();

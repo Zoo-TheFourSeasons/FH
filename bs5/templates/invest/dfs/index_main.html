@@ -118,6 +118,6 @@
         listdir($table, '/invest/dfs/index', target, '/webs/invest/dfs/index');
         view('/invest/dfs/view');
         mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), '/invest/dfs/mkdir', $table, target);
-        confirm_do($("#delete"), $table, "DELETE", "/invest/dfs/delete", target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", "/invest/dfs/delete", target);
     })
 </script>

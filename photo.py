@@ -33,211 +33,117 @@ class PhotoHelper(CodeHelper):
         #
         self.site = None
 
-    @classmethod
     @timer
-    def rotate(cls, target: str, path_out: str):
-        print('rotate')
-        path_in = os.path.join(PATH_PROJECT, target)
-        path_out = os.path.join(PATH_PROJECT, path_out)
+    def _rotate_resize_ink(self, path_in: str, path_out: str, size_max: int = 1800, _format: str = None):
+        print('rotate_resize_ink')
         if not os.path.exists(path_in):
             raise ValueError('path: %s is not exist' % path_in)
 
-        cls.mkdir_if_not_exist(path_out)
+        self.mkdir_if_not_exist(path_out)
 
-        def _do(_path_file):
-            print('_do', _path_file)
+        def _rotate(_path_file):
+            print('_rotate', path_in)
 
-            image = Image.open(_path_file)
-            _, _f = os.path.split(_path_file)
-            _path = os.path.join(path_out, _f)
+            _image = Image.open(_path_file)
 
-            if hasattr(image, '_getexif'):  # only present in JPEGs
+            if hasattr(_image, '_getexif'):  # only present in JPEGs
                 orientation = None
                 for k, v in ExifTags.TAGS.items():
                     if v == 'Orientation':
                         orientation = k
                         break
                 if orientation:
-                    e = image._getexif()  # returns None if no EXIF data
+                    e = _image._getexif()  # returns None if no EXIF data
                     if e:
                         exif = dict(e.items())
                         orientation = exif[orientation] if orientation in exif else None
 
                         if orientation == 3:
-                            image = image.transpose(Image.ROTATE_180)
+                            _image = _image.transpose(Image.ROTATE_180)
                         elif orientation == 6:
-                            image = image.transpose(Image.ROTATE_270)
+                            _image = _image.transpose(Image.ROTATE_270)
                         elif orientation == 8:
-                            image = image.transpose(Image.ROTATE_90)
+                            _image = _image.transpose(Image.ROTATE_90)
                         else:
                             pass
-                    pass
-                pass
-            pass
-            image.save(_path)
+            return _image
 
-        # file
-        if os.path.isfile(path_in):
-            _do(path_in)
-            return
+        def _resize(_image):
+            print('_resize', path_in)
 
-        # folder
-        if os.path.isdir(path_in):
-            for f in os.listdir(path_in):
-                _do(os.path.join(path_in, f))
-            return
+            width, height = _image.size
 
-    @classmethod
-    @timer
-    def resize(cls, target: str, path_out: str,
-               size_max: int = 1800, _format: str = None):
-        # 调整尺寸, 保持长宽比
-        print('resize')
-        path_in = os.path.join(PATH_PROJECT, target)
-        path_out = os.path.join(PATH_PROJECT, path_out)
-        if not os.path.exists(path_in):
-            raise ValueError('path: %s is not exist' % path_in)
+            if width >= height:
+                height = int(height / (width / size_max))
+                width = size_max
+            else:
+                width = int(width / (height / size_max))
+                height = size_max
 
-        cls.mkdir_if_not_exist(path_out)
+            return _image.resize((width, height))
 
-        def _do(_path_file):
-            print('_do', _path_file)
-            try:
-                im = Image.open(_path_file)
-                width, height = im.size
+        def _ink(_image, _path_out_file):
+            print('_ink', path_in)
 
-                if width >= height:
-                    height = int(height / (width / size_max))
-                    width = size_max
-                else:
-                    width = int(width / (height / size_max))
-                    height = size_max
+            im_width = _image.size[0]
+            im_high = _image.size[1]
 
-                _, _f = os.path.split(_path_file)
-                _path = os.path.join(path_out, _f)
-                im = im.resize((width, height))
+            watermark = Image.open(self.path_ink_white)
+            watermark_width = watermark.size[0]
+            watermark_high = watermark.size[1]
 
-                im.save(_path, _format) if _format else im.save(_path)
+            # 根据水印放大比率调整水印大小
+            watermark_high = int(self.ratio_ink / watermark_width * watermark_high)
+            watermark_width = self.ratio_ink
+            # print(watermark_width, watermark_high)
+            watermark = watermark.resize((watermark_width, watermark_high),
+                                         resample=Image.ANTIALIAS)
 
-            except Exception as e:
-                print("cannot convert", _path_file, e)
+            # 下居中
+            if self.position_ink == 'bottom center':
+                left, top = int((im_width - watermark_width) / 2), im_high - watermark_high
+            # 下居左
+            elif self.position_ink == 'bottom left':
+                left, top = 10, im_high - watermark_high
+            # 下居右
+            elif self.position_ink == 'bottom right':
+                left, top = im_width - watermark_width, im_high - watermark_high
+            # 上居中
+            elif self.position_ink == 'top center':
+                left, top = int((im_width - watermark_width) / 2), 10
+            # 上居左
+            elif self.position_ink == 'top left':
+                left, top = 10, 10
+            # 上居右
+            else:
+                left, top = (im_width - watermark_width, 10)
 
-        # file
-        if os.path.isfile(path_in):
-            _do(path_in)
-            return
+            # 获取水印区域
+            right, bottom = left + watermark_width, top + watermark_high
+            area = _image.crop((left, top, right, bottom))
+            stat = ImageStat.Stat(area)
+            r, g, b = stat.rms
+            lighting = math.sqrt(0.241 * (r ** 2) + 0.691 * (g ** 2) + 0.068 * (b ** 2))
 
-        # folder
-        if os.path.isdir(path_in):
-            for f in os.listdir(path_in):
-                _do(os.path.join(path_in, f))
-            return
-
-        # link or other
-        print('path: %s is a link or other file' % path_in)
-        return
-
-    @timer
-    def ink(self, target: str, path_out: str):
-        # 添加水印
-        print('ink')
-        path_in = os.path.join(PATH_PROJECT, target)
-        path_out = os.path.join(PATH_PROJECT, path_out)
-
-        if not os.path.exists(path_in):
-            raise ValueError('path: %s is not exist' % path_in)
-
-        if self.position_ink not in self.positions:
-            raise ValueError('position error')
-        if not os.path.exists(self.path_ink_white):
-            raise ValueError('path_ink_white not exist')
-
-        if not os.path.exists(self.path_ink_black):
-            raise ValueError('path_ink_black not exist')
-
-        self.mkdir_if_not_exist(path_out)
-
-        def _do(_path_file):
-            print('_do', _path_file)
-            try:
-                im = Image.open(_path_file)
-                im_width = im.size[0]
-                im_high = im.size[1]
-
-                watermark = Image.open(self.path_ink_white)
-                watermark_width = watermark.size[0]
-                watermark_high = watermark.size[1]
-
-                # 根据水印放大比率调整水印大小
-                watermark_high = int(self.ratio_ink / watermark_width * watermark_high)
-                watermark_width = self.ratio_ink
-                # print(watermark_width, watermark_high)
+            # print(lighting)
+            # use black
+            if lighting >= self.threshold_lighting:
+                # print('use black')
+                watermark = Image.open(self.path_ink_black)
                 watermark = watermark.resize((watermark_width, watermark_high),
                                              resample=Image.ANTIALIAS)
 
-                # 下居中
-                if self.position_ink == 'bottom center':
-                    left, top = int((im_width - watermark_width) / 2), im_high - watermark_high
-                # 下居左
-                elif self.position_ink == 'bottom left':
-                    left, top = 10, im_high - watermark_high
-                # 下居右
-                elif self.position_ink == 'bottom right':
-                    left, top = im_width - watermark_width, im_high - watermark_high
-                # 上居中
-                elif self.position_ink == 'top center':
-                    left, top = int((im_width - watermark_width) / 2), 10
-                # 上居左
-                elif self.position_ink == 'top left':
-                    left, top = 10, 10
-                # 上居右
-                else:
-                    left, top = (im_width - watermark_width, 10)
+            layer = Image.new('RGBA', _image.size, (0, 0, 0, 0))
+            layer.paste(watermark, (left, top))
+            out = Image.composite(layer, _image, layer)
+            out.save(_path_out_file)
 
-                # 获取水印区域
-                right, bottom = left + watermark_width, top + watermark_high
-                area = im.crop((left, top, right, bottom))
-                stat = ImageStat.Stat(area)
-                r, g, b = stat.rms
-                lighting = math.sqrt(0.241 * (r ** 2) + 0.691 * (g ** 2) + 0.068 * (b ** 2))
-
-                # print(lighting)
-                # use black
-                if lighting >= self.threshold_lighting:
-                    # print('use black')
-                    watermark = Image.open(self.path_ink_black)
-                    watermark = watermark.resize((watermark_width, watermark_high),
-                                                 resample=Image.ANTIALIAS)
-
-                with open('lighting.py.info', 'a') as lf:
-                    lf.write(_path_file + ':' + str(lighting) + '\n')
-
-                # with open(self.file_lighting, 'r') as fff:
-                #     lighting = json.load(fff)
-                # self.lighting[_path_file] = math.sqrt(0.241 * (r ** 2) + 0.691 * (g ** 2) + 0.068 * (b ** 2))
-                #
-                # with open(self.file_lighting, 'w') as fff:
-                #     json.dump(lighting, fff)
-
-                layer = Image.new('RGBA', im.size, (0, 0, 0, 0))
-                layer.paste(watermark, (left, top))
-                out = Image.composite(layer, im, layer)
-                _, _f = os.path.split(_path_file)
-                _path = os.path.join(path_out, _f)
-                out.save(_path)
-            except Exception as e:
-                print("cannot convert", _path_file, e)
-
-        # file
-        if os.path.isfile(path_in):
-            _do(path_in)
-            return
-
-        # folder
-        if os.path.isdir(path_in):
-            for f in os.listdir(path_in):
-                _do(os.path.join(path_in, f))
-            return
+        _, fn = os.path.split(path_in)
+        try:
+            _ink(_resize(_rotate(path_in)), os.path.join(path_out, fn))
+        except Exception as e:
+            pass
+        return
 
     @classmethod
     @timer
@@ -554,7 +460,7 @@ layout: default
                 date = info['date']
                 thumbnail = info['thumbnail']
                 path_thumbnail = '/'.join((site, 'images/mix', path_author, thumbnail))
-                path_md = '/'.join((site, path_author))
+                path_md = '/'.join(('mds', site, path_author))
 
                 page += template_div.format(
                     path_md=path_md,
@@ -621,32 +527,23 @@ layout: default
         return
 
     @timer
-    def rotate_resize_add_ink(self, path_in: str, path_out: str):
+    def rotate_resize_add_ink(self, path_in: str):
         print('rotate_resize_add_ink')
         if not os.path.exists(path_in):
             raise ValueError('path: %s is not exist' % path_in)
 
-        def _do(_path_in, _path_out):
-            print('_do', _path_in)
-            self.rotate(_path_in, _path_out)
-            self.resize(_path_out, _path_out)
-            self.ink(_path_out, _path_out)
-
-        pass
-        # file
-        if os.path.isfile(path_in):
-            _do(path_in, path_out)
+        # not dir
+        if not os.path.isdir(path_in):
             return
 
-        # folder
-        if os.path.isdir(path_in):
-            for root, dirs, files in os.walk(path_in):
-                # 跳过子目录
-                if not files:
-                    continue
-                __path_out = os.path.join(path_out, os.path.relpath(root, path_in))
-                print('__path_out', __path_out)
-                _do(root, __path_out)
+        for root, dirs, files in os.walk(path_in):
+            for fn in files:
+                path_fn = os.path.join(root, fn)
+                path_raw, fd = os.path.split(root)
+                path_med, _ = os.path.split(path_raw)
+                path_mix = os.path.join(path_med, 'mix')
+                path_out = os.path.join(path_mix, fd)
+                self._rotate_resize_ink(path_fn, path_out)
 
 
 if __name__ == '__main__':

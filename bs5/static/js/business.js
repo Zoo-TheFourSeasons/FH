@@ -158,7 +158,7 @@ function get_selected($table, with_version) {
     return {'ids': ids_.join(',')};
 }
 
-function confirm_do($btn, $table, title, url, target) {
+function confirm_do_with_table($btn, $table, title, url, target) {
     $btn.confirm({
         closeIcon: true,
         theme: 'supervan',
@@ -181,6 +181,27 @@ function confirm_do($btn, $table, title, url, target) {
                     axios.request({url: url, method: 'get', params: {'files': select.ids, 'target': target}}).then(function (response) {
                         $table.bootstrapTable('refresh');
                         console.log(response.data);
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+            },
+            cancel: {text: 'CLOSE'}
+        }
+    });
+}
+
+function confirm_do($btn, title, url, data) {
+    $btn.confirm({
+        closeIcon: true,
+        theme: 'supervan',
+        title: title,
+        content: "",
+        buttons: {
+            doKey: {
+                text: 'YES',
+                action: function () {
+                    axios.request({url: url, method: 'get', params: data}).then(function (response) {
                     }).catch(function (error) {
                         console.log(error);
                     });
