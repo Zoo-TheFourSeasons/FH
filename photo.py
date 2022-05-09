@@ -294,10 +294,10 @@ layout: default
                     size=size_str,
                     name=f,
                     photo_description=i_description,
-                    path=site + '/mds/' + path)
+                    path=site + '/' + path)
                 md += item
             md += md_tail
-            with open(os.path.join(path_media, fd + '.md'), 'w') as f:
+            with open(os.path.join(path_media, 'mds/' + fd + '.md'), 'w') as f:
                 f.write(md)
 
     @classmethod
@@ -460,7 +460,7 @@ layout: default
                 date = info['date']
                 thumbnail = info['thumbnail']
                 path_thumbnail = '/'.join((site, 'images/mix', path_author, thumbnail))
-                path_md = '/'.join((site, path_author))
+                path_md = '/'.join((site, 'mds', path_author))
 
                 page += template_div.format(
                     path_md=path_md,
