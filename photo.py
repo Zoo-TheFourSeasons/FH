@@ -6,6 +6,7 @@ import json
 import math
 
 from PIL import Image, ImageStat, ExifTags
+import cv2
 
 from base import CodeHelper
 from independence import timer
@@ -69,9 +70,8 @@ class PhotoHelper(CodeHelper):
             return _image
 
         def _resize(_image):
-            print('_resize', path_in)
-
             width, height = _image.size
+            print('_resize', path_in, width, height)
 
             if width >= height:
                 height = int(height / (width / size_max))
@@ -83,10 +83,9 @@ class PhotoHelper(CodeHelper):
             return _image.resize((width, height))
 
         def _ink(_image, _path_out_file):
-            print('_ink', path_in)
+            print('_ink')
 
-            im_width = _image.size[0]
-            im_high = _image.size[1]
+            im_width, im_high = _image.size
 
             watermark = Image.open(self.path_ink_white)
             watermark_width = watermark.size[0]
@@ -545,17 +544,20 @@ layout: default
                 path_out = os.path.join(path_mix, fd)
                 self._rotate_resize_ink(path_fn, path_out)
 
+    def image_to_video(self, path_in: str):
+
+        video = cv2.VideoWriter('t1.avi', cv2.VideoWriter_fourcc(*'MJPG'), 0.75, (1800, 1013))
+        for root, dirs, files in os.walk(path_in):
+            files.sort()
+            for fn in files:
+                path_fn = os.path.join(root, fn)
+                img = cv2.imread(path_fn)
+                high, width, _ = img.shape
+                if (high, width) != (1013, 1800):
+                    continue
+                video.write(img)
+        video.release()
+
 
 if __name__ == '__main__':
-    pass
-    hp = PhotoHelper()
-    # hp.create_page_info('/home/zoo/Desktop/_Y/Zoo-HZ-Media-Volunteers/static/images/raw/2022/20220504HuangBingChan')
-    #
-    # hp.ratio_ink = 500
-    # hp.position_ink = 'bottom right'
-    # hp.path_ink_white = '/home/zoo/_L/Zoo-HZ-Media-Volunteers/_files/white.png'
-    # hp.path_ink_black = '/home/zoo/_L/Zoo-HZ-Media-Volunteers/_files/black.png'
-    # hp.rotate_resize_W(
-    #     r'/home/zoo/_L/Zoo-HZ-Media-Volunteers/static/images/raw',
-    #     r'/home/zoo/_L/Zoo-HZ-Media-Volunteers/static/images/webp-resize-1800-ink'
-    # )
+    PhotoHelper().image_to_video('/home/zoo/Desktop/_Y/MEDIA-2022/images/mix/20220508ZouBinbin')
