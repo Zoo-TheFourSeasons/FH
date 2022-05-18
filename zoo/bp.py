@@ -79,3 +79,12 @@ def operate():
     path_in = os.path.join(PATH_ZOO, request.args.get('target'))
     data = func_map[_operate](path_in)
     return jsonify(data)
+
+
+@bp.route('/zoo/images/order', methods=['get'], endpoint='sort')
+def sort():
+    for media in os.listdir(PATH_ZOO):
+        if not media.startswith('MEDIA-'):
+            continue
+        PhotoHelper.sort(os.path.join(PATH_ZOO, media))
+    return jsonify({'status': True})

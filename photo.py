@@ -7,6 +7,7 @@ import math
 
 from PIL import Image, ImageStat, ExifTags
 import cv2
+import exifread
 
 from base import CodeHelper
 from independence import timer
@@ -587,6 +588,16 @@ layout: default
                     continue
                 print(high, width, fn)
 
+    @staticmethod
+    def sort(path_media: str):
+        path_raw = os.path.join(path_media, 'raw')
+
+        for root, dirs, files in os.walk(path_raw):
+            for fn in files:
+                path_fn = os.path.join(root, fn)
+                tags = exifread.process_file(open(path_fn, 'rb'))
+                print(tags)
+
 
 if __name__ == '__main__':
-    pass
+    PhotoHelper.sort('/home/zoo/Desktop/_Y/FH/background/DSCF1903.JPG')
