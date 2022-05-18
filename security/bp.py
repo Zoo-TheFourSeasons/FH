@@ -74,41 +74,41 @@ class TsunamiNameSpace(Namespace):
 
 
 socket_io.on_namespace(TsunamiNameSpace('/security'))
-security = Blueprint('security', __name__)
+bp = Blueprint('security', __name__)
 
 
-@security.route('/security/tsunami/index', methods=['get'], endpoint='tsunami_index')
+@bp.route('/security/tsunami/index', methods=['get'], endpoint='tsunami_index')
 def listdir():
     data = ScanHelper.listdir(request.args.get('target', ''), base=PATH_TSUNAMI, args_r=request.args)
     return jsonify(data)
 
 
-@security.route('/security/tsunami/delete', methods=['get'], endpoint='tsunami_delete')
+@bp.route('/security/tsunami/delete', methods=['get'], endpoint='tsunami_delete')
 def delete():
     files = request.args.get('files')
     data = ScanHelper.delete(files, PATH_TSUNAMI)
     return jsonify(data)
 
 
-@security.route('/security/tsunami/view', methods=['get'], endpoint='tsunami_view')
+@bp.route('/security/tsunami/view', methods=['get'], endpoint='tsunami_view')
 def tsunami_view():
     data = ScanHelper.view(request.args.get('target', ''), PATH_TSUNAMI, request.args)
     return jsonify(data)
 
 
-@security.route('/security/en-decrypt/listdir', methods=['get'], endpoint='listdir')
+@bp.route('/security/en-decrypt/listdir', methods=['get'], endpoint='listdir')
 def listdir():
     data = ScanHelper.listdir(request.args.get('target', ''), PATH_EN_DECRYPT, args_r=request.args)
     return jsonify(data)
 
 
-@security.route('/security/en-decrypt/view', methods=['get'], endpoint='decrypt_view')
+@bp.route('/security/en-decrypt/view', methods=['get'], endpoint='decrypt_view')
 def view():
     data = ScanHelper.view(request.args.get('target', ''), PATH_EN_DECRYPT)
     return jsonify(data)
 
 
-@security.route('/security/en-decrypt/', methods=['get'], endpoint='en_decrypt')
+@bp.route('/security/en-decrypt/', methods=['get'], endpoint='en_decrypt')
 def en_decrypt():
     psw_aes = request.args.get('psw_aes')
     psw_stream = request.args.get('psw_stream')

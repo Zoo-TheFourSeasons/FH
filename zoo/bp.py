@@ -8,35 +8,35 @@ from flask import jsonify
 from photo import PhotoHelper
 from zoo.cons import PATH_ZOO
 
-zoo = Blueprint('zoo', __name__)
+bp = Blueprint('zoo', __name__)
 
 
-@zoo.route('/zoo/listdir', methods=['get'], endpoint='listdir')
+@bp.route('/zoo/listdir', methods=['get'], endpoint='listdir')
 def listdir():
     data = PhotoHelper.listdir(request.args.get('target', ''), PATH_ZOO, args_r=request.args)
     return jsonify(data)
 
 
-@zoo.route('/zoo/view', methods=['get'], endpoint='view')
+@bp.route('/zoo/view', methods=['get'], endpoint='view')
 def view():
     data = PhotoHelper.view(request.args.get('target', ''), PATH_ZOO)
     return jsonify(data)
 
 
-@zoo.route('/zoo/images/mkdir', methods=['get'], endpoint='mkdir')
+@bp.route('/zoo/images/mkdir', methods=['get'], endpoint='mkdir')
 def mkdir():
     data = PhotoHelper.mkdir(request.args.get('target', ''), PATH_ZOO)
     return jsonify(data)
 
 
-@zoo.route('/zoo/images/delete', methods=['get'], endpoint='delete')
+@bp.route('/zoo/images/delete', methods=['get'], endpoint='delete')
 def delete():
     files = request.args.get('files')
     data = PhotoHelper.delete(files, PATH_ZOO)
     return jsonify(data)
 
 
-@zoo.route('/zoo/images/render', methods=['get'], endpoint='render')
+@bp.route('/zoo/images/render', methods=['get'], endpoint='render')
 def render():
     path_index = ''
     for media in os.listdir(PATH_ZOO):
@@ -52,7 +52,7 @@ def render():
     return jsonify({'status': True})
 
 
-@zoo.route('/zoo/images/generate-pages', methods=['get'], endpoint='generate_pages')
+@bp.route('/zoo/images/generate-pages', methods=['get'], endpoint='generate_pages')
 def generate_pages():
     for media in os.listdir(PATH_ZOO):
         if not media.startswith('MEDIA-'):
@@ -61,7 +61,7 @@ def generate_pages():
     return jsonify({'status': True})
 
 
-@zoo.route('/zoo/images/operate', methods=['get'], endpoint='operate')
+@bp.route('/zoo/images/operate', methods=['get'], endpoint='operate')
 def operate():
     _operate = request.args.get('operate')
     hp = PhotoHelper()

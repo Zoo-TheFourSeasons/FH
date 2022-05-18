@@ -4,27 +4,9 @@ import argparse
 from flask import render_template
 
 from app import app_, socket_io
-import zoo.bp
-import dsp.bp
-import know.bp
-import invest.bp
-import security.bp
-import zoo.before
-import dsp.before
-import know.before
-import invest.before
-import security.before
 
-app_.register_blueprint(zoo.bp.zoo)
-app_.register_blueprint(dsp.bp.dsp)
-app_.register_blueprint(know.bp.know)
-app_.register_blueprint(invest.bp.invest)
-app_.register_blueprint(security.bp.security)
-app_.before_first_request_funcs.extend(zoo.before.inits)
-app_.before_first_request_funcs.extend(dsp.before.inits)
-app_.before_first_request_funcs.extend(know.before.inits)
-app_.before_first_request_funcs.extend(invest.before.inits)
-app_.before_first_request_funcs.extend(security.before.inits)
+[app_.register_blueprint(i.bp) for i in app.bps]
+[app_.before_first_request_funcs.extend(i.inits) for i in app.bfs]
 
 
 @app_.route('/', methods=['get'], defaults={'category': '', 'link': '', 'func': ''}, endpoint='home')

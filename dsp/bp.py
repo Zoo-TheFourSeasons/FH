@@ -7,7 +7,7 @@ from flask import jsonify
 from photo import PhotoHelper
 from dsp.cons import PATH_TASKS
 
-dsp = Blueprint('dsp', __name__)
+bp = Blueprint('dsp', __name__)
 
 
 class Server(object):
@@ -151,6 +151,7 @@ class Server(object):
     def reload_configure(self, *args, **kwargs):
         def wrap(func):
             func(self, args, kwargs)
+
         return wrap
 
     def __get_release_path_of_file(self, host, file_task):
@@ -159,7 +160,7 @@ class Server(object):
 
     @staticmethod
     def __get_task_id(host, file_yaml):
-        return '_'.join((str(datetime.datetime.now()), host, file_yaml)).\
+        return '_'.join((str(datetime.datetime.now()), host, file_yaml)). \
             replace(' ', '_').replace('/', '_').replace('\\', '_')
 
     def __build_tasks_require(self):
@@ -377,32 +378,32 @@ class Server(object):
                 file.write(json.dumps({'error': str(err), 'op': str(ob)}, indent=4) + '\n')
 
 
-@dsp.route('/dsp/tasks/listdir', methods=['get'], endpoint='listdir')
+@bp.route('/dsp/tasks/listdir', methods=['get'], endpoint='listdir')
 def listdir():
     data = PhotoHelper.listdir(request.args.get('target', ''), PATH_TASKS, args_r=request.args)
     return jsonify(data)
 
 
-@dsp.route('/dsp/tasks/view', methods=['get'], endpoint='view')
+@bp.route('/dsp/tasks/view', methods=['get'], endpoint='view')
 def view():
     data = PhotoHelper.view(request.args.get('target', ''), PATH_TASKS)
     return jsonify(data)
 
 
-@dsp.route('/dsp/images/mkdir', methods=['get'], endpoint='mkdir')
+@bp.route('/dsp/images/mkdir', methods=['get'], endpoint='mkdir')
 def mkdir():
     data = PhotoHelper.mkdir(request.args.get('target', ''), PATH_TASKS)
     return jsonify(data)
 
 
-@dsp.route('/dsp/images/delete', methods=['get'], endpoint='delete')
+@bp.route('/dsp/images/delete', methods=['get'], endpoint='delete')
 def delete():
     files = request.args.get('files')
     data = PhotoHelper.delete(files, PATH_TASKS)
     return jsonify(data)
 
 
-@dsp.route('/dsp/agent/echo', methods=['post'], endpoint='echo')
+@bp.route('/dsp/agent/echo', methods=['post'], endpoint='echo')
 def echo():
     __info = request.form['__info']
     info = json.loads(__info)['info']
@@ -411,43 +412,43 @@ def echo():
     return jsonify({'status': True})
 
 
-@dsp.route('/dsp/agent/get_agent_ssh_connect', methods=['get'],
-           endpoint='get_agent_ssh_connect')
+@bp.route('/dsp/agent/get_agent_ssh_connect', methods=['get'],
+          endpoint='get_agent_ssh_connect')
 def get_agent_ssh_connect():
     return jsonify(server.get_agent_ssh_connect())
 
 
-@dsp.route('/dsp/agent/install_interpreter_for_agent/<int:enforce>', methods=['get'],
-           endpoint='install_interpreter_for_agent')
+@bp.route('/dsp/agent/install_interpreter_for_agent/<int:enforce>', methods=['get'],
+          endpoint='install_interpreter_for_agent')
 def install_interpreter_for_agent(enforce):
     return jsonify(server.install_interpreter_for_agent(enforce))
 
 
-@dsp.route('/dsp/agent/install_agent_service', methods=['get'],
-           endpoint='install_agent_service')
+@bp.route('/dsp/agent/install_agent_service', methods=['get'],
+          endpoint='install_agent_service')
 def install_agent_service():
     return jsonify(server.install_agent_service())
 
 
-@dsp.route('/dsp/agent/start_agent_service', methods=['get'],
-           endpoint='start_agent_service')
+@bp.route('/dsp/agent/start_agent_service', methods=['get'],
+          endpoint='start_agent_service')
 def start_agent_service():
     return jsonify(server.start_agent_service())
 
 
-@dsp.route('/dsp/agent/restart_agent_service', methods=['get'],
-           endpoint='restart_agent_service')
+@bp.route('/dsp/agent/restart_agent_service', methods=['get'],
+          endpoint='restart_agent_service')
 def restart_agent_service():
     return jsonify(server.restart_agent_service())
 
 
-@dsp.route('/dsp/agent/stop_agent_service', methods=['get'],
-           endpoint='stop_agent_service')
+@bp.route('/dsp/agent/stop_agent_service', methods=['get'],
+          endpoint='stop_agent_service')
 def stop_agent_service():
     return jsonify(server.stop_agent_service())
 
 
-@dsp.route('/dsp/agent/run_task_on_agent', methods=['get'],
-           endpoint='run_task_on_agent')
+@bp.route('/dsp/agent/run_task_on_agent', methods=['get'],
+          endpoint='run_task_on_agent')
 def run_task_on_agent():
     return jsonify(server.run_task_on_agent())
