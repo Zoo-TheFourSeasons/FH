@@ -600,4 +600,4 @@ layout: default
 
 
 if __name__ == '__main__':
-    PhotoHelper.sort('/home/zoo/Desktop/_Y/FH/background/DSCF1903.JPG')
+    pass
