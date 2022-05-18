@@ -1,3 +1,4 @@
 pycrypto
 flask
 pillow
+# yum install numpy opencv*

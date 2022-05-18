@@ -546,18 +546,47 @@ layout: default
 
     def image_to_video(self, path_in: str):
 
-        video = cv2.VideoWriter('t1.avi', cv2.VideoWriter_fourcc(*'MJPG'), 0.75, (1800, 1013))
+        _, fd = os.path.split(path_in)
+        size = (3072, 2048)
+        video = cv2.VideoWriter(fd + '.mp4', cv2.VideoWriter_fourcc(*'XVID'), 1, size)
+
+        img = cv2.imread('/home/zoo/Desktop/_Y/Zoo-HZ-Media-Volunteers/_files/head.jpg')
+        img = cv2.resize(img, size)
+        video.write(img)
+        video.write(img)
+        video.write(img)
+
         for root, dirs, files in os.walk(path_in):
             files.sort()
             for fn in files:
                 path_fn = os.path.join(root, fn)
                 img = cv2.imread(path_fn)
                 high, width, _ = img.shape
-                if (high, width) != (1013, 1800):
+                if round(high / width, 3) != 0.667:
                     continue
+                print(high, width, fn)
+                img = cv2.resize(img, size)
                 video.write(img)
+                video.write(img)
+        img = cv2.imread('/home/zoo/Desktop/_Y/Zoo-HZ-Media-Volunteers/_files/tail.jpg')
+        img = cv2.resize(img, size)
+        video.write(img)
+        video.write(img)
+        video.write(img)
         video.release()
+
+    @staticmethod
+    def show_shape_by_cv(path_in: str):
+        for root, dirs, files in os.walk(path_in):
+            files.sort()
+            for fn in files:
+                path_fn = os.path.join(root, fn)
+                img = cv2.imread(path_fn)
+                high, width, _ = img.shape
+                if round(high / width, 3) != 0.667:
+                    continue
+                print(high, width, fn)
 
 
 if __name__ == '__main__':
-    PhotoHelper().image_to_video('/home/zoo/Desktop/_Y/MEDIA-2022/images/mix/20220508ZouBinbin')
+    pass
