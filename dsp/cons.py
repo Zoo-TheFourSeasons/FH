@@ -2,7 +2,7 @@ import os
 
 from cons import PATH_PROJECT
 
-PATH_TASKS = os.path.join(PATH_PROJECT, 'dsp/static')
+PATH_TASKS = os.path.join(PATH_PROJECT, 'dsp/static/task')
 
 path_project = os.path.dirname(os.path.abspath(__file__))
 path_history = os.path.join(path_project, 'history')

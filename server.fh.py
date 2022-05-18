@@ -4,9 +4,10 @@ import argparse
 from flask import render_template
 
 from app import app_, socket_io
+import bpsbfs
 
-[app_.register_blueprint(i.bp) for i in app.bps]
-[app_.before_first_request_funcs.extend(i.inits) for i in app.bfs]
+[app_.register_blueprint(i.bp) for i in bpsbfs.bps]
+[app_.before_first_request_funcs.extend(i.inits) for i in bpsbfs.bfs]
 
 
 @app_.route('/', methods=['get'], defaults={'category': '', 'link': '', 'func': ''}, endpoint='home')
