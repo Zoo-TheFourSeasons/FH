@@ -1,0 +1,80 @@
+[os]
+name=BCLinux-7.7 - os
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/os/
+gpgcheck=0
+enabled=1
+
+[debuginfo]
+name=BCLinux-7.7 - debuginfo
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/debuginfo
+gpgcheck=0
+enabled=1
+
+[extras]
+name=BCLinux-7.7 - extras
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/extras/
+gpgcheck=0
+enabled=1
+
+[kernel-lt]
+name=BCLinux-7.7 - kernel-lt
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/kernel-lt/
+gpgcheck=0
+enabled=1
+
+[kernel-ml]
+name=BCLinux-7.7 - kernel-ml
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/kernel-ml/
+gpgcheck=0
+enabled=1
+
+[kernel-rt]
+name=BCLinux-7.7 - kernel-rt
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/kernel-rt/
+gpgcheck=0
+enabled=1
+
+[kernel-bek]
+name=BCLinux-7.7 - kernel-bek
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/kernel-bek/
+gpgcheck=0
+enabled=1
+
+[nfv]
+name=BCLinux-7.7 - nfv
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/nfv/
+gpgcheck=0
+enabled=1
+
+[updates]
+name=BCLinux-7.7 - updates
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/updates/
+gpgcheck=0
+enabled=1
+
+[virt]
+name=BCLinux-7.7 - virt
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/virt/
+gpgcheck=0
+enabled=1
+
+[openstack-pike]
+name=BCLinux-7.7 - openstack-pike
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/bcec/openstack-pike-base/
+gpgcheck=0
+enabled=1
+
+[light-vm]
+name=BCLinux-7.7 - light-vm
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/bcec/light-vm/
+gpgcheck=0
+enabled=1
+
+[other]
+name=BCLinux-7.7 - other
+baseurl=http://10.121.10.105:8000/mirrors/BigCloud7.7/x86_64/other/
+gpgcheck=0
+enabled=1
+
+
+# reposync -n --repoid=cr --repoid=kernel-ml --repoid=kernel-rt --repoid=kernel-bek --repoid=nfv --repoid=updates --repoid=virt --repoid=debuginfo --repoid=extras --repoid=kernel-lt -p //var/www/html/mirrors/BigCloud7.7
