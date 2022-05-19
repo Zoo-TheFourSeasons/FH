@@ -16,8 +16,7 @@ import pandas
 from flask import make_response
 
 from independence import timer, TimerMeta
-import invest.ins as ins
-import invest.cons as cons
+import ins
 
 PATH_PROJECT = os.path.dirname(os.path.abspath(__file__))
 logging.getLogger('paramiko.transport').setLevel(logging.CRITICAL)
@@ -321,27 +320,27 @@ class CodeHelper(object):
             return {'status': True, 'rows': f.read(), 'is_image': False, 'type': 'txt'}
 
     @classmethod
-    def __view_xls(cls, target_abs, args_r, with_rounds=False):
+    def __view_xls(cls, target_abs, args_r, rounds=None):
         stat = os.stat(target_abs)
         st_mtime = stat.st_mtime
 
-        if target_abs not in ins.ins_dfs_cache:
+        if target_abs not in ins.ins_xls_cache:
             # add in cache
-            ins.ins_dfs_cache[target_abs] = {
+            ins.ins_xls_cache[target_abs] = {
                 'df': pandas.read_excel(target_abs),
                 'st_mtime': st_mtime
             }
             print('add ins_dfs_cache: %s' % target_abs)
         else:
             # update cache
-            if st_mtime > ins.ins_dfs_cache[target_abs]['st_mtime']:
-                ins.ins_dfs_cache[target_abs] = {
+            if st_mtime > ins.ins_xls_cache[target_abs]['st_mtime']:
+                ins.ins_xls_cache[target_abs] = {
                     'df': pandas.read_excel(target_abs),
                     'st_mtime': st_mtime
                 }
                 print('update ins_dfs_cache: %s' % target_abs)
             pass
-        df = ins.ins_dfs_cache[target_abs]['df']
+        df = ins.ins_xls_cache[target_abs]['df']
         _, _, _, offset, limit = cls.__parser_request_args(args_r)
 
         rows = []
@@ -359,9 +358,9 @@ class CodeHelper(object):
                     # NaN
                     tmp[col] = 'NaN'
                     continue
-                if with_rounds:
+                if rounds:
                     # with rounds
-                    for rd, keys in cons.ROUNDS.items():
+                    for rd, keys in rounds.items():
                         if col not in keys:
                             continue
                         if rd < 1:
