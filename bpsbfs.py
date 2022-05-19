@@ -1,13 +1,13 @@
-import zoo.bp as zoo_bp
-import know.bp as know_bp
-import invest.bp as invest_bp
-import security.bp as security_bp
-import dsp.bp as dsp_bp
-import zoo.before as zoo_bf
-import know.before as know_bf
-import invest.before as invest_bf
-import security.before as security_bf
-import dsp.before as dsp_bf
+import importlib
 
-bps = [zoo_bp, know_bp, invest_bp, security_bp, dsp_bp]
-bfs = [zoo_bf, know_bf, invest_bf, security_bf, dsp_bf]
+import cons
+
+
+def get_bps_bfs(bps):
+    _bps, _bfs = [], []
+    for bp in cons.BPS:
+        if bp not in bps:
+            continue
+        _bps.append(importlib.import_module(bp + '.bp'))
+        _bfs.append(importlib.import_module(bp + '.before'))
+    return _bps, _bfs

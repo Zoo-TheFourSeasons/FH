@@ -35,7 +35,8 @@
 
                             <!--- Sidemenu -->
                             <ul class="side-nav">
-                                <li class="side-nav-item {% if category == 'zoo' %}menuitem-active{% endif %}">
+                                {% if 'zoo' in _bps %}
+                                    <li class="side-nav-item {% if category == 'zoo' %}menuitem-active{% endif %}">
                                     <a data-bs-toggle="collapse" href="#sidebarZoo" aria-expanded="false"
                                        aria-controls="sidebarZoo" class="side-nav-link">
                                         <i class="fas fa-fw fa-paw"></i>
@@ -58,7 +59,9 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="side-nav-item {% if category == 'know' %}menuitem-active{% endif %}">
+                                {% endif %}
+                                {% if 'know' in _bps %}
+                                    <li class="side-nav-item {% if category == 'know' %}menuitem-active{% endif %}">
                                     <a data-bs-toggle="collapse" href="#sidebarKnow" aria-expanded="false"
                                        aria-controls="sidebarZoo" class="side-nav-link">
                                         <i class="fas fa-fw fa-book"></i>
@@ -78,7 +81,9 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="side-nav-item {% if category == 'invest' %}menuitem-active{% endif %}">
+                                {% endif %}
+                                {% if 'invest' in _bps %}
+                                    <li class="side-nav-item {% if category == 'invest' %}menuitem-active{% endif %}">
                                     <a data-bs-toggle="collapse" href="#sidebarInvest" aria-expanded="false"
                                        aria-controls="sidebarInvest" class="side-nav-link">
                                         <i class="fas fa-fw fa-coins"></i>
@@ -99,7 +104,9 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="side-nav-item {% if category == 'security' %}menuitem-active{% endif %}">
+                                {% endif %}
+                                {% if 'security' in _bps %}
+                                    <li class="side-nav-item {% if category == 'security' %}menuitem-active{% endif %}">
                                     <a data-bs-toggle="collapse" href="#sidebarSEC" aria-expanded="false"
                                        aria-controls="sidebarSEC" class="side-nav-link">
                                         <i class="fas fa-fw fa-hat-cowboy"></i>
@@ -123,7 +130,9 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="side-nav-item {% if category == 'dsp' %}menuitem-active{% endif %}">
+                                {% endif %}
+                                {% if 'dsp' in _bps %}
+                                    <li class="side-nav-item {% if category == 'dsp' %}menuitem-active{% endif %}">
                                     <a data-bs-toggle="collapse" href="#sidebarDSP" aria-expanded="false"
                                        aria-controls="sidebarDSP" class="side-nav-link">
 
@@ -144,6 +153,7 @@
                                         </ul>
                                     </div>
                                 </li>
+                                {% endif %}
                             </ul>
                             <!--                            &lt;!&ndash; Help Box &ndash;&gt;-->
                             <!--                            <div class="help-box text-white text-center">-->

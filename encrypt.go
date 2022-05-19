@@ -370,19 +370,23 @@ func (he *HelloEncrypt) routineEncryptOrDecrypt(pathFiles []string, wg *sync.Wai
 			fmt.Println(err)
 		}
 
-		isEmpty := false
+		isEmpty := true
 		HasPrefix := false
 		scanner := bufio.NewScanner(file)
+		line_i := 0
 		for scanner.Scan() {
 			line := scanner.Text()
 			line = strings.TrimSpace(line)
-			if line == "" {
-				isEmpty = true
+			line_i += 1
+			if line_i == 1 && bytes.HasPrefix([]byte(line), he.BinHeaderEncrypt) {
+                HasPrefix = true
+                isEmpty = false
+                break
+            }
+			if line != "" {
+			    isEmpty = false
+			    break
 			}
-			if bytes.HasPrefix([]byte(line), he.BinHeaderEncrypt) {
-				HasPrefix = true
-			}
-			break
 		}
 		// 空文件
 		if isEmpty {
