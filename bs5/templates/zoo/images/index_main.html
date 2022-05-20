@@ -38,7 +38,7 @@
                            data-show-jumpto="true"
                            data-icon-size="sm"
                            data-page-size="20"
-                           data-url="/zoo/listdir"
+                           data-url="/zoo/index"
                            data-side-pagination="server"
                            data-click-to-select="true"
                            data-pagination="true"
@@ -116,7 +116,7 @@
 
     $(document).ready(function () {
         $(".modal").draggable();
-        listdir($table, '/zoo/listdir', target, '/webs/zoo/images/index');
+        listdir($table, '/zoo/index', target, '/webs/zoo/images/index');
 
         mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), '/zoo/images/mkdir', $table, target);
         confirm_do_with_table($("#delete"), $table, "DELETE", "/zoo/images/delete", target);
