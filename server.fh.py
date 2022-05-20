@@ -19,7 +19,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--ip', help='ip', type=str, default='0.0.0.0')
     parser.add_argument('--port', help='port', type=int, default=9755)
-    parser.add_argument('--bps', help='blueprints', type=str, default='security,dsp')
+    parser.add_argument('--bps', help='blueprints', type=str, default='security')
 
     ars = parser.parse_args()
     _bps = BPS if ars.bps == BP_ALL else ars.bps.split(',')

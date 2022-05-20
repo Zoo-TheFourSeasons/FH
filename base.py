@@ -14,6 +14,8 @@ from datetime import date
 
 import pandas
 from flask import make_response
+from flask_socketio import Namespace
+from flask_socketio import join_room
 
 from independence import timer, TimerMeta
 import ins
@@ -190,7 +192,7 @@ class CodeHelper(object):
         """
         if precision not in ('day', 'hour', 'minute', 'second', 'ns'):
             raise ValueError('precision error')
-        now = str(datetime.datetime.now()).\
+        now = str(datetime.datetime.now()). \
             replace(' ', '').replace(':', '').replace('-', '').replace('.', '')
         name_map = {
             'day': now[:8],
@@ -524,5 +526,20 @@ class Pickled(metaclass=TimerMeta):
             pickle.dump(picks, f)
 
 
-if __name__ == '__main__':
-    pass
+class WebSocketHelper(Namespace):
+
+    def on_connect(self):
+        return True
+
+    def on_disconnect(self):
+        pass
+
+    def on_join(self, data):
+        print('join: %s' % data)
+        join_room(data['room'])
+
+    def emit_signal(self, name, data):
+        self.emit(name, data=data, room='progress')
+
+    def update_progress(self, data):
+        self.emit_signal('progress', data)

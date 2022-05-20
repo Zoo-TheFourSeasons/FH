@@ -7,16 +7,22 @@ import ctypes
 
 from Crypto.Cipher import AES
 
-PATH_PROJECT = os.path.dirname(os.path.abspath(__file__))
+from independence import timer
+from base import CodeHelper
 
 
-class HelloEncrypt(object):
+PATH_PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+class EncryptHelper(CodeHelper):
     # 已加密文件头部特征
     header_encrypt = 'encrypted:'
     bin_header_encrypt = bytes(header_encrypt.encode('utf-8'))
     len_header_encrypt = len(bin_header_encrypt)
 
     def __init__(self, psw_aes, psw_stream):
+        super(EncryptHelper, self).__init__()
+
         # AES密钥
         self.psw_aes = psw_aes
         self.bin_psw_aes = bytearray(psw_aes.encode('utf-8'))
@@ -279,7 +285,7 @@ class HelloEncrypt(object):
 
         # do
         try:
-            lib = ctypes.cdll.LoadLibrary('./encrypt.go.so')
+            lib = ctypes.cdll.LoadLibrary('./security/encrypt.go.so')
             lib.security(do_encrypt,
                          psw_aes.encode('utf-8'),
                          psw_stream.encode('utf-8'),
@@ -298,5 +304,29 @@ class HelloEncrypt(object):
         return True if line.startswith(cls.bin_header_encrypt) else False
 
 
-if __name__ == '__main__':
-    pass
+class ScanHelper(CodeHelper):
+
+    def __init__(self):
+        super(ScanHelper, self).__init__()
+
+    @classmethod
+    @timer
+    def scan_by_tsunami(
+            cls, path_data, path_source, jar, location, ip_v4_target, output_format):
+        jar = os.path.join(path_source, jar)
+        location = os.path.join(path_source, location)
+        plugins = os.path.join(path_source, 'plugins/*')
+
+        out_filename = ScanHelper.get_output_file_split_by_time(
+            path_output=path_data, folder=ip_v4_target, precision='ns', suffix='.info'
+        )
+        cmd = 'java -cp "%s:%s"' \
+              ' -Dtsunami-config.location=%s' \
+              ' com.google.tsunami.main.cli.TsunamiCli' \
+              ' --ip-v4-target=%s' \
+              ' --scan-results-local-output-format=%s' \
+              ' --scan-results-local-output-filename=%s' % (
+                  jar, plugins, location, ip_v4_target, output_format, out_filename)
+        print(cmd)
+        shell = cls.run_in_subprocess(cmd, None)
+        return shell
