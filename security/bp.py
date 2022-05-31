@@ -6,10 +6,11 @@ from flask import Blueprint, jsonify, request
 
 from app import socket_io
 from base import WebSocketHelper
-from security.cons import PATH_TSUNAMI, PATH_SOURCE_TSUNAMI, PATH_EN_DECRYPT
+
 from cons import PATH_HISTORY
 from security.assistant import ScanHelper
 from security.assistant import EncryptHelper
+from security.cons import APPS
 
 
 class TsunamiNameSpace(WebSocketHelper):
@@ -21,8 +22,8 @@ class TsunamiNameSpace(WebSocketHelper):
     def background_run_task(self, data):
         action = data['action']
         params = data['params']
-        params['path_data'] = PATH_TSUNAMI
-        params['path_source'] = PATH_SOURCE_TSUNAMI
+        params['path_data'] = APPS['tsunami']['data']
+        params['path_source'] = APPS['tsunami']['pks']
 
         shells_map = {
             'tsunami:scan': ScanHelper.scan_by_tsunami,
@@ -59,36 +60,39 @@ socket_io.on_namespace(TsunamiNameSpace('/security'))
 bp = Blueprint('security', __name__)
 
 @bp.route('/security/en-decrypt/index', methods=['get'],
-          defaults={'base': PATH_EN_DECRYPT}, endpoint='decrypt_index')
+          defaults={'app': 'en-decrypt'}, endpoint='decrypt_index')
 @bp.route('/security/tsunami/index', methods=['get'],
-          defaults={'base': PATH_TSUNAMI}, endpoint='tsunami_index')
-def index(base):
-    data = ScanHelper.listdir(request.args.get('target', ''), base=base, args_r=request.args)
+          defaults={'app': 'tsunami'}, endpoint='tsunami_index')
+def index(app):
+
+    data = ScanHelper.listdir(request.args.get('target', ''), base=APPS[app]['data'], args_r=request.args)
     return jsonify(data)
 
 
 @bp.route('/security/en-decrypt/view', methods=['get'],
-          defaults={'base': PATH_EN_DECRYPT}, endpoint='decrypt_view')
+          defaults={'app': 'en-decrypt'}, endpoint='decrypt_view')
 @bp.route('/security/tsunami/view', methods=['get'],
-          defaults={'base': PATH_TSUNAMI}, endpoint='tsunami_view')
-def view(base):
-    data = ScanHelper.view(request.args.get('target', ''), base=base, args_r=request.args)
+          defaults={'app': 'tsunami'}, endpoint='tsunami_view')
+def view(app):
+    data = ScanHelper.view(request.args.get('target', ''), base=APPS[app]['data'], args_r=request.args)
     return jsonify(data)
 
 
-@bp.route('/security/tsunami/delete', methods=['get'], endpoint='tsunami_delete')
-def delete():
+@bp.route('/security/tsunami/delete', methods=['get'],
+          defaults={'app': 'tsunami'}, endpoint='tsunami_delete')
+def delete(app):
     files = request.args.get('files')
-    data = ScanHelper.delete(files, PATH_TSUNAMI)
+    data = ScanHelper.delete(files, APPS[app]['data'])
     return jsonify(data)
 
 
-@bp.route('/security/en-decrypt/', methods=['get'], endpoint='en_decrypt')
-def en_decrypt():
+@bp.route('/security/en-decrypt/', methods=['get'],
+          defaults={'app': 'en-decrypt'}, endpoint='en_decrypt')
+def en_decrypt(app):
     psw_aes = request.args.get('psw_aes')
     psw_stream = request.args.get('psw_stream')
     nonce = request.args.get('nonce')
     _type = request.args.get('type')
     target = request.args.get('target')
-    data = EncryptHelper.security_by_golang(_type, psw_aes, psw_stream, nonce, target, base=PATH_EN_DECRYPT)
+    data = EncryptHelper.security_by_golang(_type, psw_aes, psw_stream, nonce, target, base=APPS[app]['data'])
     return jsonify(data)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import json
 import time
 import base64
 import pickle
@@ -24,8 +25,8 @@ PATH_PROJECT = os.path.dirname(os.path.abspath(__file__))
 logging.getLogger('paramiko.transport').setLevel(logging.CRITICAL)
 
 
-def data_paging_for_pickle(request, ins, key_name, exclude=None, fields=None):
-    items = sorted(ins.keys())
+def data_paging_for_pickle(request, _ins, key_name, exclude=None, fields=None):
+    items = sorted(_ins.keys())
     if 'search' in request.args and request.args['search']:
         search = request.args['search']
 
@@ -33,7 +34,7 @@ def data_paging_for_pickle(request, ins, key_name, exclude=None, fields=None):
         if fields:
             for k in fields:
                 for item in items:
-                    v = ins[item][k]
+                    v = _ins[item][k]
                     # print('v: ' + v + ' k: ' + k + ' search: ' + search)
                     if v == search:
                         items_.append(item)
@@ -79,7 +80,7 @@ def data_paging_for_pickle(request, ins, key_name, exclude=None, fields=None):
             query_list.append((tmp[0], ope, tmp[1]))
 
         print(query_list)
-        for name, stock in ins.items():
+        for name, stock in _ins.items():
             for item in query_list:
                 field = item[0]
                 operator = item[1]
@@ -99,9 +100,9 @@ def data_paging_for_pickle(request, ins, key_name, exclude=None, fields=None):
         sort = request.args['sort']
         order = request.args['order']
         if sort and order:
-            items_need_sort = (item for item in items if sort in ins[item])
-            items_cannot_sort = [item for item in items if sort not in ins[item]]
-            items_sort = ((item, ins[item][sort]) for item in items_need_sort)
+            items_need_sort = (item for item in items if sort in _ins[item])
+            items_cannot_sort = [item for item in items if sort not in _ins[item]]
+            items_sort = ((item, _ins[item][sort]) for item in items_need_sort)
             if order == 'asc':
                 items_sort = sorted(items_sort, key=lambda x: x[1])
             else:
@@ -118,7 +119,7 @@ def data_paging_for_pickle(request, ins, key_name, exclude=None, fields=None):
     for item in items:
         # temp = ins[item]
         # rows.extend(temp)
-        temp = ins[item]
+        temp = _ins[item]
         if exclude:
             for ex in exclude:
                 temp.pop(ex, None)
@@ -215,28 +216,27 @@ class CodeHelper(object):
         return path_file
 
     @staticmethod
-    def get_output_file(path_output: str, folder: str = None):
-        """
-        :param path_output: str, folder name
-        :param folder: str, folder name
-        :return: str, file path
-        """
-        path_folder = os.path.join(path_output, folder)
+    def get_output_file(path_output: str, tid: str):
+        folder = str(datetime.datetime.now())[:10].replace(' ', '').replace('-', '')
 
-        # 目录不存在, 创建目录
+        path_folder = os.path.join(path_output, folder)
         if not os.path.exists(path_folder):
             os.makedirs(path_folder)
 
-        path_file = os.path.join(path_folder, folder)
+        path_file = os.path.join(path_folder, tid + '.his')
         if not os.path.exists(path_file):
             print('get a new file: ', path_file)
         return path_file
 
-    @staticmethod
-    def mkdir_if_not_exist(target: str):
-        if os.path.exists(target) and os.path.isdir(target):
-            return
-        os.makedirs(target)
+    def __print(self, path_output, tid, ob):
+        f = self.get_output_file(path_output, tid=tid)
+        with open(f, 'a') as file:
+            try:
+                if isinstance(ob, (dict, list, tuple)):
+                    ob = json.dumps(ob, indent=4)
+                file.write(ob + '\n')
+            except Exception as err:
+                file.write(json.dumps({'error': str(err), 'op': str(ob)}, indent=4) + '\n')
 
     @staticmethod
     def __parser_request_args(args_r):
