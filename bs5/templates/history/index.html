@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% set title = 'HISTORY' %}
+{% set category = 'history' %}
+{% set folder = category %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block extend_css %}
+{% endblock %}
+
+{% block extend_js %}
+{% endblock %}
+
+{% block content %}
+    {% include folder + '/index_main.html' %}
+{% endblock %}
+

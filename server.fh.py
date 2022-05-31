@@ -9,10 +9,17 @@ from cons import BPS, BP_ALL
 
 
 @app_.route('/', methods=['get'], defaults={'category': '', 'link': '', 'func': ''}, endpoint='home')
-@app_.route('/webs/<string:category>/<string:link>/<string:func>', methods=['get'], endpoint='webs')
+@app_.route('/webs/<string:category>', defaults={'link': '', 'func': ''}, methods=['get'], endpoint='category')
+@app_.route('/webs/<string:category>/<string:link>', defaults={'func': ''}, methods=['get'], endpoint='link')
+@app_.route('/webs/<string:category>/<string:link>/<string:func>', methods=['get'], endpoint='func')
 def webs(category, link, func):
-    _path_html = '%s/%s/%s.html' % (category, link, func) if category else 'home.html'
-    return render_template(_path_html, **{'_bps': _bps})
+    if not category:
+        return render_template('home.html', **{'_bps': _bps})
+    if not link:
+        return render_template('%s.html' % category, **{'_bps': _bps})
+    if not func:
+        return render_template('%s/%s.html' % (category, link), **{'_bps': _bps})
+    return render_template('%s/%s/%s.html' % (category, link, func), **{'_bps': _bps})
 
 
 if __name__ == '__main__':

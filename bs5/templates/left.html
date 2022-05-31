@@ -32,7 +32,6 @@
                     <div class="simplebar-content-wrapper" tabindex="0" role="region"
                          aria-label="scrollable content" style="height: 100%; overflow: hidden scroll;">
                         <div class="simplebar-content" style="padding: 0px;">
-
                             <!--- Sidemenu -->
                             <ul class="side-nav">
                                 {% if 'zoo' in _bps %}
@@ -135,7 +134,6 @@
                                     <li class="side-nav-item {% if category == 'dsp' %}menuitem-active{% endif %}">
                                     <a data-bs-toggle="collapse" href="#sidebarDSP" aria-expanded="false"
                                        aria-controls="sidebarDSP" class="side-nav-link">
-
                                         <i class="fas fa-fw fa-gear"></i>
                                         <span> DSP </span>
                                         <span class="menu-arrow"></span>
@@ -144,45 +142,44 @@
                                         <ul class="side-nav-second-level">
                                             <li class="{% if link == 'agents' %}menuitem-active{% endif %}">
                                                 <a href="/webs/dsp/nodes/index">
-                                                    <i class="fas fa-fw fa-computer"></i>NODES</a>
+                                                    <i class="fas fa-fw fa-server"></i>NODES</a>
                                             </li>
                                             <li class="{% if link == 'tasks' %}menuitem-active{% endif %}">
                                                 <a href="/webs/dsp/tasks/index">
                                                     <i class="fas fa-fw fa-tasks"></i>TASKS</a>
                                             </li>
+                                            <li class="{% if link == 'yft' %}menuitem-active{% endif %}">
+                                                <a href="/webs/dsp/yft/index">
+                                                    <i class="fas fa-fw fa-vials"></i>YFT</a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </li>
                                 {% endif %}
+
+                                <li class="side-nav-item menuitem-active">
+                                    <a href="/webs/history/index" class="side-nav-link">
+                                        <i class="fas fa-fw fa-history"></i>
+                                        <span> HIS </span>
+                                    </a>
+                                </li>
                             </ul>
-                            <!--                            &lt;!&ndash; Help Box &ndash;&gt;-->
-                            <!--                            <div class="help-box text-white text-center">-->
-                            <!--                                <a href="javascript: void(0);" class="float-end close-btn text-white">-->
-                            <!--                                    <i class="mdi mdi-close"></i>-->
-                            <!--                                </a>-->
-                            <!--                                <img src="/static/images/help-icon.svg"-->
-                            <!--                                     alt="Helper Icon Image" height="90">-->
-                            <!--                                <h5 class="mt-3">Unlimited Access</h5>-->
-                            <!--                                <p class="mb-3">Upgrade to plan to get access to unlimited reports</p>-->
-                            <!--                                <a href="javascript: void(0);" class="btn btn-secondary btn-sm">Upgrade</a>-->
-                            <!--                            </div>-->
-                            <!-- end Help Box -->
-                            <!-- End Sidebar -->
+
                             <div class="clearfix"></div>
 
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="simplebar-placeholder" style="width: auto; height: 1823px;"></div>
+{#            <div class="simplebar-placeholder" style="width: auto; height: 1823px;"></div>#}
         </div>
-        <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
-            <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
-        </div>
-        <div class="simplebar-track simplebar-vertical" style="visibility: visible;">
-            <div class="simplebar-scrollbar"
-                 style="height: 410px; transform: translate3d(0px, 0px, 0px); display: block;"></div>
-        </div>
+{#        <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">#}
+{#            <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>#}
+{#        </div>#}
+{#        <div class="simplebar-track simplebar-vertical" style="visibility: visible;">#}
+{#            <div class="simplebar-scrollbar"#}
+{#                 style="height: 410px; transform: translate3d(0px, 0px, 0px); display: block;"></div>#}
+{#        </div>#}
     </div>
     <!-- Sidebar -left -->
 </div>

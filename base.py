@@ -228,13 +228,15 @@ class CodeHelper(object):
             print('get a new file: ', path_file)
         return path_file
 
-    def __print(self, path_output, tid, ob):
-        f = self.get_output_file(path_output, tid=tid)
+    @classmethod
+    def _print(cls, path_output, tid, ob):
+        f = cls.get_output_file(path_output, tid=tid)
         with open(f, 'a') as file:
             try:
                 if isinstance(ob, (dict, list, tuple)):
                     ob = json.dumps(ob, indent=4)
                 file.write(ob + '\n')
+                print(ob)
             except Exception as err:
                 file.write(json.dumps({'error': str(err), 'op': str(ob)}, indent=4) + '\n')
 
