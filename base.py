@@ -528,7 +528,7 @@ class Pickled(metaclass=TimerMeta):
             pickle.dump(picks, f)
 
 
-class WebSocketHelper(Namespace):
+class WebSocketHelper(Namespace, CodeHelper):
 
     def on_connect(self):
         return True

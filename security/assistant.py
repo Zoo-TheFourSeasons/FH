@@ -1,332 +1,6 @@
-# -*- coding: utf-8 -*-
-# !/bin/python3
-
-import os
-import time
-import ctypes
-
-from Crypto.Cipher import AES
-
-from independence import timer
-from base import CodeHelper
-
-
-PATH_PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
-class EncryptHelper(CodeHelper):
-    # å·²åŠ å¯†æ–‡ä»¶å¤´éƒ¨ç‰¹å¾
-    header_encrypt = 'encrypted:'
-    bin_header_encrypt = bytes(header_encrypt.encode('utf-8'))
-    len_header_encrypt = len(bin_header_encrypt)
-
-    def __init__(self, psw_aes, psw_stream):
-        super(EncryptHelper, self).__init__()
-
-        # AESå¯†é’¥
-        self.psw_aes = psw_aes
-        self.bin_psw_aes = bytearray(psw_aes.encode('utf-8'))
-        # æµå¯†é’¥
-        self.psw_stream = psw_stream
-        self.bin_psw_stream = bytearray(psw_stream.encode('utf-8'))
-        # åŠ å¯†/è§£å¯†
-        self.do_encrypt = True
-        # å•ä¸ªæ–‡ä»¶å¤§å°æœ€å¤§å€¼
-        self.max_size = 64
-        # ä»…å¤„ç†
-        self.include = []
-        # ä¸å¤„ç†
-        self.exclude = []
-
-    @staticmethod
-    def _get_file_size(_file):
-        # è·å–æ–‡ä»¶å¤§å°
-        _size = os.path.getsize(_file) / 1024 / 1024.00
-        # print(_file, _size)
-        return _size
-
-    def _encrypt_by_str(self, __path_in):
-        # æµåŠ å¯†, å¯¹ç§°
-        # print('encrypt_by_str')
-        with open(__path_in, 'rb') as f:
-            raw = f.read()
-
-        length_key = len(self.psw_stream)
-        encrypt = bytearray()
-        encrypt += self.bin_header_encrypt
-        k = 0
-        for _i in raw:
-            _j = self.bin_psw_stream[k % length_key]
-            encrypt.append(_i ^ _j)
-            k += 1
-        try:
-            with open(__path_in, 'wb') as f:
-                f.write(encrypt)
-        except Exception as e:
-            print('\rpass', __path_in, e)
-
-    def _encrypt_by_aes(self, __path_in):
-        # AESåŠ å¯†, å¯¹ç§°
-        # print('encrypt_by_aes')
-        with open(__path_in, 'rb') as f:
-            cipher = AES.new(self.bin_psw_aes, AES.MODE_EAX)
-            cipher_text, tag = cipher.encrypt_and_digest(f.read())
-        try:
-            with open(__path_in, 'wb') as f:
-                [f.write(x) for x in (cipher.nonce, tag, cipher_text)]
-        except Exception as e:
-            print('\rpass:', __path_in, e)
-
-    def _decrypt_by_aes(self, __path_in):
-        # AESè§£å¯†, å¯¹ç§°
-        # print('decrypt_by_aes')
-        with open(__path_in, 'rb') as f:
-            nonce, tag, cipher_text = [f.read(x) for x in (16, 16, -1)]
-            cipher = AES.new(self.bin_psw_aes, AES.MODE_EAX, nonce)
-        try:
-            text = cipher.decrypt_and_verify(cipher_text, tag)
-
-            with open(__path_in, 'wb') as f:
-                f.write(text)
-        except Exception as e:
-            print('\rpass', __path_in, e)
-
-    def _decrypt_by_str(self, __path_in):
-        # æµè§£å¯†, å¯¹ç§°
-        # print('decrypt_by_str')
-        with open(__path_in, 'rb') as f:
-            _raw = f.read()
-            raw = _raw[self.len_header_encrypt:]
-
-        length_key = len(self.psw_stream)
-        decrypt = bytearray()
-        k = 0
-        for _i in raw:
-            _j = self.bin_psw_stream[k % length_key]
-            decrypt.append(_i ^ _j)
-            k += 1
-        try:
-            with open(__path_in, 'wb') as f:
-                f.write(decrypt)
-        except Exception as e:
-            print('\rpass', __path_in, e)
-
-    def _combine(self, _path_in):
-        _tmp = {}
-        for root, dirs, files in os.walk(_path_in):
-            for _file in files:
-                # ä¸æ˜¯æ–‡ä»¶ç‰‡
-                if not _file.endswith('.serial'):
-                    continue
-                # æ£€æŸ¥æ˜¯å¦è·³è¿‡è¯¥æ–‡ä»¶
-                if self._is_pass(_file):
-                    continue
-                print('\r_combine:', _file, end='')
-                _path = os.path.join(root, _file)
-                _file_raw = '.'.join(_file.split('.')[:-2])
-                _path_raw = os.path.join(root, _file_raw)
-                if _path_raw not in _tmp:
-                    _tmp[_path_raw] = []
-                _tmp[_path_raw].append(_path)
-
-        for _path_raw, _file_serial in _tmp.items():
-            with open(_path_raw, 'ab') as _f:
-                for _file_i in _file_serial:
-                    with open(_file_i, 'rb') as __f:
-                        _f.write(__f.read())
-                    # ç§»é™¤æ–‡ä»¶ç‰‡
-                    os.remove(_file_i)
-
-    def _separate(self, _path_in):
-        # å¤§æ–‡ä»¶åˆ†ç‰‡
-        for root, dirs, files in os.walk(_path_in):
-            for _file in files:
-                # æ£€æŸ¥æ˜¯å¦è·³è¿‡è¯¥æ–‡ä»¶
-                if self._is_pass(_file):
-                    print('\r_is_pass:', _file, end='')
-                    continue
-                # æœªè¾¾åˆ°åˆ†ç‰‡é˜ˆå€¼
-                _path = os.path.join(root, _file)
-                _size = self._get_file_size(_path)
-                if _size < self.max_size:
-                    # print('<max_size', _file)
-                    continue
-                print('\r_separate:', _file, end='')
-                # åˆ†ç‰‡
-                _i = 1
-                _zfill = len(str(int((_size + self.max_size - 1) / self.max_size)))
-                with open(_path, 'rb') as _f:
-                    i_file = _f.read(self.max_size * 1024 * 1024)
-                    while i_file:
-                        # æ–‡ä»¶ç‰‡i
-                        _file_i = _path + '.' + str(_i).zfill(_zfill) + '.serial'
-                        with open(_file_i, 'wb') as __ff:
-                            __ff.write(i_file)
-                        # æ–‡ä»¶ç‰‡i+1
-                        _i += 1
-                        i_file = _f.read(self.max_size * 1024 * 1024)
-                # åˆ†ç‰‡åç§»é™¤è‡ªèº«
-                os.remove(_path)
-
-    def _is_pass(self, _file):
-        # x.py.i.serial
-        # åˆ†ç‰‡æ–‡ä»¶
-        if _file.endswith('.serial'):
-            # è®¡ç®—æ–‡ä»¶å
-            _file = '.'.join(_file.split('.')[:-2])
-
-        # ä»…å¤„ç†
-        if self.include:
-            # ä¸åœ¨ä»…å¤„ç†åˆ—è¡¨å†…
-            if _file not in self.include:
-                # è·³è¿‡è¯¥æ–‡ä»¶
-                return True
-        # ä¸å¤„ç†
-        elif self.exclude:
-            # åœ¨ä¸å¤„ç†åˆ—è¡¨å†…
-            if _file in self.include:
-                # è·³è¿‡è¯¥æ–‡ä»¶
-                return True
-        # å…¶ä»–æƒ…å†µä¸è·³è¿‡è¯¥æ–‡ä»¶
-        return False
-
-    def _encrypt_or_decrypt(self, _path_in):
-
-        if not os.path.exists(_path_in):
-            return
-
-        ts = time.time()
-
-        def _do(_path_file):
-
-            with open(_path_file, 'rb') as f:
-                text = f.read()
-                # å¿½ç•¥ç©ºæ–‡ä»¶
-                if not text.strip():
-                    print('ignore:', _path_file, end='')
-                    return
-
-            with open(_path_file, 'rb') as f:
-                line = f.readline()
-
-            # æ–‡ä»¶å·²åŠ å¯†
-            if line.startswith(self.bin_header_encrypt):
-                # æ­£åœ¨è¿›è¡ŒåŠ å¯†
-                if self.do_encrypt:
-                    # å¿½ç•¥
-                    return
-                # æ­£åœ¨è¿›è¡Œè§£å¯†
-                # æµè§£å¯†
-                self._decrypt_by_str(_path_file)
-                # AESè§£å¯†
-                self._decrypt_by_aes(_path_file)
-                return
-            # æ–‡ä»¶æœªåŠ å¯†
-            # æ­£åœ¨è¿›è¡ŒåŠ å¯†
-            if self.do_encrypt:
-                # AESåŠ å¯†
-                self._encrypt_by_aes(_path_file)
-                # æµåŠ å¯†
-                self._encrypt_by_str(_path_file)
-                return
-            # æ­£åœ¨è¿›è¡Œè§£å¯†
-            pass
-
-        if os.path.isfile(_path_in):
-            _do(_path_in)
-            print('\nend encrypt_file, cost:', time.time() - ts, ' file index:', 1)
-            return
-
-        if os.path.isdir(_path_in):
-            # è®¡ç®—æ€»æ•°
-            total = sum([len(files) for root, dirs, files in os.walk(_path_in)])
-            index = 0
-            for root, dirs, files in os.walk(_path_in):
-                for file in files:
-                    index += 1
-                    # æ£€æŸ¥æ˜¯å¦è·³è¿‡è¯¥æ–‡ä»¶
-                    if self._is_pass(file):
-                        continue
-
-                    _file = os.path.join(root, file)
-                    _do(_file)
-                    print('\rprocess:', index, '/', total, end='')
-            print('\nend encrypt_file, cost:', time.time() - ts, ' file index:', index)
-
-    def security(self, _path_in):
-        # æ–‡ä»¶åŠ è§£å¯†
-        print('do_encrypt:', self.do_encrypt)
-        print('path_in:', _path_in)
-
-        # åŠ å¯†å‰åˆ†ç‰‡
-        if self.do_encrypt:
-            self._separate(_path_in)
-
-        # åŠ å¯†/è§£å¯†
-        self._encrypt_or_decrypt(_path_in)
-        # è§£å¯†åç»„è£…
-        if not self.do_encrypt:
-            self._combine(_path_in)
-
-    @staticmethod
-    def security_by_golang(
-            do_encrypt, psw_aes, psw_stream, nonce, path_in,
-            max_size: int = 45, base: str = None):
-        # parser
-        base = PATH_PROJECT if base is None else base
-        target_abs = os.path.join(base, path_in)
-        do_encrypt = True if do_encrypt == 'ENCRYPT' else False
-
-        # validate
-        if not os.path.exists(target_abs):
-            return {'status': False, 'message': 'there is not exist: %s' % path_in}
-        if len(psw_aes) != 32 or len(psw_stream) != 32 or len(nonce) != 24:
-            return {'status': False, 'message': 'len(psw_aes | psw_stream) != 32 | len(nonce) != 24'}
-
-        # do
-        try:
-            lib = ctypes.cdll.LoadLibrary('./security/encrypt.go.so')
-            lib.security(do_encrypt,
-                         psw_aes.encode('utf-8'),
-                         psw_stream.encode('utf-8'),
-                         nonce.encode('utf-8'),
-                         target_abs.encode('utf-8'),
-                         max_size)
-            return {'status': True}
-        except Exception as e:
-            return {'status': False, 'message': str(e)}
-
-    @classmethod
-    def is_encrypted(cls, _path_in):
-        with open(_path_in, 'rb') as f:
-            line = f.readline()
-
-        return True if line.startswith(cls.bin_header_encrypt) else False
-
-
-class ScanHelper(CodeHelper):
-
-    def __init__(self):
-        super(ScanHelper, self).__init__()
-
-    @classmethod
-    @timer
-    def scan_by_tsunami(
-            cls, path_data, path_source, jar, location, ip_v4_target, output_format):
-        jar = os.path.join(path_source, jar)
-        location = os.path.join(path_source, location)
-        plugins = os.path.join(path_source, 'plugins/*')
-
-        out_filename = ScanHelper.get_output_file_split_by_time(
-            path_output=path_data, folder=ip_v4_target, precision='ns', suffix='.info'
-        )
-        cmd = 'java -cp "%s:%s"' \
-              ' -Dtsunami-config.location=%s' \
-              ' com.google.tsunami.main.cli.TsunamiCli' \
-              ' --ip-v4-target=%s' \
-              ' --scan-results-local-output-format=%s' \
-              ' --scan-results-local-output-filename=%s' % (
-                  jar, plugins, location, ip_v4_target, output_format, out_filename)
-        print(cmd)
-        shell = cls.run_in_subprocess(cmd, None)
-        return shell
+encrypted:>$à§cr˜)&@ó*x¥¢íØî\’M•ëN©ó‰rÁ&ÑÔÖÈ$kúYG­W—o)70ZlJ_ÙŒ$”_>ÿĞ’Õ‘¬²•Ï_öJ¿â!«…,ùw#³¶@Ûk£ÇìSC©lf¦/Ü0áj—JF•ü|¶³*_ÔOé5ÇÔˆˆJë
+–íN,¨kv¥Ï¨Àg¶ä±6ãÅD…éëûà£ÍoI~ÓãÔ•§Ği$6®ê•çXmÅrR¡9ìA8Á@àOöÍû¯ÁÜÄhå¿bÁ¾šJ<ÜÅåÀM!ô¾=}äİöå+TƒôcµŞ-Yü•˜!VL`³Ÿ„±8sWcuï×gİh†¦¯›cGì6‚DĞ-õRyy#·ï¸E—ä—8š
+š›}±âZò_¬‚!0ÛˆcËXÜ/°-°ä&Ô=º&.:cK:	.iï‹İ^:ƒá”¯As²¼gø·bA~(±?™ÄXï	ú¯à±ul`	ÎèÈ²øzv„@™Ê%î}B¨¶5dp>i7ñB&•½lU“µ­)YCQpÉNXm×ëà–±p¯ÉFXä#ôxD~üUãPyêª0›*‹¬2â\_unÑÁÚXÛª>
+¦ŒŸcGÅ¯Ì
+ÖCA|¼¼÷„ŞÅ¹é¹åcyÚÉÙKKıÉ8Íˆ0NP:›IÏõÓSšÓıZ@÷¡ÄğM`È2BµXf9ëagrŠ×ÆşÆ–pÉ’ªò‘W5ûµgSaÛ!šL”(©eLuëÖB1Rzöb[µxëÆjŒEBûèXwMÈ3‰5„÷SyÓ÷hï4íw!€ #åİÇ¼Ò÷ĞáV]"_Ôä1Êœ^ä™ƒ•8Ò6Ai=mPc•.LQNP T®ÈµµÃt{6pp–ƒW·£8ü‰®6Õ	#ÜúÃƒÄ4ê½ê-NÜ”>”üì_/ó-çk¬ØaàÿyˆÉ½UvNêjÍ«eüÅ•æı$Lå‡˜V‘ı°i|ÃÁü/©­Ò»:ıâO’ÛæH´ùã®Ôìåšéª—‹.DúÃİK¯y{¶¥»JŠïÖí$%^¯*¶*¼k’¶(éÙÔ¯A¢,Ìóø~^ËıRê¾Åî°UÍÊô³zPìŒm?·$cyqtõ;}HÜõÔrª¯Ğ6\‡Õv—Ú0¢[ßdªõC˜°~š|/a’¸x/¥œ+	Êäæ^äë—&ĞYnˆá@‡Á±"¤d]«–<-W Åñİs•kÄªÕ¸L¼+<Â5íæôû¼óR·DmWå4©AíøzS3nËvÜ¤”ÖOküûË*²Ôÿ,ıî€şÌÄY'máÑ:>“R$·ª*§—<>bêjBŒ¥Lv‰ÀsfºDA†¶ÈâsCì(A>o¿UûãDGAW…£œpb—bïŒ”¢³©¢RyÚÌ<Ö®xÌQ iŞŒªóv­ç6ÖT¦7U9…eYí…ŠãœÊÆSH–é;ÜëXR¤ãwbkÊXGıöŠHü¤ÎÑ_Á]gcÙ”GMÙ.ò'æ
+GR&57òt˜³NÁİ¢•î¾&ìˆWÛaân {

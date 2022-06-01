@@ -104,6 +104,15 @@
                                     </div>
                                 </li>
                                 {% endif %}
+                                {% if 'en_decrypt' in _bps %}
+                                <li class="side-nav-item menuitem-active">
+                                    <a href="/webs/en_decrypt/index" class="side-nav-link">
+                                        <i class="fas fa-fw fa-lock"></i>
+                                        <span> EN-DECRYPT </span>
+                                    </a>
+                                </li>
+                                {% endif %}
+
                                 {% if 'security' in _bps %}
                                     <li class="side-nav-item {% if category == 'security' %}menuitem-active{% endif %}">
                                     <a data-bs-toggle="collapse" href="#sidebarSEC" aria-expanded="false"
@@ -114,10 +123,6 @@
                                     </a>
                                     <div class="collapse {% if category == 'security' %}show{% endif %}" id="sidebarSEC">
                                         <ul class="side-nav-second-level">
-                                            <li class="{% if link == 'en-decrypt' %}menuitem-active{% endif %}">
-                                                <a href="/webs/security/en-decrypt/index">
-                                                    <i class="fas fa-fw fa-lock"></i>EN-DECRYPT</a>
-                                            </li>
                                             <li class="{% if link == 'tsunami' %}menuitem-active{% endif %}">
                                                 <a href="/webs/security/tsunami/index">
                                                     <i class="fas fa-fw fa-water"></i>TSUNAMI</a>
