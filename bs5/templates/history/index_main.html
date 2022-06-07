@@ -14,6 +14,11 @@
                     <button type="button" id="back" class="btn btn-outline-secondary"><i
                             class="fas fa-fw fa-backward"></i>BACK
                     </button>
+                    <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
+                    </button>
+
+                    <button type="button" id="delete" class="btn btn-outline-danger"><i class="fas fa-fw fa-trash"></i>DELETE
+                    </button>
                 </div>
                 <div id="parents" class="mt-2"></div>
             </div>
@@ -64,6 +69,7 @@
             </div> <!-- end card-->
         </div> <!-- end col -->
     </div>
+    {% include 'modal.html' %}
 
 </div> <!-- container -->
 <script>
@@ -107,6 +113,7 @@
 
         listdir($table, '/history/index', target, '/webs/history/index');
         view('/history/view');
+        confirm_do_with_table($("#delete"), $table, "DELETE", "/history/delete", target);
 
     })
 </script>

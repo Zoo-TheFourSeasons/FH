@@ -498,10 +498,10 @@ body[data-leftbar-theme=light] {
     --ct-black-rgb: 0, 0, 0;
     --ct-body-color-rgb: 108, 117, 125;
     --ct-body-bg-rgb: 250, 251, 254;
-    --ct-font-sans-serif: "Nunito", sans-serif;
+    --ct-font-sans-serif: DejaVu Sans Mono;
     --ct-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     --ct-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-    --ct-body-font-family: Nunito, sans-serif;
+    --ct-body-font-family: DejaVu Sans Mono;
     --ct-body-font-size: 0.9rem;
     --ct-body-font-weight: 400;
     --ct-body-line-height: 1.5;
@@ -7022,19 +7022,22 @@ textarea.form-control-lg {
     }
 
     .modal-sm {
-        max-width: 300px
+        max-width: 100%;
+        max-height: 100%;
     }
 }
 
 @media (min-width: 992px) {
     .modal-lg, .modal-xl {
-        max-width: 800px
+        max-width: 100%;
+        max-height: 100%;
     }
 }
 
 @media (min-width: 1600px) {
     .modal-xl {
-        max-width: 1500px
+        max-width: 100%;
+        max-height: 100%;
     }
 }
 

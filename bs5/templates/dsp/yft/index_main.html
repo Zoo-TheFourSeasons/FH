@@ -126,5 +126,21 @@
         listdir($table, '/dsp/yft/index', target, '/webs/dsp/yft/index');
         view('/dsp/yft/view');
         confirm_do_with_table($("#execute"), $table, "EXECUTE", "/dsp/yft/execute", target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", "/dsp/yft/delete", target);
+
+        $("#view-modal .commit-btn").on('click', function () {
+            let text = $('#view-modal textarea[name=text]').val();
+            let p = $('#view-modal input[name=target]').val();
+            axios.request({
+                url: '/dsp/yft/touch',
+                method: 'get',
+                params: {'text': text, 'target': p}
+            }).then(function (response) {
+                $table.bootstrapTable('refresh');
+                console.log(response.data);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        });
     })
 </script>
