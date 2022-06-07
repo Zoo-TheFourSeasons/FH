@@ -1,128 +1,12 @@
 <!-- Topbar Start -->
 <div class="navbar-custom">
-    <ul class="list-unstyled topbar-menu float-end mb-0">
-        <li class="dropdown notification-list d-lg-none">
-            <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"
-               aria-haspopup="false" aria-expanded="false">
-                <i class="dripicons-search noti-icon"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
-                <form class="p-3">
-                    <input type="text" class="form-control" placeholder="Search ..."
-                           aria-label="Recipient's username">
-                </form>
-            </div>
-        </li>
-
-        <li class="dropdown notification-list">
-            <a class="nav-link dropdown-toggle arrow-none" data-bs-toggle="dropdown" href="#" role="button"
-               aria-haspopup="false" aria-expanded="false">
-                <i class="dripicons-bell noti-icon"></i>
-                <span class="noti-icon-badge"></span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated dropdown-lg">
-
-                <!-- item-->
-                <div class="dropdown-item noti-title px-3">
-                    <h5 class="m-0">
-                         <span class="float-end">
-                             <a href="javascript: void(0);" class="text-dark">
-                                 <small>Clear All</small>
-                             </a>
-                         </span>Notification
-                    </h5>
-                </div>
-
-                <div class="px-3" style="max-height: 300px;" data-simplebar="init">
-                    <div class="simplebar-wrapper" style="margin: 0px -24px;">
-                        <div class="simplebar-height-auto-observer-wrapper">
-                            <div class="simplebar-height-auto-observer"></div>
-                        </div>
-                        <div class="simplebar-mask">
-                            <div class="simplebar-offset" style="right: 0px; bottom: 0px;">
-                                <div class="simplebar-content-wrapper" tabindex="0" role="region"
-                                     aria-label="scrollable content"
-                                     style="height: auto; overflow: hidden;">
-                                    <div class="simplebar-content" style="padding: 0px 24px;">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="simplebar-placeholder" style="width: 0px; height: 0px;"></div>
-                    </div>
-                    <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;">
-                        <div class="simplebar-scrollbar" style="width: 0px; display: none;"></div>
-                    </div>
-                    <div class="simplebar-track simplebar-vertical" style="visibility: hidden;">
-                        <div class="simplebar-scrollbar" style="height: 0px; display: none;"></div>
-                    </div>
-                </div>
-
-                <!-- All-->
-                <a href="javascript:void(0);"
-                   class="dropdown-item text-center text-primary notify-item border-top border-light py-2">
-                    View All
-                </a>
-
-            </div>
-        </li>
-
-        <li class="notification-list">
-            <a class="nav-link end-bar-toggle" href="javascript: void(0);">
-                <i class="dripicons-lock noti-icon"></i>
-            </a>
-        </li>
-
-        <li class="dropdown notification-list">
-            <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown" href="#"
-               role="button" aria-haspopup="false" aria-expanded="false">
-                                    <span class="account-user-avatar">
-                                        <img src="/static/images/avatar-1.jpg"
-                                             alt="user-image" class="rounded-circle">
-                                    </span>
-                <span>
-                                        <span class="account-user-name">Dominic Keller</span>
-                                        <span class="account-position">Founder</span>
-                                    </span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
-                <!-- item-->
-                <div class=" dropdown-header noti-title">
-                    <h6 class="text-overflow m-0">Welcome !</h6>
-                </div>
-
-                <!-- item-->
-                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                    <i class="mdi mdi-account-circle me-1"></i>
-                    <span>My Account</span>
-                </a>
-
-                <!-- item-->
-                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                    <i class="mdi mdi-account-edit me-1"></i>
-                    <span>Settings</span>
-                </a>
-
-                <!-- item-->
-                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                    <i class="mdi mdi-lifebuoy me-1"></i>
-                    <span>Support</span>
-                </a>
-
-                <!-- item-->
-                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                    <i class="mdi mdi-lock-outline me-1"></i>
-                    <span>Lock Screen</span>
-                </a>
-
-                <!-- item-->
-                <a href="javascript:void(0);" class="dropdown-item notify-item">
-                    <i class="mdi mdi-logout me-1"></i>
-                    <span>Logout</span>
-                </a>
-            </div>
-        </li>
-
+    <ul class="list-unstyled topbar-menu float-end m-0">
+        <div class="btn-group mt-1">
+            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                    data-bs-target="#his-modal"><i class="fas fa-fw fa-history"></i></button>
+            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                    data-bs-target="#"><i class="fas fa-fw fa-lock"></i></button>
+        </div>
     </ul>
     <button class="button-menu-mobile open-left">
         <i class="mdi mdi-menu"></i>
@@ -139,3 +23,21 @@
     </div>
 </div>
 <!-- end Topbar -->
+<script>
+    {#let io_security = io.connect(#}
+    {#    'http://' + document.domain + (location.port ? ":" + location.port : "") + '/security',#}
+    {#    {'sync disconnect on unload': true});#}
+    {#io_security.emit('join', {'room': 'progress'});#}
+    {#io_security.on('progress', function (data) {#}
+    {#    console.log('data', data);#}
+    {# });#}
+
+    let io_dsp = io.connect(
+        'http://' + document.domain + (location.port ? ":" + location.port : "") + '/dsp',
+        {'sync disconnect on unload': true});
+    io_dsp.emit('join', {'room': 'progress'});
+    io_dsp.on('his', function (data) {
+        $('#his-modal textarea').append(data)
+    });
+
+</script>

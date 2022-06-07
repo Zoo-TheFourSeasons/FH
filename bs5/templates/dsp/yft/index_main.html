@@ -16,10 +16,14 @@
                     </button>
                     <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
                     </button>
-
                     <button type="button" id="delete" class="btn btn-outline-danger"><i class="fas fa-fw fa-trash"></i>DELETE
                     </button>
-
+                    <button type="button" id="mkdir" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#mkdir-modal"><i class="fas fa-fw fa-folder"></i>MKDIR
+                    </button>
+                    <button type="button" id="touch" class="btn btn-outline-primary" data-bs-toggle="modal"
+                            data-bs-target="#touch-modal"><i class="fas fa-fw fa-add"></i>TOUCH
+                    </button>
                     <button type="button" id="execute" class="btn btn-outline-primary"><i class="fas fa-fw fa-trash"></i>EXECUTE
                     </button>
                 </div>
@@ -77,14 +81,6 @@
 
 </div> <!-- container -->
 <script>
-    let task_io = io.connect(
-        'http://' + document.domain + (location.port ? ":" + location.port : "") + '/security',
-        {'sync disconnect on unload': true});
-
-    task_io.emit('join', {'room': 'progress'});
-    task_io.on('progress', function (data) {
-        console.log('data', data);
-    });
 
     let $table = $("#yft-table");
     let $back = $("#back");
@@ -125,8 +121,28 @@
 
         listdir($table, '/dsp/yft/index', target, '/webs/dsp/yft/index');
         view('/dsp/yft/view');
-        confirm_do_with_table($("#execute"), $table, "EXECUTE", "/dsp/yft/execute", target);
+        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), '/dsp/yft/mkdir', $table, target);
+
+        confirm_do_ns_with_table($("#execute"), $table, "EXECUTE", target, 'yft', "yft:execute", io_dsp);
         confirm_do_with_table($("#delete"), $table, "DELETE", "/dsp/yft/delete", target);
+
+        $("#touch-modal .commit-btn").on('click', function () {
+            let text = $('#touch-modal textarea[name=text]').val();
+            let p = $('#touch-modal input[name=target]').val();
+            if (target) {
+                p = target + '/' + p
+            }
+            axios.request({
+                url: '/dsp/yft/touch',
+                method: 'get',
+                params: {'text': text, 'target': p + '.yaml'}
+            }).then(function (response) {
+                $table.bootstrapTable('refresh');
+                console.log(response.data);
+            }).catch(function (error) {
+                console.log(error);
+            });
+        });
 
         $("#view-modal .commit-btn").on('click', function () {
             let text = $('#view-modal textarea[name=text]').val();

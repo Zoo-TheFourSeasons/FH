@@ -1,38 +1,37 @@
 <!-- VIEW Modal -->
 <div id="view-modal" class="modal" tabindex="-1" aria-labelledby="view-header"
      style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header modal-colored-header bg-primary">
                 <h4 class="modal-title" id="view-header">VIEW</h4>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
             </div>
-            <div class="p-1">
-                <div class="modal-body px-2 pt-2 pb-0">
-                    <form>
-                        <div class="write-mdg-box mb-2">
-                            <textarea class="form-control" rows="18" name="text" autocorrect="off" spellcheck="false" tabindex="0" wrap="off"></textarea>
-                            <img class="img-fluid" src="">
-                        </div>
-                        <div class="input-group mb-2">
-                            <table style="table-layout: auto" class="table-striped table-hover table-bordered table-condensed table-centered table-nowrap mb-0">
-                            </table>
-                        </div>
-                        <div class="input-group mb-2">
-                            <span class="input-group-text">TARGET</span>
-                            <input type="text" class="form-control" readonly name="target" aria-label="PATH OUT">
-                        </div>
-                    </form>
-                </div>
-                <div class="px-2 pb-1">
-                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-code-commit"></i> COMMIT
-                    </button>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-cancel"></i>CANCEL
-                    </button>
-                </div>
+            <div class="modal-body px-2 pt-2 pb-0">
+                <form>
+                    <div class="write-mdg-box mb-2">
+                        <textarea class="form-control" rows="40" name="text" spellcheck="false" tabindex="0" wrap="off"></textarea>
+                        <img class="img-fluid" src="">
+                    </div>
+                    <div class="input-group mb-2">
+                        <table style="table-layout: auto"
+                               class="table-striped table-hover table-bordered table-condensed table-centered table-nowrap mb-0">
+                        </table>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">TARGET</span>
+                        <input type="text" class="form-control" readonly name="target" aria-label="PATH OUT">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer px-2 pb-1">
+                <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                        class="fas fa-fw fa-code-commit"></i> COMMIT
+                </button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
+                        class="fas fa-fw fa-cancel"></i>CANCEL
+                </button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -48,22 +47,20 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
             </div>
-            <div class="p-1">
-                <div class="modal-body px-2 pt-2 pb-0">
-                    <form>
-                        <div class="mb-2">
-                            <input type="text" class="form-control" name="dir" placeholder="new folder">
-                        </div>
-                    </form>
-                </div>
-                <div class="px-2 pb-1">
-                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-code-commit"></i> COMMIT
-                    </button>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-cancel"></i>CANCEL
-                    </button>
-                </div>
+            <div class="modal-body px-2 pt-2 pb-0">
+                <form>
+                    <div class="mb-2">
+                        <input type="text" class="form-control" name="dir" placeholder="new folder">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer px-2 pb-1">
+                <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                        class="fas fa-fw fa-code-commit"></i> COMMIT
+                </button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
+                        class="fas fa-fw fa-cancel"></i>CANCEL
+                </button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -79,38 +76,94 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
             </div>
+            <div class="modal-body px-2 pt-2 pb-0">
+                <form>
+                    <div class="mb-2">
+                        <label class="form-label">AES PSW*</label>
+                        <input type="text" class="form-control" name="psw_aes"
+                               placeholder="AES password for en-decrypt, ******ZOO">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">STREAM PSW*</label>
+                        <input type="text" class="form-control" name="psw_stream"
+                               placeholder="STREAM password for en-decrypt, ------ZOO">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">NONCE*</label>
+                        <input type="text" class="form-control" name="nonce"
+                               placeholder="NONCE for en-decrypt, 159-162-">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">TYPE</label>
+                        <select class="form-control" name="type">
+                            <option class="form-control" value="DECRYPT">DECRYPT 解密</option>
+                            <option class="form-control" value="ENCRYPT">ENCRYPT 加密</option>
+                        </select>
+                    </div>
+                    <input type="text" hidden name="target" placeholder="target">
+                </form>
+            </div>
+            <div class="modal-footer px-2 pb-1">
+                <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                        class="fas fa-fw fa-code-commit"></i> COMMIT
+                </button>
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
+                        class="fas fa-fw fa-cancel"></i>CANCEL
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- HIS Modal -->
+<div id="his-modal" class="modal" tabindex="-1" aria-labelledby="view-header"
+     style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-primary">
+                <h4 class="modal-title" id="his-header">HIS</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body px-2 pt-2 pb-0">
+                <form>
+                    <div class="write-mdg-box mb-2">
+                        <textarea readonly class="form-control" rows="45" name="text" spellcheck="false" tabindex="0" wrap="off"></textarea>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- TOUCH Modal -->
+<div id="touch-modal" class="modal" tabindex="-1" aria-labelledby="touch-header"
+     style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-primary">
+                <h4 class="modal-title" id="touch-header">TOUCH YAML</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
             <div class="p-1">
                 <div class="modal-body px-2 pt-2 pb-0">
                     <form>
                         <div class="mb-2">
-                            <label class="form-label">AES PSW*</label>
-                            <input type="text" class="form-control" name="psw_aes" placeholder="AES password for en-decrypt, ******ZOO">
+                            <label class="form-label">TEXT</label>
+                            <textarea type="text" rows="18" class="form-control" name="text" placeholder="REPTILE"></textarea>
                         </div>
-                        <div class="mb-2">
-                            <label class="form-label">STREAM PSW*</label>
-                            <input type="text" class="form-control" name="psw_stream" placeholder="STREAM password for en-decrypt, ------ZOO">
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">TARGET*</span>
+                            <input type="text" class="form-control" name="target" aria-label="PATH OUT">
+                            <span class="input-group-text">.yaml</span>
                         </div>
-                        <div class="mb-2">
-                            <label class="form-label">NONCE*</label>
-                            <input type="text" class="form-control" name="nonce" placeholder="NONCE for en-decrypt, 159-162-">
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">TYPE</label>
-                            <select class="form-control" name="type">
-                                <option class="form-control" value="DECRYPT">DECRYPT 解密</option>
-                                <option class="form-control" value="ENCRYPT">ENCRYPT 加密</option>
-                            </select>
-                        </div>
-                        <input type="text" hidden name="target" placeholder="target">
                     </form>
                 </div>
                 <div class="px-2 pb-1">
-                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-code-commit"></i> COMMIT
+                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i class="fas fa-fw fa-code-commit"></i> COMMIT
                     </button>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-cancel"></i>CANCEL
-                    </button>
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i class="fas fa-fw fa-cancel"></i>CANCEL</button>
                 </div>
             </div>
         </div><!-- /.modal-content -->

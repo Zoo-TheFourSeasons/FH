@@ -191,6 +191,49 @@ function confirm_do_with_table($btn, $table, title, url, target) {
     });
 }
 
+function confirm_do_ns_with_table($btn, $table, title, target, signal, action, ns) {
+    $btn.confirm({
+        closeIcon: true,
+        theme: 'supervan',
+        title: title,
+        content: "",
+        onOpenBefore: function () {
+            let select = get_selected($table, false);
+            if (!select.ids) {
+                this.setContent("<h3>PLEASE SELECT ITEM(S)</h3>");
+                this.buttons.doKey.hide();
+            } else {
+                this.setContent("ARE YOU SURE TO " + title + " THESE ITEM(S)?");
+            }
+        },
+        buttons: {
+            doKey: {
+                text: 'YES',
+                action: function () {
+                    let select = get_selected($table, false);
+                    let params;
+                    if (target === undefined) {
+                        params = {
+                            'action': action,
+                            'IS_PARALLEL': false,
+                            'params': {'files': select.ids, 'target': ''}
+                        };
+                    } else {
+                        params = {
+                            'action': action,
+                            'IS_PARALLEL': false,
+                            'params': {'files': select.ids, 'target': target}
+                        };
+                    }
+                    console.info(params);
+                    ns.emit(signal, params);
+                }
+            },
+            cancel: {text: 'CLOSE'}
+        }
+    });
+}
+
 function confirm_do($btn, title, url, data) {
     $btn.confirm({
         closeIcon: true,
