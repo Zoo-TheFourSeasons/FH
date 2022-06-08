@@ -1,138 +1,117 @@
-<div class="menu-left">
-    <ul class="nav flex-column">
+<div class="menu-left bg-secondary">
+    <ul class="nav flex-column m-2">
         {% if 'zoo' in _bps %}
-            <li class="nav-item {% if category == 'zoo' %}active{% endif %}">
-                <a data-bs-toggle="collapse" href="#sidebarZoo" aria-expanded="false"
+            <li class="shadow-lg {% if category == 'zoo' %}active{% endif %}">
+                <a data-bs-toggle="collapse" href="#sidebarZoo" aria-expanded="false" class="nav-link fw-bold text-info"
                    aria-controls="sidebarZoo">
-                    <i class="fas fa-fw fa-paw"></i>
-                    <span> ZOO </span>
-                    <span class="menu-arrow"></span>
-                </a>
+                    <i class="fas fa-fw fa-paw"></i><span>ZOO</span></a>
                 <div class="collapse {% if category == 'zoo' %}show{% endif %}" id="sidebarZoo">
-                    <ul>
+                    <ul class="nav flex-column ml-4">
                         <li class="{% if link == 'images' %}active{% endif %}">
-                            <a class="nav-link" href="/webs/zoo/images/index">
-                                <i class="fas fa-images fa-fw"></i>IMAGES
-                            </a>
+                            <a class="nav-link fw-bold text-white" href="/webs/zoo/images/index">
+                                <i class="fas fa-images fa-fw"></i><span>IMAGES</span></a>
                         </li>
                         <li class="{% if link == 'volunteers' %}active{% endif %}">
-                            <a class="nav-link" target="_blank"
+                            <a class="nav-link fw-bold text-white" target="_blank"
                                href="https://zooatmospheregroup.github.io/Zoo-HZ-Media-Volunteers/">
-                                <i class="fas fa-fw fa-people-group"></i>VOLUNTEERS
-                            </a>
+                                <i class="fas fa-fw fa-people-group"></i><span>VOLUNTEERS</span></a>
                         </li>
                     </ul>
                 </div>
             </li>
         {% endif %}
         {% if 'know' in _bps %}
-            <li class="nav-item {% if category == 'know' %}active{% endif %}">
-                <a data-bs-toggle="collapse" href="#sidebarKnow" aria-expanded="false"
+            <li class="shadow-lg {% if category == 'know' %}active{% endif %}">
+                <a data-bs-toggle="collapse" href="#sidebarKnow" aria-expanded="false" class="nav-link fw-bold text-info"
                    aria-controls="sidebarZoo">
-                    <i class="fas fa-fw fa-book"></i>
-                    <span> KNOW </span>
-                    <span class="menu-arrow"></span>
-                </a>
+                    <i class="fas fa-fw fa-book"></i><span>KNOW</span></a>
                 <div class="collapse {% if category == 'know' %}show{% endif %}" id="sidebarKnow">
-                    <ul>
+                    <ul class="nav flex-column">
                         <li class="{% if link == 'docs' %}active{% endif %}">
-                            <a class="nav-link" href="/webs/know/docs/index">
-                                <i class="fas fa-fw fa-book"></i>DOCS</a>
+                            <a class="nav-link fw-bold text-white" href="/webs/know/docs/index">
+                                <i class="fas fa-fw fa-book"></i><span>DOCS</span></a>
                         </li>
                         <li class="{% if link == 'sites' %}active{% endif %}">
-                            <a class="nav-link" href="/webs/know/sites/index">
-                                <i class="fas fa-fw fa-bookmark"></i>SITES</a>
+                            <a class="nav-link fw-bold text-white" href="/webs/know/sites/index">
+                                <i class="fas fa-fw fa-bookmark"></i><span>SITES</span></a>
                         </li>
                     </ul>
                 </div>
             </li>
         {% endif %}
         {% if 'invest' in _bps %}
-            <li class="nav-item {% if category == 'invest' %}active{% endif %}">
-                <a data-bs-toggle="collapse" href="#sidebarInvest" aria-expanded="false"
+            <li class="shadow-lg {% if category == 'invest' %}active{% endif %}">
+                <a data-bs-toggle="collapse" href="#sidebarInvest" aria-expanded="false" class="nav-link fw-bold text-info"
                    aria-controls="sidebarInvest">
-                    <i class="fas fa-fw fa-coins"></i>
-                    <span> INVEST </span>
-                    <span class="menu-arrow"></span>
-                </a>
+                    <i class="fas fa-fw fa-coins"></i><span>INVEST</span></a>
                 <div class="collapse {% if category == 'invest' %}show{% endif %}"
                      id="sidebarInvest">
-                    <ul>
+                    <ul class="nav flex-column">
                         <li class="{% if link == 'pys' %}active{% endif %}">
-                            <a class="nav-link" href="/webs/invest/pys/index">
-                                <i class="fa-brands fa-fw fa-python"></i>PYS</a>
+                            <a class="nav-link fw-bold text-white" href="/webs/invest/pys/index">
+                                <i class="fa-brands fa-fw fa-python"></i><span>PYS</span></a>
                         </li>
                         <li class="{% if link == 'dfs' %}active{% endif %}">
-                            <a class="nav-link" href="/webs/invest/dfs/index">
-                                <i class="fas fa-fw fa-table"></i>DFS</a>
+                            <a class="nav-link fw-bold text-white" href="/webs/invest/dfs/index">
+                                <i class="fas fa-fw fa-table"></i><span>DFS</span></a>
                         </li>
                     </ul>
                 </div>
             </li>
         {% endif %}
         {% if 'en_decrypt' in _bps %}
-            <li class="nav-item">
-                <a class="nav-link" href="/webs/en_decrypt/index">
-                    <i class="fas fa-fw fa-lock"></i>
-                    <span> EN-DECRYPT </span>
-                </a>
+            <li class="shadow-lg {% if category == 'en_decrypt' %}active{% endif %}">
+                <a class="nav-link fw-bold text-white" href="/webs/en_decrypt/index">
+                    <i class="fas fa-fw fa-lock"></i><span>EN-DECRYPT</span></a>
             </li>
         {% endif %}
 
         {% if 'security' in _bps %}
-            <li class="nav-item {% if category == 'security' %}active{% endif %}">
-                <a data-bs-toggle="collapse" href="#sidebarSEC" aria-expanded="false"
+            <li class="shadow-lg {% if category == 'security' %}active{% endif %}">
+                <a data-bs-toggle="collapse" href="#sidebarSEC" aria-expanded="false" class="nav-link fw-bold text-info"
                    aria-controls="sidebarSEC">
-                    <i class="fas fa-fw fa-hat-cowboy"></i>
-                    <span> SECURITY </span>
-                    <span class="menu-arrow"></span>
-                </a>
+                    <i class="fas fa-fw fa-hat-cowboy"></i><span>SECURITY</span></a>
                 <div class="collapse {% if category == 'security' %}show{% endif %}" id="sidebarSEC">
-                    <ul>
+                    <ul class="nav flex-column">
                         <li class="{% if link == 'tsunami' %}active{% endif %}">
-                            <a class="nav-link" href="/webs/security/tsunami/index">
-                                <i class="fas fa-fw fa-water"></i>TSUNAMI</a>
+                            <a class="nav-link fw-bold text-white" href="/webs/security/tsunami/index">
+                                <i class="fas fa-fw fa-water"></i><span>TSUNAMI</span></a>
                         </li>
                         <li class="{% if link == 'tasks' %}active{% endif %}">
-                            <a class="nav-link" href="/webs/security/snort/index">
-                                <i class="fas fa-fw fa-piggy-bank"></i>SNORT</a>
+                            <a class="nav-link fw-bold text-whited" href="/webs/security/snort/index">
+                                <i class="fas fa-fw fa-piggy-bank"></i><span>SNORT</span></a>
                         </li>
                     </ul>
                 </div>
             </li>
         {% endif %}
         {% if 'dsp' in _bps %}
-            <li class="nav-item {% if category == 'dsp' %}active{% endif %}">
-                <a data-bs-toggle="collapse" href="#sidebarDSP" aria-expanded="false"
+            <li class="shadow-lg {% if category == 'dsp' %}active{% endif %}">
+                <a data-bs-toggle="collapse" href="#sidebarDSP" aria-expanded="false" class="nav-link fw-bold text-info"
                    aria-controls="sidebarDSP">
-                    <i class="fas fa-fw fa-gear"></i>
-                    <span> DSP </span>
-                    <span class="menu-arrow"></span>
-                </a>
+                    <i class="fas fa-fw fa-gear"></i><span>DSP</span></a>
                 <div class="collapse {% if category == 'dsp' %}show{% endif %}" id="sidebarDSP">
-                    <ul>
+                    <ul class="nav flex-column p-0 pl-3">
                         <li class="{% if link == 'agents' %}active{% endif %}">
-                            <a class="nav-link" href="/webs/dsp/nodes/index">
-                                <i class="fas fa-fw fa-server"></i>NODES</a>
+                            <a class="nav-link fw-bold text-white" href="/webs/dsp/nodes/index">
+                                <i class="fas fa-fw fa-server"></i><span>NODES</span></a>
                         </li>
                         <li class="{% if link == 'tasks' %}active{% endif %}">
-                            <a class="nav-link" href="/webs/dsp/tasks/index">
-                                <i class="fas fa-fw fa-tasks"></i>TASKS</a>
+                            <a class="nav-link fw-bold text-white" href="/webs/dsp/tasks/index">
+                                <i class="fas fa-fw fa-tasks"></i><span>TASKS</span></a>
                         </li>
                         <li class="{% if link == 'yft' %}active{% endif %}">
-                            <a class="nav-link" href="/webs/dsp/yft/index">
-                                <i class="fas fa-fw fa-vials"></i>YFT</a>
+                            <a class="nav-link fw-bold text-white" href="/webs/dsp/yft/index">
+                                <i class="fas fa-fw fa-vials"></i><span>YFT</span></a>
                         </li>
                     </ul>
                 </div>
             </li>
         {% endif %}
         {% if 'history' in _bps %}
-            <li class="nav-item">
-                <a class="nav-link" href="/webs/history/index">
-                    <i class="fas fa-fw fa-history"></i>
-                    <span> HIS </span>
-                </a>
+            <li class="shadow-lg {% if category == 'history' %}active{% endif %}">
+                <a class="nav-link fw-bold text-white font-monospace" href="/webs/history/index">
+                    <i class="fas fa-fw fa-history"></i><span>HIS</span></a>
             </li>
         {% endif %}
     </ul>

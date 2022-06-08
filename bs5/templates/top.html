@@ -1,12 +1,14 @@
 <div class="menu-top pb-2">
-    <div class="input-group">
-        <input type="text" class="form-control" id="top-search" placeholder="SEARCH...">
-        <button type="button" class="btn btn-outline-info"><i class="fas fa-fw fa-search"></i></button>
-        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
-                data-bs-target="#his-modal"><i class="fas fa-fw fa-circle-exclamation"></i></button>
-        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
-                data-bs-target="#"><i class="fas fa-fw fa-lock"></i></button>
-    </div>
+    <form>
+        <div class="input-group">
+            <input type="text" class="form-control" id="top-search" placeholder="SEARCH...">
+            <button type="submit" class="btn btn-outline-info"><i class="fas fa-fw fa-search"></i></button>
+            <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
+                    data-bs-target="#his-modal"><i class="fas fa-fw fa-circle-exclamation"></i></button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                    data-bs-target="#"><i class="fas fa-fw fa-lock"></i></button>
+        </div>
+    </form>
 </div>
 <script>
     {#let io_security = io.connect(#}
