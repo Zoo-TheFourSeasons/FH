@@ -28,6 +28,6 @@ def en_decrypt(app):
     psw_stream = request.args.get('psw_stream')
     nonce = request.args.get('nonce')
     _type = request.args.get('type')
-    target = request.args.get('target')
-    data = EncryptHelper.security_by_golang(_type, psw_aes, psw_stream, nonce, target, base=APPS[app]['data'])
-    return jsonify(data)
+    for target in request.args.get('target').split(','):
+        EncryptHelper.security_by_golang(_type, psw_aes, psw_stream, nonce, target, base=APPS[app]['data'])
+    return jsonify({'status': True})
