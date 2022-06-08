@@ -140,7 +140,7 @@ def make_response_with_headers(data):
 class CodeHelper(object):
 
     def __init__(self):
-        pass
+        self.ns = None
 
     @classmethod
     def run_in_subprocess(cls, _cmd, _cwd):
@@ -228,15 +228,16 @@ class CodeHelper(object):
             print('get a new file: ', path_file)
         return path_file
 
-    @classmethod
-    def _print(cls, path_output, tid, ob):
-        f = cls.get_output_file(path_output, tid=tid)
+    def _print(self, path_output, tid, ob):
+        f = self.get_output_file(path_output, tid=tid)
         with open(f, 'a') as file:
             try:
                 if isinstance(ob, (dict, list, tuple)):
                     ob = json.dumps(ob, indent=4)
                 file.write(ob + '\n')
                 print(ob)
+                if self.ns is not None:
+                    self.ns.emit_signal('his', ob)
             except Exception as err:
                 file.write(json.dumps({'error': str(err), 'op': str(ob)}, indent=4) + '\n')
 
@@ -256,14 +257,13 @@ class CodeHelper(object):
 
         base = PATH_PROJECT if base is None else base
         target_abs = os.path.join(base, target)
-        rows = []
-
         _index = 0
-        for _file in os.listdir(target_abs):
-            if _file.startswith('.'):
-                continue
+        files = [f for f in os.listdir(target_abs) if not f.startswith('.')]
+        files.sort(reverse=True)
+        rows = []
+        for _file in files:
             _index += 1
-            if offset and _index < offset:
+            if offset and _index <= offset:
                 continue
             if limit and _index > offset + limit:
                 break
@@ -284,16 +284,13 @@ class CodeHelper(object):
                 '_size': _size,
                 'id': os.path.join(target, _file),
             })
-        total = sum([1 for _file in os.listdir(target_abs) if not _file.startswith('.')])
         # parents of the current path
         parents = []
         target = '../' + target
         target_split = target.split('/')
         for index in range(len(target_split)):
             parents.append({'i': target_split[index], 'i_path': '/'.join(target_split[1:index + 1])})
-        # sort by name
-        rows.sort(key=lambda x: x['_file']) if rows else None
-        return {'status': True, 'rows': rows, 'target': target, 'parents': parents, 'total': total}
+        return {'status': True, 'rows': rows, 'target': target, 'parents': parents, 'total': len(files)}
 
     @classmethod
     @timer
