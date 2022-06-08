@@ -1,85 +1,75 @@
-<div class="container-fluid" id="performance-main">
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box">
-                <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li><h3></h3></li>
-                        <li><h3>INVEST></h3></li>
-                        <li><h3><strong>PERFORMANCE</strong></h3></li>
-                    </ol>
-                </div>
-                <div class="btn-group mr-2">
-                    <button type="button" id="update-btn" class="btn btn-sm btn-outline-danger">Update
-                    </button>
-                </div>
-                <div id="parents" class="mt-2"></div>
-            </div>
-        </div>
+<div class="page-title-box">
+    <div class="page-title-right">
+        <ol class="breadcrumb m-0">
+            <li><h3></h3></li>
+            <li><h3>INVEST></h3></li>
+            <li><h3><strong>PERFORMANCE</strong></h3></li>
+        </ol>
     </div>
-    <!-- end page title -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover table-bordered table-condensed table-no-bordered table-centered table-nowrap mb-0"
-                           id="performance-table"
-                           data-toggle="table"
-                           data-locale="zh-CN"
-                           data-sticky-header="true"
-                           data-show-jumpto="true"
-                           data-show-detail="true"
-                           data-icon-size="sm"
-                           data-page-size="20"
-                           data-side-pagination="server"
-                           data-click-to-select="true"
-                           data-pagination="true"
-                           data-falign="center"
-                           data-search="true"
-                           data-id-field="id"
-                           data-sort-name="id"
-                           data-sort-order="desc"
-                           data-pagination-h-align="left"
-                           data-pagination-detail-h-align="right"
-                           data-unique-id="id"
-                           data-page-list="[20, 50, 500]">
-                        <thead class="table-light">
-                        <tr>
-{#'序号', '股票代码', '股票简称', '每股收益', '营业收入-营业收入', '营业收入-去年同期', '营业收入-同比增长',
+    <div class="btn-group mr-2">
+        <button type="button" id="update-btn" class="btn btn-sm btn-outline-danger">Update
+        </button>
+    </div>
+    <div id="parents" class="m-2 h5"></div>
+</div>
+<!-- end page title -->
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered table-condensed table-no-bordered table-centered table-nowrap mb-0"
+               id="performance-table"
+               data-toggle="table"
+               data-locale="zh-CN"
+               data-sticky-header="true"
+               data-show-jumpto="true"
+               data-show-detail="true"
+               data-icon-size="sm"
+               data-page-size="20"
+               data-side-pagination="server"
+               data-click-to-select="true"
+               data-pagination="true"
+               data-falign="center"
+               data-search="true"
+               data-id-field="id"
+               data-sort-name="id"
+               data-sort-order="desc"
+               data-pagination-h-align="left"
+               data-pagination-detail-h-align="right"
+               data-unique-id="id"
+               data-page-list="[20, 50, 500]">
+            <thead class="table-light">
+            <tr>
+                {#'序号', '股票代码', '股票简称', '每股收益', '营业收入-营业收入', '营业收入-去年同期', '营业收入-同比增长',
 {#       '营业收入-季度环比增长', '净利润-净利润', '净利润-去年同期', '净利润-同比增长', '净利润-季度环比增长', '每股净资产',
 {#       '净资产收益率', '所处行业', '公告日期', '市场板块', '证券类型'#}
-                            <th data-align="center" data-field="state" data-width="52px" data-checkbox="true"></th>
-                            <th data-align="center" data-width="52px" data-formatter="iFormatter">num</th>
-                            <th data-align="center" data-field="id" data-sortable="true">id</th>
-                            <th data-align="right" data-field="股票代码" data-sortable="true">代码</th>
-                            <th data-align="right" data-field="股票简称" data-sortable="true">简称</th>
-                            <th data-align="right" data-field="每股收益" data-sortable="true">每股收益</th>
-                            <th data-align="right" data-field="每股净资产" data-sortable="true">每股净资产</th>
-                            <th data-align="right" data-field="净资产收益率" data-sortable="true">净资产收益率</th>
-                            <th data-align="right" data-field="所处行业" data-sortable="true">所处行业</th>
-                            <th data-align="right" data-field="市场板块" data-sortable="true">市场板块</th>
-                            <th data-align="right" data-field="营业收入-营业收入" data-sortable="true">营业收入-营业收入</th>
-                            <th data-align="right" data-field="营业收入-去年同期" data-sortable="true">营业收入-去年同期</th>
-                            <th data-align="right" data-field="营业收入-同比增长" data-sortable="true">营业收入-同比增长</th>
-                            <th data-align="right" data-field="营业收入-季度环比增长" data-sortable="true">营业收入-季度环比增长</th>
-                            <th data-align="right" data-field="净利润-净利润" data-sortable="true">净利润-净利润</th>
-                            <th data-align="right" data-field="净利润-去年同期" data-sortable="true">净利润-去年同期</th>
-                            <th data-align="right" data-field="净利润-同比增长" data-sortable="true">净利润-同比增长</th>
-                            <th data-align="right" data-field="净利润-季度环比增长" data-sortable="true">净利润-季度环比增长</th>
-                            <th data-align="right" data-field="证券类型" data-sortable="true">证券类型</th>
-                            <th data-align="right" data-field="公告日期" data-sortable="true">公告日期</th>
-                            <th data-align="right" data-formatter="operateFormatter">operation</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div> <!-- end card-body-->
-            </div> <!-- end card-->
-        </div> <!-- end col -->
-    </div>
-    <div id="temp-container">
-    </div>
+                <th data-align="center" data-field="state" data-width="52px" data-checkbox="true"></th>
+                <th data-align="center" data-width="52px" data-formatter="iFormatter">num</th>
+                <th data-align="center" data-field="id" data-sortable="true">id</th>
+                <th data-align="right" data-field="股票代码" data-sortable="true">代码</th>
+                <th data-align="right" data-field="股票简称" data-sortable="true">简称</th>
+                <th data-align="right" data-field="每股收益" data-sortable="true">每股收益</th>
+                <th data-align="right" data-field="每股净资产" data-sortable="true">每股净资产</th>
+                <th data-align="right" data-field="净资产收益率" data-sortable="true">净资产收益率</th>
+                <th data-align="right" data-field="所处行业" data-sortable="true">所处行业</th>
+                <th data-align="right" data-field="市场板块" data-sortable="true">市场板块</th>
+                <th data-align="right" data-field="营业收入-营业收入" data-sortable="true">营业收入-营业收入</th>
+                <th data-align="right" data-field="营业收入-去年同期" data-sortable="true">营业收入-去年同期</th>
+                <th data-align="right" data-field="营业收入-同比增长" data-sortable="true">营业收入-同比增长</th>
+                <th data-align="right" data-field="营业收入-季度环比增长" data-sortable="true">营业收入-季度环比增长</th>
+                <th data-align="right" data-field="净利润-净利润" data-sortable="true">净利润-净利润</th>
+                <th data-align="right" data-field="净利润-去年同期" data-sortable="true">净利润-去年同期</th>
+                <th data-align="right" data-field="净利润-同比增长" data-sortable="true">净利润-同比增长</th>
+                <th data-align="right" data-field="净利润-季度环比增长" data-sortable="true">净利润-季度环比增长</th>
+                <th data-align="right" data-field="证券类型" data-sortable="true">证券类型</th>
+                <th data-align="right" data-field="公告日期" data-sortable="true">公告日期</th>
+                <th data-align="right" data-formatter="operateFormatter">operation</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div> <!-- end card-body-->
+</div> <!-- end card-->
+<div id="temp-container">
 </div>
 <script>
     let $main = $("#performance-main");

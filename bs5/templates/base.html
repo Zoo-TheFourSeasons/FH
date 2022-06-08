@@ -39,13 +39,11 @@
     <script src="/static/js/socket.io.min.js"></script>
     <script src="/static/js/business.js"></script>
     <!--    <script src="/static/js/app.js"></script>-->
-    <!--    <script src="/static/js/vendor.js"></script>-->
     {% block extend_js %}
     {% endblock %}
 </head>
 
-<body class="show" data-layout-color="light" data-layout-mode="fluid" data-rightbar-onstart="true"
-      data-leftbar-theme="dark">
+<body>
 <!-- Begin page -->
 <div class="wrapper">
     {% block left %}
@@ -53,11 +51,10 @@
     {% endblock %}
 
     <div class="content-page">
-        <div class="content">
+        <div class="content p-0 m-1">
             {% block top %}
             {% include 'top.html' %}
             {% endblock %}
-
             <!-- Start Content-->
             {% block content %}
             {% include 'content.html' %}
@@ -68,7 +65,6 @@
         {% block footer %}
         {# {% include 'footer.html' %}#}
         {% endblock %}
-        <!-- end Footer -->
 
     </div>
 

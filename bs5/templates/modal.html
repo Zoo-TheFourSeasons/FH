@@ -8,8 +8,13 @@
             </div>
             <div class="modal-body px-2 pt-2 pb-0">
                 <form>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">TARGET</span>
+                        <input type="text" class="form-control" readonly name="target" aria-label="PATH OUT">
+                    </div>
                     <div class="write-mdg-box mb-2">
-                        <textarea class="form-control" rows="40" name="text" spellcheck="false" tabindex="0" wrap="off"></textarea>
+                        <textarea class="form-control" rows="40" name="text" spellcheck="false" tabindex="0"
+                                  wrap="off"></textarea>
                         <img class="img-fluid" src="">
                     </div>
                     <div class="input-group mb-2">
@@ -17,19 +22,19 @@
                                class="table-striped table-hover table-bordered table-condensed table-centered table-nowrap mb-0">
                         </table>
                     </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text">TARGET</span>
-                        <input type="text" class="form-control" readonly name="target" aria-label="PATH OUT">
-                    </div>
                 </form>
             </div>
-            <div class="modal-footer px-2 pb-1">
-                <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                        class="fas fa-fw fa-code-commit"></i> COMMIT
-                </button>
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
-                        class="fas fa-fw fa-cancel"></i>CANCEL
-                </button>
+            <div class="modal-footer px-2 pb-2">
+                <div class="col-6 d-grid m-0 p-0">
+                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i> COMMIT
+                    </button>
+                </div>
+                <div class="col-6 d-grid m-0 p-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                </div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -50,13 +55,17 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                        class="fas fa-fw fa-code-commit"></i> COMMIT
-                </button>
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
-                        class="fas fa-fw fa-cancel"></i>CANCEL
-                </button>
+            <div class="modal-footer px-2 pb-2">
+                <div class="col-6 d-grid m-0 p-0">
+                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i> COMMIT
+                    </button>
+                </div>
+                <div class="col-6 d-grid m-0 p-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                </div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -97,13 +106,17 @@
                     <input type="text" hidden name="target" placeholder="target">
                 </form>
             </div>
-            <div class="modal-footer px-2 pb-1">
-                <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                        class="fas fa-fw fa-code-commit"></i> COMMIT
-                </button>
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
-                        class="fas fa-fw fa-cancel"></i>CANCEL
-                </button>
+            <div class="modal-footer px-2 pb-2">
+                <div class="col-6 d-grid m-0 p-0">
+                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i> COMMIT
+                    </button>
+                </div>
+                <div class="col-6 d-grid m-0 p-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                </div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -120,13 +133,17 @@
             <div class="modal-body px-2 pt-2 pb-0">
                 <form>
                     <div class="write-mdg-box mb-2">
-                        <textarea readonly class="form-control" rows="45" name="text" spellcheck="false" tabindex="0" wrap="off"></textarea>
+                        <textarea readonly class="form-control" rows="45" name="text" spellcheck="false" tabindex="0"
+                                  wrap="off"></textarea>
                     </div>
                 </form>
             </div>
-            <div class="modal-footer px-2 pb-1">
-                <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i class="fas fa-fw fa-cancel"></i>CANCEL
-                </button>
+            <div class="modal-footer px-2 pb-2">
+                <div class="col-12 d-grid m-0 p-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                </div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -143,21 +160,28 @@
             <div class="p-1">
                 <div class="modal-body px-2 pt-2 pb-0">
                     <form>
-                        <div class="mb-2">
-                            <label class="form-label">TEXT</label>
-                            <textarea type="text" rows="18" class="form-control" name="text" placeholder="REPTILE"></textarea>
-                        </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text">TARGET*</span>
                             <input type="text" class="form-control" name="target" aria-label="PATH OUT">
                             <span class="input-group-text">.yaml</span>
                         </div>
+                        <div class="mb-2">
+                            <textarea type="text" rows="18" class="form-control" name="text"
+                                      placeholder="REPTILE"></textarea>
+                        </div>
                     </form>
                 </div>
-                <div class="modal-footer px-2 pb-1">
-                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i class="fas fa-fw fa-code-commit"></i> COMMIT
-                    </button>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i class="fas fa-fw fa-cancel"></i>CANCEL</button>
+                <div class="modal-footer px-2 pb-2">
+                    <div class="col-6 d-grid m-0 p-0">
+                        <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                                class="fas fa-fw fa-code-commit"></i> COMMIT
+                        </button>
+                    </div>
+                    <div class="col-6 d-grid m-0 p-0">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
+                                class="fas fa-fw fa-close"></i>CLOSE
+                        </button>
+                    </div>
                 </div>
             </div>
         </div><!-- /.modal-content -->

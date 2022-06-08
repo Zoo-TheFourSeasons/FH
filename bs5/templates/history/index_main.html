@@ -1,77 +1,65 @@
-<div class="container-fluid">
-
-    <!-- start page title -->
-    <div class="row">
-        <div class="col-12">
-            <div class="page-title-box">
-                <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li><h3></h3></li>
-                        <li><h3><strong>HISTORY</strong></h3></li>
-                    </ol>
-                </div>
-                <div class="btn-group">
-                    <button type="button" id="back" class="btn btn-outline-secondary"><i
-                            class="fas fa-fw fa-backward"></i>BACK
-                    </button>
-                    <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
-                    </button>
-
-                    <button type="button" id="delete" class="btn btn-outline-danger"><i class="fas fa-fw fa-trash"></i>DELETE
-                    </button>
-                </div>
-                <div id="parents" class="mt-2"></div>
-            </div>
-        </div>
+<!-- start page title -->
+<div class="page-title-box">
+    <div class="page-title-right">
+        <ol class="breadcrumb m-0">
+            <li><h3></h3></li>
+            <li><h3><strong>HISTORY</strong></h3></li>
+        </ol>
     </div>
-    <!-- end page title -->
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover table-bordered table-condensed table-no-bordered table-centered table-nowrap mb-0"
-                           id="history-table"
-                           data-toggle="table"
-                           data-locale="zh-CN"
-                           data-sticky-header="true"
-                           data-show-jumpto="true"
-                           data-icon-size="sm"
-                           data-page-size="20"
-                           data-side-pagination="server"
-                           data-click-to-select="true"
-                           data-pagination="true"
-                           data-falign="center"
-                           data-search="true"
-                           data-id-field="id"
-                           data-sort-name="id"
-                           data-sort-order="desc"
-                           data-pagination-h-align="left"
-                           data-pagination-detail-h-align="right"
-                           data-unique-id="id"
-                           data-page-list="[20, 50, 500]">
-                        <thead class="table-light">
-                        <tr>
-                            <th data-align="center" data-field="state" data-width="52px" data-checkbox="true"></th>
-                            <th data-align="center" data-width="52px" data-formatter="iFormatter">num</th>
-                            <th data-align="center" data-field="id" data-visible="false">id</th>
-                            <th data-align="left" data-formatter="operateFormatter" data-width="140px">operation</th>
-                            <th data-align="left" data-field="_file" data-formatter="fileFormatter">file</th>
-                            <th data-align="center" data-field="_isdir" data-visible="false">isdir</th>
-                            <th data-align="right" data-field="_ctime">ctime</th>
-                            <th data-align="right" data-field="_mtime">mtime</th>
-                            <th data-align="right" data-field="_size">size</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div> <!-- end card-body-->
-            </div> <!-- end card-->
-        </div> <!-- end col -->
-    </div>
-    {% include 'modal.html' %}
+    <div class="btn-group">
+        <button type="button" id="back" class="btn btn-outline-secondary"><i
+                class="fas fa-fw fa-backward"></i>BACK
+        </button>
+        <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
+        </button>
 
-</div> <!-- container -->
+        <button type="button" id="delete" class="btn btn-outline-danger"><i class="fas fa-fw fa-trash"></i>DELETE
+        </button>
+    </div>
+    <div id="parents" class="m-2 h5"></div>
+</div>
+<!-- end page title -->
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered table-condensed table-no-bordered table-centered table-nowrap mb-0"
+               id="history-table"
+               data-toggle="table"
+               data-locale="zh-CN"
+               data-sticky-header="true"
+               data-show-jumpto="true"
+               data-icon-size="sm"
+               data-page-size="20"
+               data-side-pagination="server"
+               data-click-to-select="true"
+               data-pagination="true"
+               data-falign="center"
+               data-search="true"
+               data-id-field="id"
+               data-sort-name="id"
+               data-sort-order="desc"
+               data-pagination-h-align="left"
+               data-pagination-detail-h-align="right"
+               data-unique-id="id"
+               data-page-list="[20, 50, 500]">
+            <thead class="table-light">
+            <tr>
+                <th data-align="center" data-field="state" data-width="52px" data-checkbox="true"></th>
+                <th data-align="center" data-width="52px" data-formatter="iFormatter">num</th>
+                <th data-align="center" data-field="id" data-visible="false">id</th>
+                <th data-align="left" data-formatter="operateFormatter" data-width="140px">operation</th>
+                <th data-align="left" data-field="_file" data-formatter="fileFormatter">file</th>
+                <th data-align="center" data-field="_isdir" data-visible="false">isdir</th>
+                <th data-align="right" data-field="_ctime">ctime</th>
+                <th data-align="right" data-field="_mtime">mtime</th>
+                <th data-align="right" data-field="_size">size</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div> <!-- end card-body-->
+</div> <!-- end card-->
+{% include 'modal.html' %}
 <script>
 
     let $table = $("#history-table");
