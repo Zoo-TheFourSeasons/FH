@@ -1,10 +1,10 @@
 <div class="menu-top pb-2">
     <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search..." id="top-search">
-        <button type="button" class="btn btn-outline-info">Search</button>
-        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
-                data-bs-target="#his-modal"><i class="fas fa-fw fa-history"></i></button>
-        <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+        <input type="text" class="form-control" id="top-search" placeholder="SEARCH...">
+        <button type="button" class="btn btn-outline-info"><i class="fas fa-fw fa-search"></i></button>
+        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
+                data-bs-target="#his-modal"><i class="fas fa-fw fa-circle-exclamation"></i></button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
                 data-bs-target="#"><i class="fas fa-fw fa-lock"></i></button>
     </div>
 </div>
@@ -23,5 +23,9 @@
     io_dsp.emit('join', {'room': 'progress'});
     io_dsp.on('his', function (data) {
         $('#his-modal textarea').append(data)
+    });
+
+    $(document).ready(function () {
+        $(".modal").draggable();
     });
 </script>

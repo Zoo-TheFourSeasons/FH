@@ -2,19 +2,18 @@
 <div class="page-title-box">
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
-            {#                        <li><h3>SECURITY></h3></li>#}
             <li><h3><strong>EN-DECRYPT</strong></h3></li>
         </ol>
     </div>
     <div class="btn-group">
-        <button type="button" id="back" class="btn btn-outline-secondary"><i class="fas fa-fw fa-backward"></i>BACK
-        </button>
         <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
+        </button>
+        <button type="button" id="back" class="btn btn-outline-secondary"><i class="fas fa-fw fa-backward"></i>BACK
         </button>
         <button type="button" id="en_decrypt" class="btn btn-outline-warning"><i class="fas fa-fw fa-lock"></i>EN-DECRYPT
         </button>
     </div>
-    <div id="parents" class="m-2 h5"></div>
+    <div id="parents" class="ml-0 mb-2 mt-2 h5"></div>
 </div>
 <!-- end page title -->
 <div class="card">
@@ -83,7 +82,7 @@
         }
         return '<div class="btn-group" role="group">'
             + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
-            + 'View</button>'
+            + 'VIEW</button>'
             + '</div>';
     }
 
@@ -97,7 +96,6 @@
     }
 
     $(document).ready(function () {
-        $(".modal").draggable();
         listdir($table, '/en_decrypt/index', target, '/webs/en_decrypt/index');
 
         show_modal($("#en_decrypt"), $table, "en-decrypt-modal");

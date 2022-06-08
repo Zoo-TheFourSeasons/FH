@@ -30,3 +30,13 @@
 .modal-footer {
     justify-content: space-between;
 }
+
+.table > :not(caption) > * > * {
+    padding: .1rem .1rem;
+}
+
+.btn-group-sm > .btn, .btn-sm {
+    padding: .1rem .5rem;
+    font-size: .875rem;
+    border-radius: .2rem
+}
