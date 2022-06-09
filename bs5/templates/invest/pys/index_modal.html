@@ -3,36 +3,33 @@
      style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header bg-silver">
-                <h4 class="modal-title" id="touch-header">TOUCH PYS</h4>
+            <div class="modal-header bg-dark">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
+                    </button>
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                </div>
+                <h4 class="modal-title text-white" id="mkdir-header">TOUCH PYS</h4>
             </div>
-            <div class="p-1">
+            <form>
                 <div class="modal-body px-2 pt-2 pb-0">
-                    <form>
-                        <div class="mb-2">
-                            <label class="form-label">TEXT</label>
-                            <textarea type="text" rows="18" class="form-control" name="text" placeholder="TEXT"></textarea>
-                        </div>
-                        <div class="input-group mb-2">
-                            <span class="input-group-text">TARGET*</span>
-                            <input type="text" class="form-control" name="target" aria-label="PATH OUT">
-                            <span class="input-group-text">.py</span>
-                        </div>
-                    </form>
+
+                    <div class="mb-2">
+                        <label class="form-label">TEXT</label>
+                        <textarea type="text" rows="18" class="form-control" name="text" placeholder="TEXT"></textarea>
+                    </div>
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">TARGET*</span>
+                        <input type="text" class="form-control" name="target" aria-label="PATH OUT">
+                        <span class="input-group-text">.py</span>
+                    </div>
                 </div>
                 <div class="modal-footer px-2 pb-2">
-                    <div class="col-6 d-grid m-0 p-0">
-                        <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                                class="fas fa-fw fa-code-commit"></i> COMMIT
-                        </button>
-                    </div>
-                    <div class="col-6 d-grid m-0 p-0">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
-                                class="fas fa-fw fa-close"></i>CLOSE
-                        </button>
-                    </div>
                 </div>
-            </div>
+            </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->

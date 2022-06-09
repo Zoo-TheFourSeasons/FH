@@ -3,11 +3,19 @@
      style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header bg-silver">
-                <h4 class="modal-title" id="view-header">VIEW</h4>
+            <div class="modal-header bg-dark">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
+                    </button>
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                </div>
+                <h4 class="modal-title text-white" id="mkdir-header">VIEW</h4>
             </div>
-            <div class="modal-body px-2 pt-2 pb-0">
-                <form>
+            <form>
+                <div class="modal-body px-2 pt-2 pb-0">
                     <div class="input-group mb-2">
                         <span class="input-group-text">TARGET</span>
                         <input type="text" class="form-control" readonly name="target" aria-label="PATH OUT">
@@ -22,19 +30,9 @@
                                class="table-striped table-hover table-bordered table-condensed table-centered table-nowrap mb-0">
                         </table>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
             <div class="modal-footer px-2 pb-2">
-                <div class="col-6 d-grid m-0 p-0">
-                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-code-commit"></i> COMMIT
-                    </button>
-                </div>
-                <div class="col-6 d-grid m-0 p-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-close"></i>CLOSE
-                    </button>
-                </div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -45,27 +43,25 @@
      style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header bg-silver">
-                <h4 class="modal-title" id="mkdir-header">MKDIR</h4>
-            </div>
-            <div class="modal-body px-2 pt-2 pb-0">
-                <form>
-                    <div class="mb-2">
-                        <input type="text" class="form-control" name="dir" placeholder="MKDIR">
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer px-2 pb-2">
-                <div class="col-6 d-grid m-0 p-0">
-                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-code-commit"></i> COMMIT
+            <div class="modal-header bg-dark">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
                     </button>
-                </div>
-                <div class="col-6 d-grid m-0 p-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
                             class="fas fa-fw fa-close"></i>CLOSE
                     </button>
                 </div>
+                <h4 class="modal-title text-white" id="mkdir-header">MKDIR</h4>
+            </div>
+            <form>
+                <div class="modal-body px-2 pt-2 pb-0">
+                    <div class="mb-2">
+                        <input type="text" class="form-control" name="dir" placeholder="MKDIR">
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer px-2 pb-2">
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -76,11 +72,19 @@
      style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header bg-silver">
-                <h4 class="modal-title" id="en-decrypt-header">EN-DECRYPT</h4>
+            <div class="modal-header bg-dark">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
+                    </button>
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                </div>
+                <h4 class="modal-title text-white" id="mkdir-header">EN-DECRYPT</h4>
             </div>
-            <div class="modal-body px-2 pt-2 pb-0">
-                <form>
+            <form>
+                <div class="modal-body px-2 pt-2 pb-0">
                     <div class="mb-2">
                         <label class="form-label">AES PSW*</label>
                         <input type="text" class="form-control" name="psw_aes"
@@ -104,20 +108,10 @@
                         </select>
                     </div>
                     <input type="text" hidden name="target" placeholder="TARGET">
-                </form>
-            </div>
-            <div class="modal-footer px-2 pb-2">
-                <div class="col-6 d-grid m-0 p-0">
-                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-code-commit"></i> COMMIT
-                    </button>
                 </div>
-                <div class="col-6 d-grid m-0 p-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-close"></i>CLOSE
-                    </button>
+                <div class="modal-footer px-2 pb-2">
                 </div>
-            </div>
+            </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
@@ -127,23 +121,19 @@
      style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header bg-silver">
-                <h4 class="modal-title" id="his-header">HIS</h4>
+            <div class="modal-header bg-dark">
+                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
+                        class="fas fa-fw fa-close"></i>CLOSE
+                </button>
+                <h4 class="modal-title text-white" id="mkdir-header">CLOSE</h4>
             </div>
             <div class="modal-body px-2 pt-2 pb-0">
-                <form>
-                    <div class="write-mdg-box mb-2">
+                <div class="write-mdg-box mb-2">
                         <textarea readonly class="form-control" rows="45" name="text" spellcheck="false" tabindex="0"
                                   wrap="off"></textarea>
-                    </div>
-                </form>
+                </div>
             </div>
             <div class="modal-footer px-2 pb-2">
-                <div class="col-12 d-grid m-0 p-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-close"></i>CLOSE
-                    </button>
-                </div>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -154,36 +144,32 @@
      style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header bg-silver">
-                <h4 class="modal-title" id="touch-header">TOUCH YAML</h4>
+            <div class="modal-header bg-dark">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
+                    </button>
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                </div>
+                <h4 class="modal-title text-white" id="mkdir-header">TOUCH YAML</h4>
             </div>
-            <div class="p-1">
+            <form>
                 <div class="modal-body px-2 pt-2 pb-0">
-                    <form>
-                        <div class="input-group mb-2">
-                            <span class="input-group-text">TARGET*</span>
-                            <input type="text" class="form-control" name="target" aria-label="PATH OUT">
-                            <span class="input-group-text">.yaml</span>
-                        </div>
-                        <div class="mb-2">
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">TARGET*</span>
+                        <input type="text" class="form-control" name="target" aria-label="PATH OUT">
+                        <span class="input-group-text">.yaml</span>
+                    </div>
+                    <div class="mb-2">
                             <textarea type="text" rows="18" class="form-control" name="text"
                                       placeholder="REPTILE"></textarea>
-                        </div>
-                    </form>
+                    </div>
                 </div>
                 <div class="modal-footer px-2 pb-2">
-                    <div class="col-6 d-grid m-0 p-0">
-                        <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                                class="fas fa-fw fa-code-commit"></i> COMMIT
-                        </button>
-                    </div>
-                    <div class="col-6 d-grid m-0 p-0">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal"><i
-                                class="fas fa-fw fa-close"></i>CLOSE
-                        </button>
-                    </div>
                 </div>
-            </div>
-        </div><!-- /.modal-content -->
+            </form>
+        </div>
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
