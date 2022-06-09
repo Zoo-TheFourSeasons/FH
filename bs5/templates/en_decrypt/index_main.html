@@ -63,6 +63,11 @@
     let $table = $("#en_decrypt-table");
     let $back = $("#back");
     let target = $.url().param('target');
+    let f_index = '/webs/en_decrypt/index';
+    let b_index = '/en_decrypt/index';
+    let b_view = '/en_decrypt/view';
+    let b_ = '/en_decrypt';
+
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -73,7 +78,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="/webs/en_decrypt/index?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -82,7 +87,7 @@
         }
         return '<div class="btn-group" role="group">'
             + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
-            + 'VIEW</button>'
+            + '<i class="fa-solid fa-eye"></i></button>'
             + '</div>';
     }
 
@@ -96,15 +101,14 @@
     }
 
     $(document).ready(function () {
-        listdir($table, '/en_decrypt/index', target, '/webs/en_decrypt/index');
+        listdir($table, b_index, target, f_index);
+        view(b_view, '.view-btn');
 
         show_modal($("#en_decrypt"), $table, "en-decrypt-modal");
 
-        view('/en_decrypt/view');
-
         $("#en-decrypt-modal .commit-btn").on('click', function () {
             axios.request({
-                url: '/en_decrypt',
+                url: b_,
                 method: 'get',
                 params: {
                     'psw_aes': $('#en-decrypt-modal input[name=psw_aes]').val(),
@@ -118,6 +122,5 @@
                 console.log(error);
             });
         });
-
     })
 </script>

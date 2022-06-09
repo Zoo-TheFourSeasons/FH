@@ -78,6 +78,12 @@
     let $table = $("#agents-table");
     let $back = $("#back");
     let target = $.url().param('target');
+    let f_index = '/webs/dsp/nodes/index';
+    let b_index = '/dsp/nodes/index';
+    let b_view = '/dsp/nodes/view';
+    let b_mkdir = '/dsp/nodes/mkdir';
+    let b_delete = '/dsp/nodes/delete';
+    let b_touch = '/dsp/nodes/touch';
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -88,7 +94,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="/webs/dsp/nodes/index?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -97,7 +103,7 @@
         }
         return '<div class="btn-group" role="group">'
             + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
-            + 'VIEW</button>'
+            + '<i class="fa-solid fa-eye"></i></button>'
             + '</div>';
     }
 
@@ -111,10 +117,10 @@
 
     $(document).ready(function () {
 
-        listdir($table, '/dsp/nodes/index', target, '/webs/dsp/nodes/index');
-        view('/dsp/nodes/view');
-        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), '/dsp/nodes/mkdir', $table, target);
-        confirm_do_with_table($("#delete"), $table, "DELETE", "/dsp/nodes/delete", target);
+        listdir($table, b_index, target, f_index);
+        view(b_view, '.view-btn');
+        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete, target);
 
         $("#touch-modal .commit-btn").on('click', function () {
             let text = $('#touch-modal textarea[name=text]').val();

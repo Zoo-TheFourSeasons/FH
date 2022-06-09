@@ -66,6 +66,12 @@
     let $table = $("#dfs-table");
     let $back = $("#back");
     let target = $.url().param('target');
+    let f_index = '/webs/invest/dfs/index';
+    let b_index = '/invest/dfs/index';
+    let b_view = '/invest/dfs/view';
+    let b_mkdir = '/invest/dfs/mkdir';
+    let b_delete = '/invest/dfs/delete';
+    let b_touch = '/invest/dfs/touch';
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -76,7 +82,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="/webs/invest/dfs/index?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -85,7 +91,7 @@
         }
         return '<div class="btn-group" role="group">'
             + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
-            + 'VIEW</button>'
+            + '<i class="fa-solid fa-eye"></i></button>'
             + '</div>';
     }
 
@@ -100,9 +106,9 @@
 
     $(document).ready(function () {
 
-        listdir($table, '/invest/dfs/index', target, '/webs/invest/dfs/index');
-        view('/invest/dfs/view');
-        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), '/invest/dfs/mkdir', $table, target);
-        confirm_do_with_table($("#delete"), $table, "DELETE", "/invest/dfs/delete", target);
+        listdir($table, b_index, target, f_index);
+        view(b_view, '.view-btn');
+        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete, target);
     })
 </script>

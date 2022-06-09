@@ -76,7 +76,12 @@
     let $table = $("#scan-table");
     let $back = $("#back");
     let target = $.url().param('target');
-
+    let f_index = '/webs/security/tsunami/index';
+    let b_index = '/security/tsunami/index';
+    let b_view = '/security/tsunami/view';
+    let b_delete = '/security/tsunami/delete';
+    let b_touch = '/security/tsunami/touch';
+        
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
         return options.pageSize * (options.pageNumber - 1) + index + 1;
@@ -86,7 +91,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="/webs/security/tsunami/index?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -95,7 +100,7 @@
         }
         return '<div class="btn-group" role="group">'
             + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
-            + 'VIEW</button>'
+            + '<i class="fa-solid fa-eye"></i></button>'
             + '</div>';
     }
 
@@ -109,9 +114,9 @@
 
     $(document).ready(function () {
 
-        listdir($table, '/security/tsunami/index', target, '/webs/security/tsunami/index');
-        view('/security/tsunami/view');
-        confirm_do_with_table($("#delete"), $table, "DELETE", "/security/tsunami/delete", target);
+        listdir($table, b_index, target, f_index);
+        view(b_view, '.view-btn');
+        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete, target);
 
         $("#scan-modal .commit-btn").on('click', function () {
             task_io.emit('task', {

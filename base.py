@@ -141,6 +141,7 @@ class CodeHelper(object):
 
     def __init__(self):
         self.ns = None
+        self.current_his = None
 
     @classmethod
     def run_in_subprocess(cls, _cmd, _cwd):
@@ -228,9 +229,9 @@ class CodeHelper(object):
             print('get a new file: ', path_file)
         return path_file
 
-    def _print(self, path_output, tid, ob):
-        f = self.get_output_file(path_output, tid=tid)
-        with open(f, 'a') as file:
+    def _print(self, ob):
+        # f = self.get_output_file(path_output, tid=tid)
+        with open(self.current_his, 'a') as file:
             try:
                 if isinstance(ob, (dict, list, tuple)):
                     ob = json.dumps(ob, indent=4)
@@ -378,6 +379,7 @@ class CodeHelper(object):
     def view(cls, target: str, base: str = None, args_r: dict = None):
         base = PATH_PROJECT if base is None else base
         target_abs = os.path.join(base, target)
+        print('view', target_abs)
         if not os.path.exists(target_abs):
             return {'status': False, 'message': 'there is not exist: %s' % target, 'type': 'txt'}
         if not os.path.isfile(target_abs):

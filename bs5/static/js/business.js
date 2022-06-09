@@ -270,8 +270,8 @@ function mkdir($btn, $input_dir, url, $table, target) {
     });
 }
 
-function view(view_url) {
-    $("tbody").on('click', '.view-btn', function () {
+function view(view_url, btn) {
+    $("tbody").on('click', btn, function () {
         let target = this.name;
         let $img = $("#view-modal img");
         let $textarea = $("#view-modal textarea");

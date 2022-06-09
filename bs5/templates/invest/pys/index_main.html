@@ -74,6 +74,13 @@
     let $table = $("#pys-table");
     let $back = $("#back");
     let target = $.url().param('target');
+    let f_index = '/webs/invest/pys/index';
+    let b_index = '/invest/pys/index';
+    let b_view = '/invest/pys/view';
+    let b_mkdir = '/invest/pys/mkdir';
+    let b_delete = '/invest/pys/delete';
+    let b_touch = '/invest/pys/touch';
+    let b_execute = '/invest/pys/execute';
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -84,7 +91,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="/webs/invest/pys/index?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -93,7 +100,7 @@
         }
         return '<div class="btn-group" role="group">'
             + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
-            + 'VIEW</button>'
+            + '<i class="fa-solid fa-eye"></i></button>'
             + '</div>';
     }
 
@@ -107,11 +114,11 @@
 
     $(document).ready(function () {
 
-        listdir($table, '/invest/pys/index', target, '/webs/invest/pys/index');
-        view('/invest/pys/view');
-        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), '/invest/pys/mkdir', $table, target);
-        confirm_do_with_table($("#delete"), $table, "DELETE", "/invest/pys/delete", target);
-        confirm_do_with_table($("#execute"), $table, "EXECUTE", "/invest/pys/execute", target);
+        listdir($table, b_index, target, f_index);
+        view(b_view, '.view-btn');
+        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete, target);
+        confirm_do_with_table($("#execute"), $table, "EXECUTE", b_execute, target);
 
         $("#touch-modal .commit-btn").on('click', function () {
             let text = $('#touch-modal textarea[name=text]').val();
@@ -120,7 +127,7 @@
                 p = target + '/' + p
             }
             axios.request({
-                url: '/invest/pys/touch',
+                url: b_touch,
                 method: 'get',
                 params: {'text': text, 'target': p + '.py'}
             }).then(function (response) {
@@ -135,7 +142,7 @@
             let text = $('#view-modal textarea[name=text]').val();
             let p = $('#view-modal input[name=target]').val();
             axios.request({
-                url: '/invest/pys/touch',
+                url: b_touch,
                 method: 'get',
                 params: {'text': text, 'target': p}
             }).then(function (response) {

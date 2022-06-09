@@ -73,6 +73,13 @@
     let $table = $("#yft-table");
     let $back = $("#back");
     let target = $.url().param('target');
+    let f_index = '/webs/dsp/yft/index';
+    let b_index = '/dsp/yft/index';
+    let b_view = '/dsp/yft/view';
+    let b_mkdir = '/dsp/yft/mkdir';
+    let b_delete = '/dsp/yft/delete';
+    let b_touch = '/dsp/yft/touch';
+    let b_his = '/dsp/yft/history';
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -83,7 +90,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="/webs/dsp/yft/index?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -92,9 +99,13 @@
         }
         return '<div class="btn-group" role="group">'
             + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
-            + 'VIEW</button>'
-            + '<button type="button" name="' + row.id + '" class="btn btn-outline-info btn-sm download-btn">'
-            + 'DLOAD</button>'
+            + '<i class="fa-solid fa-eye"></i></button>'
+            + '<button type="button" name="' + row.id + '" class="btn btn-outline-dark btn-sm download-btn">'
+            + '<i class="fa-solid fa-download"></i></button>'
+            + '<button type="button" name="' + row.id + '" class="btn btn-outline-dark btn-sm execute-btn">'
+            + '<i class="fas fa-fw fa-play"></i></button>'
+            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-dark btn-sm his-btn">'
+            + '<i class="fas fa-fw fa-history"></i></button>'
             + '</div>';
     }
 
@@ -106,14 +117,37 @@
         });
     }
 
+    let signal = 'yft';
+    let action = 'yft:execute';
+
     $(document).ready(function () {
 
-        listdir($table, '/dsp/yft/index', target, '/webs/dsp/yft/index');
-        view('/dsp/yft/view');
-        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), '/dsp/yft/mkdir', $table, target);
+        listdir($table, b_index, target, f_index);
+        view(b_view, '.view-btn');
+        view(b_his, '.his-btn');
 
-        confirm_do_ns_with_table($("#execute"), $table, "EXECUTE", target, 'yft', "yft:execute", io_dsp);
-        confirm_do_with_table($("#delete"), $table, "DELETE", "/dsp/yft/delete", target);
+        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete, target);
+        confirm_do_ns_with_table($("#execute"), $table, "EXECUTE", target, signal, action, io_dsp);
+
+        $("tbody").on('click', '.execute-btn', function () {
+            let params;
+            if (target === undefined) {
+                params = {
+                    'action': action,
+                    'IS_PARALLEL': false,
+                    'params': {'files': this.name, 'target': ''}
+                };
+            } else {
+                params = {
+                    'action': action,
+                    'IS_PARALLEL': false,
+                    'params': {'files': this.name, 'target': target}
+                };
+            }
+            console.info(params);
+            io_dsp.emit(signal, params);
+        });
 
         $("#touch-modal .commit-btn").on('click', function () {
             let text = $('#touch-modal textarea[name=text]').val();
@@ -122,7 +156,7 @@
                 p = target + '/' + p
             }
             axios.request({
-                url: '/dsp/yft/touch',
+                url: b_touch,
                 method: 'get',
                 params: {'text': text, 'target': p + '.yaml'}
             }).then(function (response) {
@@ -137,7 +171,7 @@
             let text = $('#view-modal textarea[name=text]').val();
             let p = $('#view-modal input[name=target]').val();
             axios.request({
-                url: '/dsp/yft/touch',
+                url: b_touch,
                 method: 'get',
                 params: {'text': text, 'target': p}
             }).then(function (response) {

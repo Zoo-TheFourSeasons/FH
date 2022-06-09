@@ -72,6 +72,12 @@
     let $table = $("#tasks-table");
     let $back = $("#back");
     let target = $.url().param('target');
+    let f_index = '/webs/dsp/tasks/index';
+    let b_index = '/dsp/tasks/index';
+    let b_view = '/dsp/tasks/view';
+    let b_mkdir = '/dsp/tasks/mkdir';
+    let b_delete = '/dsp/tasks/delete';
+    let b_touch = '/dsp/tasks/touch';
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -82,7 +88,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="/webs/dsp/tasks/index?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -91,7 +97,7 @@
         }
         return '<div class="btn-group" role="group">'
             + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
-            + 'VIEW</button>'
+            + '<i class="fa-solid fa-eye"></i></button>'
             + '</div>';
     }
 
@@ -105,8 +111,9 @@
 
     $(document).ready(function () {
 
-        listdir($table, '/dsp/tasks/index', target, '/webs/dsp/tasks/index');
-        view('/dsp/tasks/view');
-
+        listdir($table, b_index, target, f_index);
+        view(b_view, '.view-btn');
+        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete, target);
     })
 </script>
