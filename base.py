@@ -253,7 +253,7 @@ class CodeHelper(object):
 
     @classmethod
     @timer
-    def listdir(cls, target: str, base: str = None, args_r: dict = None):
+    def listdir(cls, target: str, base: str = None, args_r: dict = None, suffix=None):
         _, _, _, offset, limit = cls.__parser_request_args(args_r)
 
         base = PATH_PROJECT if base is None else base
@@ -263,12 +263,14 @@ class CodeHelper(object):
         files.sort(reverse=True)
         rows = []
         for _file in files:
+            _f = os.path.join(target_abs, _file)
+            if suffix and os.path.isfile(_f) and not _file.endswith(suffix):
+                continue
             _index += 1
             if offset and _index <= offset:
                 continue
             if limit and _index > offset + limit:
                 break
-            _f = os.path.join(target_abs, _file)
             _stat = os.stat(_f)
             _ctime = _stat.st_ctime
             _mtime = _stat.st_mtime
