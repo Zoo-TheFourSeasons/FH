@@ -52,14 +52,14 @@
             <thead class="table-light">
             <tr>
                 <th data-align="center" data-field="state" data-width="52px" data-checkbox="true"></th>
-                <th data-align="center" data-width="52px" data-formatter="iFormatter">num</th>
-                <th data-align="center" data-field="id" data-visible="false">id</th>
-                <th data-align="left" data-formatter="operateFormatter" data-width="140px">operation</th>
-                <th data-align="left" data-field="_file" data-formatter="fileFormatter">file</th>
-                <th data-align="center" data-field="_isdir" data-visible="false">isdir</th>
-                <th data-align="right" data-field="_ctime">ctime</th>
-                <th data-align="right" data-field="_mtime">mtime</th>
-                <th data-align="right" data-field="_size">size</th>
+                <th data-align="center" data-width="52px" data-formatter="iFormatter">NUM</th>
+                <th data-align="center" data-field="id" data-visible="false">ID</th>
+                <th data-align="left" data-formatter="operateFormatter" data-width="140px">OPERATION</th>
+                <th data-align="left" data-field="_file" data-formatter="fileFormatter">FILE</th>
+                <th data-align="center" data-field="_isdir" data-visible="false">ISDIR</th>
+                <th data-align="right" data-field="_ctime">CTIME</th>
+                <th data-align="right" data-field="_mtime">MTIME</th>
+                <th data-align="right" data-field="_size">SIZE</th>
             </tr>
             </thead>
             <tbody>
@@ -124,37 +124,27 @@
         show_modal($("#operates"), $table, "operates-modal");
         show_modal($("#en-decrypt"), $table, "en-decrypt-modal");
 
-        view('/zoo/view');
-
         $("#en-decrypt-modal .commit-btn").on('click', function () {
-            axios.request({
-                url: '/zoo/images/en-decrypt',
-                method: 'get',
-                params: {
+            get({
+                'url': '/zoo/images/en-decrypt', 'btn': $(this),
+                'data': {
                     'psw_aes': $('#en-decrypt-modal input[name=psw_aes]').val(),
                     'psw_stream': $('#en-decrypt-modal input[name=psw_stream]').val(),
                     'nonce': $('#en-decrypt-modal input[name=nonce]').val(),
                     'target': $('#en-decrypt-modal input[name=target]').val(),
                     'type': $('#en-decrypt-modal select[name=type]').val(),
-                }
-            }).then(function (response) {
-            }).catch(function (error) {
-                console.log(error);
+                },
             });
         });
 
         $("#operates-modal .commit-btn").on('click', function () {
-            axios.request({
-                url: '/zoo/images/operate',
-                method: 'get',
-                params: {
+            get({
+                'url': '/zoo/images/operate', 'btn': $(this),
+                'data': {
                     'operate': $('#operates-modal select[name=operate]').val(),
                     'target': $('#operates-modal input[name=target]').val(),
                     'path_out': $('#operates-modal input[name=path_out]').val(),
-                }
-            }).then(function (response) {
-            }).catch(function (error) {
-                console.log(error);
+                },
             });
         });
 

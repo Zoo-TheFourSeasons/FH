@@ -48,14 +48,14 @@
             <thead class="table-light">
             <tr>
                 <th data-align="center" data-field="state" data-width="52px" data-checkbox="true"></th>
-                <th data-align="center" data-width="52px" data-formatter="iFormatter">num</th>
-                <th data-align="center" data-field="id" data-visible="false">id</th>
-                <th data-align="left" data-formatter="operateFormatter" data-width="140px">operation</th>
-                <th data-align="left" data-field="_file" data-formatter="fileFormatter">file</th>
-                <th data-align="center" data-field="_isdir" data-visible="false">isdir</th>
-                <th data-align="right" data-field="_ctime">ctime</th>
-                <th data-align="right" data-field="_mtime">mtime</th>
-                <th data-align="right" data-field="_size">size</th>
+                <th data-align="center" data-width="52px" data-formatter="iFormatter">NUM</th>
+                <th data-align="center" data-field="id" data-visible="false">ID</th>
+                <th data-align="left" data-formatter="operateFormatter" data-width="140px">OPERATION</th>
+                <th data-align="left" data-field="_file" data-formatter="fileFormatter">FILE</th>
+                <th data-align="center" data-field="_isdir" data-visible="false">ISDIR</th>
+                <th data-align="right" data-field="_ctime">CTIME</th>
+                <th data-align="right" data-field="_mtime">MTIME</th>
+                <th data-align="right" data-field="_size">SIZE</th>
             </tr>
             </thead>
             <tbody>
@@ -128,30 +128,22 @@
             if (target) {
                 p = target + '/' + p
             }
-            axios.request({
-                url: '/dsp/nodes/touch',
-                method: 'get',
-                params: {'text': text, 'target': p + '.yaml'}
-            }).then(function (response) {
-                $table.bootstrapTable('refresh');
-                console.log(response.data);
-            }).catch(function (error) {
-                console.log(error);
+            get({
+                'url': b_touch, 'btn': $(this), 'data': {'text': text, 'target': p + '.yaml'},
+                'success': function (rsp) {
+                    $table.bootstrapTable('refresh');
+                }
             });
         });
 
         $("#view-modal .commit-btn").on('click', function () {
             let text = $('#view-modal textarea[name=text]').val();
             let p = $('#view-modal input[name=target]').val();
-            axios.request({
-                url: '/dsp/nodes/touch',
-                method: 'get',
-                params: {'text': text, 'target': p}
-            }).then(function (response) {
-                $table.bootstrapTable('refresh');
-                console.log(response.data);
-            }).catch(function (error) {
-                console.log(error);
+            get({
+                'url': b_touch, 'btn': $(this), 'data': {'text': text, 'target': p},
+                'success': function (rsp) {
+                    $table.bootstrapTable('refresh');
+                }
             });
         });
     })

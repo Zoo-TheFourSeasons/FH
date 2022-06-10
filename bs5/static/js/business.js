@@ -178,11 +178,11 @@ function confirm_do_with_table($btn, $table, title, url, target) {
                 text: 'YES',
                 action: function () {
                     let select = get_selected($table, false);
-                    axios.request({url: url, method: 'get', params: {'files': select.ids, 'target': target}}).then(function (response) {
-                        $table.bootstrapTable('refresh');
-                        console.log(response.data);
-                    }).catch(function (error) {
-                        console.log(error);
+                    get({
+                        'url': url, 'btn': $btn, 'data': {'files': select.ids, 'target': target},
+                        'success': function () {
+                            $table.bootstrapTable('refresh');
+                        }
                     });
                 }
             },
@@ -244,10 +244,7 @@ function confirm_do($btn, title, url, data) {
             doKey: {
                 text: 'YES',
                 action: function () {
-                    axios.request({url: url, method: 'get', params: data}).then(function (response) {
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
+                    get({'url': url, 'data': data, 'btn': $btn});
                 }
             },
             cancel: {text: 'CLOSE'}
@@ -257,15 +254,19 @@ function confirm_do($btn, title, url, data) {
 
 function mkdir($btn, $input_dir, url, $table, target) {
     $btn.on('click', function () {
+        console.info('disabled');
         let p = $input_dir.val();
         if (target) {
             p = target + '/' + p;
         }
-        axios.request({url: url, method: 'get', params: {'target': p}}).then(function (response) {
-            $table.bootstrapTable('refresh');
-            console.log(response.data);
-        }).catch(function (error) {
-            console.log(error);
+        get({
+            'url': url,
+            'data': {'target': p},
+            'btn': $(this),
+            'success': function (rsp) {
+                $table.bootstrapTable('refresh');
+                console.log(rsp.data);
+            }
         });
     });
 }
@@ -285,36 +286,38 @@ function view(view_url, btn) {
         console.log('view:' + view_url);
         console.log('target:' + target);
 
-        axios.request({url: view_url + '?target=' + target, method: 'get'}).then(function (response) {
-            let type = response.data.type;
-            let rows = response.data.rows;
-            if (type === 'img') {
-                $img.attr("src", rows);
-                $img.show();
-            } else if (type === 'txt') {
-                $textarea.val(rows);
-                $textarea.show();
-                $input.val(target);
-                $commit.show()
-            } else if (type === 'xls') {
-                $table.bootstrapTable('destroy');
-                $table.bootstrapTable({
-                    columns: response.data.columns,
-                    data: response.data.rows,
-                    cache: false,
-                    striped: true,
-                    sidePagination: "client",
-                    sortOrder: "desc",
-                    pageSize: 15,
-                    width: 667,
-                    locale: "zh-CN",
-                    pageList: "[15]",
-                    pagination: true,
-                });
-                $table.show();
+        get({
+            'url': view_url + '?target=' + target,
+            'btn': $(this),
+            'success': function (rsp) {
+                let type = rsp.data.type;
+                let rows = rsp.data.rows;
+                if (type === 'img') {
+                    $img.attr("src", rows);
+                    $img.show();
+                } else if (type === 'txt') {
+                    $textarea.val(rows);
+                    $textarea.show();
+                    $input.val(target);
+                    $commit.show()
+                } else if (type === 'xls') {
+                    $table.bootstrapTable('destroy');
+                    $table.bootstrapTable({
+                        columns: rsp.data.columns,
+                        data: rsp.data.rows,
+                        cache: false,
+                        striped: true,
+                        sidePagination: "client",
+                        sortOrder: "desc",
+                        pageSize: 15,
+                        width: 667,
+                        locale: "zh-CN",
+                        pageList: "[15]",
+                        pagination: true,
+                    });
+                    $table.show();
+                }
             }
-        }).catch(function (error) {
-            console.log(error);
         });
     });
 }
@@ -328,22 +331,39 @@ function listdir($table, url_index, target, url_item) {
             return params
         },
         ajax: function (request) {
-            axios.request({url: url_index, method: 'get', params: request.data})
-                .then(function (response) {
+            get({
+                'url': url_index,
+                'data': request.data,
+                'success': function (rsp) {
                     request.success({
-                        row: response.data
+                        row: rsp.data
                     });
-                    let parents = response.data.parents;
+                    let parents = rsp.data.parents;
                     let ps = [];
                     for (let i = 0; i < parents.length; i++) {
                         ps.push("<a href='" + url_item + "?target=" + parents[i]['i_path'] + "'><strong>" + parents[i]['i'] + "</strong></a>");
                     }
                     $("#parents").empty();
                     $("#parents").prepend(ps.join(' / '));
-                    $table.bootstrapTable('load', response.data);
-                })
-                .catch(function (error) {
-                });
+                    $table.bootstrapTable('load', rsp.data);
+                }
+            });
+            // axios.request({url: url_index, method: 'get', params: request.data})
+            //     .then(function (response) {
+            //         request.success({
+            //             row: response.data
+            //         });
+            //         let parents = response.data.parents;
+            //         let ps = [];
+            //         for (let i = 0; i < parents.length; i++) {
+            //             ps.push("<a href='" + url_item + "?target=" + parents[i]['i_path'] + "'><strong>" + parents[i]['i'] + "</strong></a>");
+            //         }
+            //         $("#parents").empty();
+            //         $("#parents").prepend(ps.join(' / '));
+            //         $table.bootstrapTable('load', response.data);
+            //     })
+            //     .catch(function (error) {
+            //     });
         },
     });
 
