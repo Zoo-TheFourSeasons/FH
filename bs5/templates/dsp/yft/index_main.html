@@ -69,17 +69,18 @@
 <!-- end row -->
 {% include 'modal.html' %}
 <script>
-
+    let Model = {
+        'font': '/webs/dsp/yft/index',
+        'index': '/dsp/yft/index',
+        'view': '/dsp/yft/view',
+        'mkdir': '/dsp/yft/mkdir',
+        'delete': '/dsp/yft/delete',
+        'touch': '/dsp/yft/touch',
+        'his': '/dsp/yft/history',
+    };
     let $table = $("#yft-table");
     let $back = $("#back");
     let target = $.url().param('target');
-    let f_index = '/webs/dsp/yft/index';
-    let b_index = '/dsp/yft/index';
-    let b_view = '/dsp/yft/view';
-    let b_mkdir = '/dsp/yft/mkdir';
-    let b_delete = '/dsp/yft/delete';
-    let b_touch = '/dsp/yft/touch';
-    let b_his = '/dsp/yft/history';
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -90,7 +91,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + Model.font + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -122,12 +123,12 @@
 
     $(document).ready(function () {
 
-        listdir($table, b_index, target, f_index);
-        view(b_view, '.view-btn');
-        view(b_his, '.his-btn');
+        listdir($table, Model.index, target, Model.font);
+        view(Model.view, '.view-btn');
+        view(Model.his, '.his-btn');
 
-        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
-        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete);
+        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), Model.mkdir, $table, target);
+        confirm_do_with_table($("#delete"), $table, "DELETE",  Model.delete);
         confirm_do_ns_with_table($("#execute"), $table, "EXECUTE", target, signal, action, io_dsp);
 
         $("tbody").on('click', '.execute-btn', function () {
@@ -146,7 +147,7 @@
                 p = target + '/' + p
             }
             get({
-                'url': b_touch, 'btn': $(this), 'data': {'text': text, 'target': p + '.yaml'},
+                'url': Model.touch, 'btn': $(this), 'data': {'text': text, 'target': p + '.yaml'},
                 'success': function (rsp) {
                     $table.bootstrapTable('refresh');
                 }
@@ -157,7 +158,7 @@
             let text = $('#view-modal textarea[name=text]').val();
             let p = $('#view-modal input[name=target]').val();
             get({
-                'url': b_touch, 'btn': $(this), 'data': {'text': text, 'target': p},
+                'url': Model.touch, 'btn': $(this), 'data': {'text': text, 'target': p},
                 'success': function (rsp) {
                     $table.bootstrapTable('refresh');
                 }
