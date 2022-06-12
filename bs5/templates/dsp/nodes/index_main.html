@@ -66,14 +66,6 @@
 <!-- end row -->
 {% include 'modal.html' %}
 <script>
-    let task_io = io.connect(
-        'http://' + document.domain + (location.port ? ":" + location.port : "") + '/security',
-        {'sync disconnect on unload': true});
-
-    task_io.emit('join', {'room': 'progress'});
-    task_io.on('progress', function (data) {
-        console.log('data', data);
-    });
 
     let $table = $("#agents-table");
     let $back = $("#back");
