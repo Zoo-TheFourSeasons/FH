@@ -3,7 +3,7 @@
     <div class="page-title-right">
         <ol class="breadcrumb m-0">
             <li><h3>DSP></h3></li>
-            <li><h3><strong>AGENTS</strong></h3></li>
+            <li><h3><strong>NODES</strong></h3></li>
         </ol>
     </div>
     <div class="btn-group">
@@ -120,7 +120,7 @@
         listdir($table, b_index, target, f_index);
         view(b_view, '.view-btn');
         mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
-        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete, target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete);
 
         $("#touch-modal .commit-btn").on('click', function () {
             let text = $('#touch-modal textarea[name=text]').val();

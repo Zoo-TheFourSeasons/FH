@@ -141,6 +141,7 @@ class CodeHelper(object):
 
     def __init__(self):
         self.ns = None
+        self.task_id = None
         self.current_his = None
 
     @classmethod
@@ -229,7 +230,7 @@ class CodeHelper(object):
             print('get a new file: ', path_file)
         return path_file
 
-    def _print(self, ob):
+    def print(self, ob):
         # f = self.get_output_file(path_output, tid=tid)
         with open(self.current_his, 'a') as file:
             try:
@@ -238,7 +239,7 @@ class CodeHelper(object):
                 file.write(ob + '\n')
                 print(ob)
                 if self.ns is not None:
-                    self.ns.emit_signal('his', ob)
+                    self.ns.emit_signal('his', ob + '\n')
             except Exception as err:
                 file.write(json.dumps({'error': str(err), 'op': str(ob)}, indent=4) + '\n')
 
@@ -530,6 +531,10 @@ class Pickled(metaclass=TimerMeta):
 
 
 class WebSocketHelper(Namespace, CodeHelper):
+
+    def __init__(self, *args, **kwargs):
+        CodeHelper.__init__(self)
+        Namespace.__init__(self, *args, **kwargs)
 
     def on_connect(self):
         return True

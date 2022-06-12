@@ -11,13 +11,13 @@
     </form>
 </div>
 <script>
-    {#let io_security = io.connect(#}
-    {#    'http://' + document.domain + (location.port ? ":" + location.port : "") + '/security',#}
-    {#    {'sync disconnect on unload': true});#}
-    {#io_security.emit('join', {'room': 'progress'});#}
-    {#io_security.on('progress', function (data) {#}
-    {#    console.log('data', data);#}
-    {# });#}
+    let io_security = io.connect(
+        'http://' + document.domain + (location.port ? ":" + location.port : "") + '/security',
+        {'sync disconnect on unload': true});
+    io_security.emit('join', {'room': 'progress'});
+    io_security.on('his', function (data) {
+        $('#his-modal textarea').append(data)
+    });
 
     let io_dsp = io.connect(
         'http://' + document.domain + (location.port ? ":" + location.port : "") + '/dsp',

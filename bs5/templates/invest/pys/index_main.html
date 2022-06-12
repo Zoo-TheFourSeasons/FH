@@ -117,8 +117,8 @@
         listdir($table, b_index, target, f_index);
         view(b_view, '.view-btn');
         mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
-        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete, target);
-        confirm_do_with_table($("#execute"), $table, "EXECUTE", b_execute, target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete);
+        confirm_do_with_table($("#execute"), $table, "EXECUTE", b_execute);
 
         $("#touch-modal .commit-btn").on('click', function () {
             let text = $('#touch-modal textarea[name=text]').val();

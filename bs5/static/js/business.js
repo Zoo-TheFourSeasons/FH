@@ -158,7 +158,7 @@ function get_selected($table, with_version) {
     return {'ids': ids_.join(',')};
 }
 
-function confirm_do_with_table($btn, $table, title, url, target) {
+function confirm_do_with_table($btn, $table, title, url) {
     $btn.confirm({
         closeIcon: true,
         theme: 'supervan',
@@ -179,7 +179,7 @@ function confirm_do_with_table($btn, $table, title, url, target) {
                 action: function () {
                     let select = get_selected($table, false);
                     get({
-                        'url': url, 'btn': $btn, 'data': {'files': select.ids, 'target': target},
+                        'url': url, 'btn': $btn, 'data': {'target': select.ids},
                         'success': function () {
                             $table.bootstrapTable('refresh');
                         }

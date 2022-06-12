@@ -64,14 +64,6 @@
 {% include 'modal.html' %}
 {% include folder + '/index_modal.html' %}
 <script>
-    let task_io = io.connect(
-        'http://' + document.domain + (location.port ? ":" + location.port : "") + '/security',
-        {'sync disconnect on unload': true});
-
-    task_io.emit('join', {'room': 'progress'});
-    task_io.on('progress', function (data) {
-        console.log('data', data);
-    });
 
     let $table = $("#scan-table");
     let $back = $("#back");
@@ -116,10 +108,10 @@
 
         listdir($table, b_index, target, f_index);
         view(b_view, '.view-btn');
-        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete, target);
+        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete);
 
         $("#scan-modal .commit-btn").on('click', function () {
-            task_io.emit('task', {
+            io_security.emit('task', {
                 'action': 'tsunami:scan',
                 'IS_PARALLEL': false,
                 'params': {
