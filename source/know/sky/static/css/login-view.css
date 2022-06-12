@@ -1,0 +1,162 @@
+body{
+    font-family: Kohinoor,"Microsoft YaHei", Arial, sans-serif;
+    background-image: url("/static/img/background.jpg");
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    min-width: 800px;
+    min-height: 500px;
+}
+html, body {
+    overflow: hidden;
+}
+.login-content {
+    margin: 140px auto 0 auto;
+}
+.login-content p {
+    color: #fff;
+    font-size: 22px;
+    text-align: center;
+}
+.l-box{
+    position: absolute;
+    left: 50%;
+    margin-left: -150px;
+    top: 190px;
+    width: 320px;  
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    z-index: 100;
+}
+.l-logo img{
+    /*padding-top: -20px;*/
+    margin-bottom: -4px;
+    margin-top: -11px;
+    padding-left: 18%;
+    /*padding-bottom: -20px;*/
+    /*padding: 20px 30px;*/
+}
+
+.l-logo{
+    padding-bottom: 12%;
+}
+.l-logo p {
+    font-size: 200%;
+    text-shadow: 2px 8px 4px #111111;
+}
+
+.l-box h4 {
+    margin-top: 100px;
+    color: whitesmoke;
+    text-align: center;
+    text-shadow: 2px 2px 7px #111111;
+}
+
+.l-box .input-prepend {
+    margin: 0 30px 20px 30px;
+}
+.l-box .input-prepend input[type="text"],
+.l-box .input-prepend input[type="password"] {
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-left: 0;
+    height: 30px;
+    font-size: 16px;
+    width: 205px
+}
+.verification-code {
+    border-top: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-left: 2px solid #ccc;
+    display: inherit;
+    margin-left: -3px;
+    padding: 4px 6px;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    height: 30px;
+    width: 65px;
+    background-color: #fff;
+}
+.verification-code img {
+    width: 65px;
+    height: 30px;
+}
+.l-box .input-prepend .add-on {
+    height: 30px;
+}
+.l-attach {
+    margin: -10px 30px 0 30px;
+    color: #fff;
+}
+.l-attach label input {
+    margin: 0 8px 0 0;
+}
+.l-attach .l-error {
+    color: red;
+    /*color: #fff;*/
+    font-size: 15px;
+}
+.l-attach input span{
+    font-size: 10px;
+    color: #2d3e58;
+    width: 110px;
+}
+.l-additional {
+    margin: -5px 30px 40px 30px;
+    font-size: 13px;
+}
+/*.l-additional #forgot {
+    float: left;
+}
+.l-additional #create {
+    float: right;
+}*/
+.l-buttons {
+    margin: 0 30px;
+}
+.l-buttons .left {
+    position: absolute;
+    margin-top: 5px;
+    background-color: #3468af;
+    background-color: rgba(52, 104, 175, 0.3);
+    height: 30px;
+    width: 90px;
+    padding: 10px 15px;
+    display: inline;
+    float: left;
+}
+.l-buttons .right {
+    margin-top: 5px;
+    background-color: #17c4bb;
+    background-color: rgba(23, 196, 187, 0.3);
+    height: 50px;
+    text-align: center;
+    float: right;
+    display: inline;
+}
+.l-buttons .right a:hover {
+    background-color: rgba(23, 196, 187, 0.8);
+}
+.l-buttons .right a{
+    color: #fff;
+    font-size: 18px;
+    display: inline-block;
+    padding: 15px 100px;
+}
+
+.l-buttons.hidden {
+    display: none;
+}
+
+#foot{
+    height: 70%;
+    text-align: center;
+    font-size: large;
+    color: whitesmoke;
+}

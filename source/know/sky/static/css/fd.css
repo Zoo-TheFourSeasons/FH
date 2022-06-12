@@ -1,0 +1,139 @@
+@CHARSET "UTF-8";
+.fd-menu{
+  min-width:940px;
+  margin:5px 0;
+  padding:5px;
+  background-color:#f9f9f9;
+  border-bottom:1px solid #ddd;
+  border-top:1px solid #ddd;  
+}
+.fd-menu .input-prepend .add-on,
+.fd-menu .input-append .add-on{
+  background-color: #eee;
+}
+.fd-task{
+  width:100%;
+  min-height:320px;
+  min-width:940px;
+  overflow-x:auto;
+  /*border:1px solid #ddd;*/
+}
+.fd-task .table{
+  white-space:nowrap;
+  margin:0;
+  border-bottom:1px solid #ddd;
+}
+.fd-task .table tr{
+  cursor:pointer;
+}
+.fd-task .table td,
+.fd-task .table th{
+  padding:4px 10px;
+  /*border-right:1px solid #ddd;*/
+}
+.fd-task .table thead{
+  /*background-color:#eee;*/
+}
+.fd-task table.items tr.selected td{
+  background:#d6e7fc;
+  border-top:1px solid #7da2ce;
+  border-bottom:1px solid #7da2ce;  
+}
+
+.fd-task .label{
+  width:20px;
+  line-height:16px;
+  padding:0 3px;
+  margin:2px;
+  vertical-align:top; 
+  text-align:center;
+}
+.fd-task .label-GB{
+  background-color: #003;
+}
+.fd-task .label-MB{
+  background-color: #09c;  
+}
+.fd-task .label-KB{
+  background-color: #0c9;  
+}
+.fd-task-view .view-item{
+  height:42px;
+  line-height:20px;
+  border:1px solid #ddd;
+  margin:0 0 8px 0;
+  padding:0 10px 0 40px;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+.fd-task-view .view-item.ok{
+  border:1px solid #468847;  
+}
+.fd-task-view .view-item.no{
+  border:1px solid #b94a48;  
+}
+.fd-task-view .view-item .item-status{
+  width:30px;
+  height:40px;
+  line-height:40px;
+  margin-left:-40px;
+  text-align:center;
+  float:left;
+  background-color:#ccc;
+  color:#fff;  
+}
+.fd-task-view .view-item.ok .item-status{
+  background-color:#468847;
+}
+.fd-task-view .view-item.no .item-status{
+  background-color:#b94a48;
+}
+
+.fd-node{
+  min-height:300px;
+  margin:15px 0;
+  padding:0;
+  border:1px solid #EEE;
+}
+.fd-node .table{
+  margin:0;
+}
+.fd-node table.items tr.selected td{
+  background:#ffffff; 
+}
+
+.fd-node .label{
+  height:20px;
+  line-height:20px;
+  margin:5px;
+  padding:0px 5px;
+  vertical-align:top;
+}
+.fd-node .grid-view .summary{
+  text-align:right;
+}
+
+/*rewrite*/
+.grid-view{
+  padding:0;
+}
+.grid-view .summary{
+  height:20px;
+  line-height:20px;
+  margin:5px 0;
+  text-align: left;
+  font-size:12px;
+}
+.pagination ul{
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;  
+}
+.pagination ul > li > a,
+.pagination ul > li > span{
+  width:20px;
+  height:20px;
+  line-height:20px;
+  padding:5px;
+  text-align:center;
+}

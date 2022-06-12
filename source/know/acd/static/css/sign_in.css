@@ -1,0 +1,23 @@
+
+body {
+    background: url("/static/img/banner.jpg") no-repeat top;
+    background-size: 100%;
+}
+
+form {
+    margin-top: 25%;
+    margin-left: 17%;
+
+}
+
+form div{
+    width: 369px;
+}
+
+button {
+    width: 100%;
+}
+
+#message{
+    margin-left: 12%;
+}
