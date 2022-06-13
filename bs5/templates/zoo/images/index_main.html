@@ -151,7 +151,7 @@
         '$btn': $("#operates-modal .commit-btn"),
         'model_id': 'operates-modal',
         'f': function () {
-            commit_from_model(this, Model, "OPERATE");
+            commit_from_model(this, Model, false);
         }
     };
     Model.operate.show = {

@@ -82,27 +82,27 @@
             <div class="modal-body px-2 pt-2 pb-0">
                 <div class="mb-2">
                     <label class="form-label">AES PSW*</label>
-                    <input type="text" class="form-control" name="psw_aes"
+                    <input type="text" class="form-control f-data" name="psw_aes"
                            placeholder="AES PASSWORD FOR EN-DECRYPT, ******ZOO">
                 </div>
                 <div class="mb-2">
                     <label class="form-label">STREAM PSW*</label>
-                    <input type="text" class="form-control" name="psw_stream"
+                    <input type="text" class="form-control f-data" name="psw_stream"
                            placeholder="STREAM PASSWORD FOR EN-DECRYPT, ------ZOO">
                 </div>
                 <div class="mb-2">
                     <label class="form-label">NONCE*</label>
-                    <input type="text" class="form-control" name="nonce"
+                    <input type="text" class="form-control f-data" name="nonce"
                            placeholder="NONCE FOR EN-DECRYPT, 159-162-">
                 </div>
                 <div class="mb-2">
                     <label class="form-label">TYPE</label>
-                    <select class="form-control" name="type">
+                    <select class="form-control f-data" name="type">
                         <option class="form-control" value="DECRYPT">DECRYPT 解密</option>
                         <option class="form-control" value="ENCRYPT">ENCRYPT 加密</option>
                     </select>
                 </div>
-                <input type="text" hidden name="target" placeholder="TARGET">
+                <input type="text" hidden name="target" class="f-data" placeholder="TARGET">
             </div>
             <div class="modal-footer px-2 pb-2">
             </div>

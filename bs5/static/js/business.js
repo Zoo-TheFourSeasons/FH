@@ -350,7 +350,7 @@ function confirm_do(model, Model, title) {
 
 function commit_from_model(model, Model, with_target) {
     model.$btn.on('click', function () {
-        let params = Model.json(model.modal_id);
+        let params = Model.json(model.model_id);
         console.info('params', params);
         if (with_target) {
             if (Model.target) {
@@ -399,7 +399,7 @@ function emit_from_model(model, Model) {
         let params = {
             'action': model.action,
             'IS_PARALLEL': false,
-            'params': Model.json(model.modal_id)
+            'params': Model.json(model.model_id)
         };
         console.log('params', params);
         Model.io.emit(Model.signal, params);
