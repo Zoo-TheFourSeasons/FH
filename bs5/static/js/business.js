@@ -97,7 +97,8 @@ let ModelFH = {
                         value = $(that).selectpicker('val');
                     } else {
                         // normal select
-                        alert('normal select. ');
+                        value = that.value;
+                        // alert('normal select. ');
                     }
                 });
             } else if (local_name === 'textarea') {
@@ -350,7 +351,7 @@ function confirm_do(model, Model, title) {
 
 function commit_from_model(model, Model, with_target) {
     model.$btn.on('click', function () {
-        let params = Model.json(model.model_id);
+        let params = Model.json(model.modal_id);
         console.info('params', params);
         if (with_target) {
             if (Model.target) {
@@ -399,7 +400,7 @@ function emit_from_model(model, Model) {
         let params = {
             'action': model.action,
             'IS_PARALLEL': false,
-            'params': Model.json(model.model_id)
+            'params': Model.json(model.modal_id)
         };
         console.log('params', params);
         Model.io.emit(Model.signal, params);
@@ -503,10 +504,10 @@ function show_modal_if_select_table(model, Model) {
         if (!select.ids) {
             confirm_tip("WARNING", "<h3>PLEASE SELECT ITEM(S)</h3>");
         } else {
-            let modal = new bootstrap.Modal(document.getElementById(model.model_id), {
+            let modal = new bootstrap.Modal(document.getElementById(model.modal_id), {
                 keyboard: false
             });
-            $('#' + model.model_id + ' input[name=target]').val(select.ids);
+            $('#' + model.modal_id + ' input[name=target]').val(select.ids);
             modal.show();
         }
     })

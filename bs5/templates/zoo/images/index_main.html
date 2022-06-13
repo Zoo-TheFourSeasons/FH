@@ -149,14 +149,14 @@
     Model.operate = {
         'u': '/zoo/images/operate',
         '$btn': $("#operates-modal .commit-btn"),
-        'model_id': 'operates-modal',
+        'modal_id': 'operates-modal',
         'f': function () {
             commit_from_model(this, Model, false);
         }
     };
     Model.operate.show = {
         '$btn': $("#operates"),
-        'model_id': 'operates-modal',
+        'modal_id': 'operates-modal',
         'f': function () {
             show_modal_if_select_table(this, Model);
         }

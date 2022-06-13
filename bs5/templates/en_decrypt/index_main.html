@@ -93,7 +93,7 @@
     };
     Model.en_decrypt = {
         'u': '/en_decrypt',
-        'model_id': 'en-decrypt-modal',
+        'modal_id': 'en-decrypt-modal',
         '$btn': $("#en-decrypt-modal .commit-btn"),
         'f': function () {
             commit_from_model(this, Model, false)
@@ -101,7 +101,7 @@
     };
     Model.en_decrypt.show = {
         '$btn': $("#en_decrypt"),
-        'model_id': 'en-decrypt-modal',
+        'modal_id': 'en-decrypt-modal',
         'f': function () {
             show_modal_if_select_table(this, Model);
         }
