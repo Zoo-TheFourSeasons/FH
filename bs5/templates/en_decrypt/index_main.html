@@ -6,7 +6,7 @@
         </ol>
     </div>
     <div class="btn-group">
-        <button type="button" id="refresh" class="btn btn-outline-dark"><i class="fas fa-fw fa-refresh"></i>REFRESH
+        <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
         </button>
         <button type="button" id="back" class="btn btn-outline-dark"><i class="fas fa-fw fa-backward"></i>BACK
         </button>
@@ -63,11 +63,49 @@
     let $table = $("#en_decrypt-table");
     let $back = $("#back");
     let target = $.url().param('target');
-    let f_index = '/webs/en_decrypt/index';
-    let b_index = '/en_decrypt/index';
-    let b_view = '/en_decrypt/view';
-    let b_ = '/en_decrypt';
 
+    if (!target) {
+        $back.hide();
+    } else {
+        $back.on('click', function () {
+            history.back();
+        });
+    }
+
+    let Model = Object.create(ModelFH);
+    Model.$table = $table;
+    Model.target = target;
+    Model.font = {
+        'u': '/webs/en_decrypt/index'
+    };
+    Model.index = {
+        'u': '/en_decrypt/index',
+        'f': function () {
+            list_for_table(this, Model);
+        }
+    };
+    Model.view = {
+        'u': '/en_decrypt/view',
+        'btn_class': '.view-btn',
+        'f': function () {
+            view(this)
+        },
+    };
+    Model.en_decrypt = {
+        'u': '/en_decrypt',
+        'model_id': 'en-decrypt-modal',
+        '$btn': $("#en-decrypt-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, false)
+        },
+    };
+    Model.en_decrypt.show = {
+        '$btn': $("#en_decrypt"),
+        'model_id': 'en-decrypt-modal',
+        'f': function () {
+            show_modal_if_select_table(this, Model);
+        }
+    };
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -78,7 +116,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + Model.font.u + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -91,31 +129,10 @@
             + '</div>';
     }
 
-    if (!target) {
-        $back.hide();
-    } else {
-        $back.on('click', function () {
-            history.back();
-        });
-    }
-
     $(document).ready(function () {
-        listdir($table, b_index, target, f_index);
-        view(b_view, '.view-btn');
-
-        show_modal($("#en_decrypt"), $table, "en-decrypt-modal");
-
-        $("#en-decrypt-modal .commit-btn").on('click', function () {
-            get({
-                'url': b_, 'btn': $(this),
-                'data': {
-                    'psw_aes': $('#en-decrypt-modal input[name=psw_aes]').val(),
-                    'psw_stream': $('#en-decrypt-modal input[name=psw_stream]').val(),
-                    'nonce': $('#en-decrypt-modal input[name=nonce]').val(),
-                    'target': $('#en-decrypt-modal input[name=target]').val(),
-                    'type': $('#en-decrypt-modal select[name=type]').val(),
-                }
-            });
-        });
+        Model.index.f();
+        Model.view.f();
+        Model.en_decrypt.f();
+        Model.en_decrypt.show.f();
     })
 </script>

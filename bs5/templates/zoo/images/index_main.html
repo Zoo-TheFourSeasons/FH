@@ -7,14 +7,14 @@
         </ol>
     </div>
     <div class="btn-group">
-        <button type="button" id="refresh" class="btn btn-outline-dark"><i class="fas fa-fw fa-refresh"></i>REFRESH
+        <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
         </button>
         <button type="button" id="back" class="btn btn-outline-dark"><i class="fas fa-fw fa-backward"></i>BACK
         </button>
+        <button type="button" id="delete" class="btn btn-outline-danger"><i class="fas fa-fw fa-trash"></i>DELETE
+        </button>
         <button type="button" id="mkdir" class="btn btn-outline-dark" data-bs-toggle="modal"
                 data-bs-target="#mkdir-modal"><i class="fas fa-fw fa-folder"></i>MKDIR
-        </button>
-        <button type="button" id="delete" class="btn btn-outline-dark"><i class="fas fa-fw fa-trash"></i>DELETE
         </button>
         <button type="button" id="generate" class="btn btn-outline-dark"><i class="fas fa-fw fa-pager"></i>GENERATE-PAGES
         </button>
@@ -69,17 +69,98 @@
 </div> <!-- end card-->
 <!-- end row -->
 {% include 'modal.html' %}
-{% include folder + '/index_modal.html' %}
 <script>
     let $table = $("#images-table");
     let $back = $("#back");
     let target = $.url().param('target');
-    let f_index = '/webs/zoo/images/index';
-    let b_index = '/zoo/images/index';
-    let b_view = '/zoo/images/view';
-    let b_mkdir = '/zoo/images/mkdir';
-    let b_delete = '/zoo/images/delete';
-    let b_touch = '/zoo/images/touch';
+    if (!target) {
+        $back.hide();
+    } else {
+        $back.on('click', function () {
+            history.back();
+        });
+    }
+
+    let Model = Object.create(ModelFH);
+    Model.$table = $table;
+    Model.target = target;
+    Model.font = {
+        'u': '/webs/zoo/images/index'
+    };
+    Model.index = {
+        'u': '/zoo/images/index',
+        'f': function () {
+            list_for_table(this, Model);
+        }
+    };
+    Model.view = {
+        'u': '/zoo/images/view',
+        'btn_class': '.view-btn',
+        'f': function () {
+            view(this)
+        },
+    };
+    Model.mkdir = {
+        'u': '/zoo/images/mkdir',
+        'modal_id': 'mkdir-modal',
+        '$btn': $("#mkdir-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        }
+    };
+    Model.deletes = {
+        'u': '/zoo/images/delete',
+        '$btn': $("#delete"),
+        'f': function () {
+            confirm_do_with_table(this, Model, "DELETE");
+        }
+    };
+    Model.touch = {
+        'u': '/zoo/images/touch',
+        'suffix': '.py',
+        'modal_id': 'touch-modal',
+        '$btn': $("#touch-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        },
+    };
+    Model.edit = {
+        'u': '/zoo/images/touch',
+        'modal_id': 'view-modal',
+        '$btn': $("#view-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, false)
+        },
+    };
+    Model.render = {
+        'u': '/zoo/images/render',
+        '$btn': $("#render"),
+        'f': function () {
+            confirm_do(this, Model, "RENDER")
+        },
+    };
+    Model.generate_pages = {
+        'u': '/zoo/images/generate-pages',
+        '$btn': $("#generate"),
+        'f': function () {
+            confirm_do(this, Model, "GENERATE-PAGES")
+        },
+    };
+    Model.operate = {
+        'u': '/zoo/images/operate',
+        '$btn': $("#operates-modal .commit-btn"),
+        'model_id': 'operates-modal',
+        'f': function () {
+            commit_from_model(this, Model, "OPERATE");
+        }
+    };
+    Model.operate.show = {
+        '$btn': $("#operates"),
+        'model_id': 'operates-modal',
+        'f': function () {
+            show_modal_if_select_table(this, Model);
+        }
+    };
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -90,7 +171,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + Model.font.u + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -103,50 +184,16 @@
             + '</div>';
     }
 
-
-    if (!target) {
-        $back.hide();
-    } else {
-        $back.on('click', function () {
-            history.back();
-        });
-    }
-
     $(document).ready(function () {
-        listdir($table, b_index, target, f_index);
-        view(b_view, '.view-btn');
-        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
-        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete);
-
-        confirm_do($("#generate"), "GENERATE-PAGES", "/zoo/images/generate-pages");
-        confirm_do($("#render"), "RENDER", "/zoo/images/render");
-
-        show_modal($("#operates"), $table, "operates-modal");
-        show_modal($("#en-decrypt"), $table, "en-decrypt-modal");
-
-        $("#en-decrypt-modal .commit-btn").on('click', function () {
-            get({
-                'url': '/zoo/images/en-decrypt', 'btn': $(this),
-                'data': {
-                    'psw_aes': $('#en-decrypt-modal input[name=psw_aes]').val(),
-                    'psw_stream': $('#en-decrypt-modal input[name=psw_stream]').val(),
-                    'nonce': $('#en-decrypt-modal input[name=nonce]').val(),
-                    'target': $('#en-decrypt-modal input[name=target]').val(),
-                    'type': $('#en-decrypt-modal select[name=type]').val(),
-                },
-            });
-        });
-
-        $("#operates-modal .commit-btn").on('click', function () {
-            get({
-                'url': '/zoo/images/operate', 'btn': $(this),
-                'data': {
-                    'operate': $('#operates-modal select[name=operate]').val(),
-                    'target': $('#operates-modal input[name=target]').val(),
-                    'path_out': $('#operates-modal input[name=path_out]').val(),
-                },
-            });
-        });
-
+        Model.index.f();
+        Model.mkdir.f();
+        Model.view.f();
+        Model.touch.f();
+        Model.deletes.f();
+        Model.edit.f();
+        Model.render.f();
+        Model.generate_pages.f();
+        Model.operate.f();
+        Model.operate.show.f();
     })
 </script>

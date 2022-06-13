@@ -461,7 +461,7 @@ class CodeHelper(object):
             os.makedirs(target_abs)
         except Exception as e:
             return {'status': False, 'message': 'failed in mkdir: %s' % e}
-        return {'status': False, 'message': 'mkdir success: %s' % target}
+        return {'status': True, 'message': 'mkdir success: %s' % target}
 
     @classmethod
     @timer

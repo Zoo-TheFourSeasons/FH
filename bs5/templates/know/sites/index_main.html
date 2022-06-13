@@ -7,10 +7,11 @@
         </ol>
     </div>
     <div class="btn-group">
-        <button type="button" id="refresh" class="btn btn-outline-dark"><i class="fas fa-fw fa-refresh"></i>REFRESH
+        <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
         </button>
-        <button type="button" id="back" class="btn btn-outline-dark"><i
-                class="fas fa-fw fa-backward"></i>BACK
+        <button type="button" id="back" class="btn btn-outline-dark"><i class="fas fa-fw fa-backward"></i>BACK
+        </button>
+        <button type="button" id="delete" class="btn btn-outline-danger"><i class="fas fa-fw fa-trash"></i>DELETE
         </button>
         <button type="button" id="mkdir" class="btn btn-outline-dark" data-bs-toggle="modal"
                 data-bs-target="#mkdir-modal"><i class="fas fa-fw fa-folder"></i>MKDIR
@@ -18,8 +19,7 @@
         <button type="button" id="touch" class="btn btn-outline-dark" data-bs-toggle="modal"
                 data-bs-target="#touch-modal"><i class="fas fa-fw fa-add"></i>TOUCH
         </button>
-        <button type="button" id="delete" class="btn btn-outline-dark"><i class="fas fa-fw fa-trash"></i>DELETE
-        </button>
+
     </div>
     <div id="parents" class="ml-0 mb-2 mt-2"></div>
 </div>
@@ -71,14 +71,81 @@
     let $table = $("#sites-table");
     let $back = $("#back");
     let target = $.url().param('target');
-    let f_index = '/webs/know/sites/index';
-    let b_index = '/know/sites/index';
-    let b_view = '/know/sites/view';
-    let b_mkdir = '/know/sites/mkdir';
-    let b_delete = '/know/sites/delete';
-    let b_touch = '/know/sites/touch';
-    let b_visit = '/know/sites/visit';
-    
+    if (!target) {
+        $back.hide();
+    } else {
+        $back.on('click', function () {
+            history.back();
+        });
+    }
+
+    let Model = Object.create(ModelFH);
+    Model.$table = $table;
+    Model.target = target;
+
+    Model.font = {
+        'u': '/webs/know/sites/index'
+    };
+    Model.index = {
+        'u': '/know/sites/index',
+        'f': function () {
+            list_for_table(this, Model);
+        }
+    };
+    Model.view = {
+        'u': '/know/sites/view',
+        'btn_class': '.view-btn',
+        'f': function () {
+            view(this)
+        },
+    };
+    Model.mkdir = {
+        'u': '/know/sites/mkdir',
+        'modal_id': 'mkdir-modal',
+        '$btn': $("#mkdir-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        }
+    };
+    Model.deletes = {
+        'u': '/know/sites/delete',
+        '$btn': $("#delete"),
+        'f': function () {
+            confirm_do_with_table(this, Model, "DELETE");
+        }
+    };
+    Model.visit = {
+        'u': '/know/sites/visit',
+        'btn_class': '.visit-btn',
+        'f': function () {
+            function success(rsp) {
+                let rows = rsp.data.rows;
+                for (let i = 0; i < rows.length; i++) {
+                    window.open(rows[i]);
+                    console.info(rows[i]);
+                }
+            }
+            commit_from_td(this, Model, success);
+        }
+    };
+    Model.touch = {
+        'u': '/know/sites/touch',
+        'suffix': '.yaml',
+        'modal_id': 'touch-modal',
+        '$btn': $("#touch-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        },
+    };
+    Model.edit = {
+        'u': '/know/sites/touch',
+        'modal_id': 'view-modal',
+        '$btn': $("#view-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, false)
+        },
+    };
+
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
         return options.pageSize * (options.pageNumber - 1) + index + 1;
@@ -88,7 +155,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + Model.font.u + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -105,57 +172,13 @@
             + '</div>';
     }
 
-    if (!target) {
-        $back.hide();
-    } else {
-        $back.on('click', function () {
-            history.back();
-        });
-    }
-
     $(document).ready(function () {
-
-        listdir($table, b_index, target, f_index);
-        view(b_view, '.view-btn');
-        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
-        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete);
-
-        $("#touch-modal .commit-btn").on('click', function () {
-            let text = $('#touch-modal textarea[name=text]').val();
-            let p = $('#touch-modal input[name=target]').val();
-            if (target) {
-                p = target + '/' + p
-            }
-            get({
-                'url': b_touch, 'btn': $(this), 'data': {'text': text, 'target': p + '.yaml'},
-                'success': function (rsp) {
-                    $table.bootstrapTable('refresh');
-                }
-            });
-        });
-
-        $("#view-modal .commit-btn").on('click', function () {
-            let text = $('#view-modal textarea[name=text]').val();
-            let p = $('#view-modal input[name=target]').val();
-            get({
-                'url': b_touch, 'btn': $(this), 'data': {'text': text, 'target': p},
-                'success': function (rsp) {
-                    $table.bootstrapTable('refresh');
-                }
-            });
-        });
-
-        $("tbody").on('click', '.visit-btn', function () {
-            get({
-                'url': b_visit, 'btn': $(this), 'data': {'target': this.name},
-                'success': function (rsp) {
-                    let rows = rsp.data.rows;
-                    for (let i = 0; i < rows.length; i++) {
-                        window.open(rows[i]);
-                        console.info(rows[i]);
-                    }
-                }
-            })
-        });
+        Model.index.f();
+        Model.mkdir.f();
+        Model.view.f();
+        Model.touch.f();
+        Model.visit.f();
+        Model.deletes.f();
+        Model.edit.f();
     })
 </script>

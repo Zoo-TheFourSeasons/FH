@@ -17,10 +17,10 @@
             <div class="modal-body px-2 pt-2 pb-0">
                 <div class="input-group mb-2">
                     <span class="input-group-text">TARGET</span>
-                    <input type="text" class="form-control" readonly name="target" aria-label="PATH OUT">
+                    <input type="text" class="form-control f-data" readonly name="target" aria-label="PATH OUT">
                 </div>
                 <div class="write-mdg-box mb-2">
-                        <textarea class="form-control" rows="40" name="text" spellcheck="false" tabindex="0"
+                        <textarea class="form-control f-data" rows="40" name="text" spellcheck="false" tabindex="0"
                                   wrap="off"></textarea>
                     <img class="img-fluid" src="">
                 </div>
@@ -32,9 +32,9 @@
             </div>
             <div class="modal-footer px-2 pb-2">
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        </div>
+    </div>
+</div>
 
 <!-- MKDIR Modal -->
 <div id="mkdir-modal" class="modal" tabindex="-1" aria-labelledby="mkdir-header"
@@ -54,14 +54,14 @@
             </div>
             <div class="modal-body px-2 pt-2 pb-0">
                 <div class="mb-2">
-                    <input type="text" class="form-control" name="dir" placeholder="MKDIR">
+                    <input type="text" class="form-control f-data" name="target" placeholder="MKDIR">
                 </div>
             </div>
             <div class="modal-footer px-2 pb-2">
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        </div>
+    </div>
+</div>
 
 <!-- ENCRYPT/DECRYPT Modal -->
 <div id="en-decrypt-modal" class="modal" tabindex="-1" aria-labelledby="en-decrypt-header"
@@ -106,9 +106,9 @@
             </div>
             <div class="modal-footer px-2 pb-2">
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        </div>
+    </div>
+</div>
 
 <!-- HIS Modal -->
 <div id="his-modal" class="modal" tabindex="-1" aria-labelledby="view-header"
@@ -123,15 +123,15 @@
             </div>
             <div class="modal-body px-2 pt-2 pb-0">
                 <div class="write-mdg-box mb-2">
-                        <textarea readonly class="form-control" rows="45" name="text" spellcheck="false" tabindex="0"
-                                  wrap="off"></textarea>
+                    <textarea readonly class="form-control" rows="45" name="text" spellcheck="false" tabindex="0"
+                              wrap="off"></textarea>
                 </div>
             </div>
             <div class="modal-footer px-2 pb-2">
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        </div>
+    </div>
+</div>
 
 <!-- TOUCH Modal -->
 <div id="touch-modal" class="modal" tabindex="-1" aria-labelledby="touch-header"
@@ -152,16 +152,91 @@
             <div class="modal-body px-2 pt-2 pb-0">
                 <div class="input-group mb-2">
                     <span class="input-group-text">TARGET*</span>
-                    <input type="text" class="form-control" name="target" aria-label="PATH OUT">
+                    <input type="text" class="form-control f-data" name="target" aria-label="PATH OUT">
                     <span class="input-group-text">.yaml</span>
                 </div>
                 <div class="mb-2">
-                            <textarea type="text" rows="18" class="form-control" name="text"
-                                      placeholder="REPTILE"></textarea>
+                    <textarea type="text" rows="18" class="form-control f-data" name="text"
+                              placeholder="REPTILE"></textarea>
                 </div>
             </div>
             <div class="modal-footer px-2 pb-2">
             </div>
         </div>
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+</div>
+
+<!-- Image Operates Modal -->
+<div id="operates-modal" class="modal" tabindex="-1" aria-labelledby="operates-header" style="display: none;"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
+                    </button>
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                </div>
+                <h4 class="modal-title text-white" id="mkdir-header">IMAGE OPERATE</h4>
+            </div>
+            <div class="modal-body px-2 pt-2 pb-0">
+                <input type="text" hidden name="target" class="f-data">
+                <div class="mb-2">
+                    <label class="form-label">OPERATE</label>
+                    <select class="form-control f-data" name="operate">
+                        <option selected value="do_all">DO ALL</option>
+                        <option value="rotate">ROTATE</option>
+                        <option value="resize">RESIZE</option>
+                        <option value="ink">INK</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer px-2 pb-2">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SCAN Modal -->
+<div id="scan-modal" class="modal" tabindex="-1" aria-labelledby="scan-header"
+     style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
+                    </button>
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                </div>
+                <h4 class="modal-title text-white" id="mkdir-header">SCAN</h4>
+            </div>
+            <div class="modal-body px-2 pt-2 pb-0">
+                <div class="mb-2">
+                    <label class="form-label">jar*</label>
+                    <input type="text" class="form-control f-data" name="jar"
+                           value="tsunami-main-0.0.10-SNAPSHOT-cli.jar">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">--ip-v4-target*</label>
+                    <input type="text" class="form-control f-data" name="ip_v4_target" aria-label="PATH OUT">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">-Dtsunami-config.location*</label>
+                    <input type="text" class="form-control f-data" name="location" value="tsunami.yaml">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">--scan-results-local-output-format*</label>
+                    <input type="text" class="form-control f-data" name="output_format" value="JSON">
+                </div>
+            </div>
+            <div class="modal-footer px-2 pb-2">
+            </div>
+        </div>
+    </div>
+</div>

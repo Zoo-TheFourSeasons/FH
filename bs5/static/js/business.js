@@ -27,6 +27,98 @@ axios.interceptors.response.use(function (response) {
     return response;
 });
 
+let ModelFH = {
+    'model': {},
+    'show': function (model_id) {
+        $("#" + model_id).modal('show');
+    },
+    'hide': function (model_id) {
+        $("#" + model_id).modal('hide');
+    },
+    'fresh': function (model_id, data) {
+        let i;
+        let field;
+        let fields = $("#" + model_id + ' .f-data');
+
+        console.log('fresh', data);
+        for (i = 0; i < fields.length; i++) {
+            field = fields[i];
+            if (field.name === undefined) {
+                continue
+            }
+            if (data[field.name] === undefined) {
+                continue
+            }
+            console.log(field.name);
+            this.fill_one(field, data[field.name]);
+        }
+    },
+    'fill_one': function (field, value) {
+        let local_name = field.localName;
+        if (local_name === 'input') {
+            $(field).val(value);
+        } else if (local_name === 'span') {
+            $(field)[0].textContent = value;
+        } else if (local_name === 'select') {
+            $(field).each(function () {
+                let that = this;
+                if ($(that).hasClass('selectpicker')) {
+                    // bootstrap-select
+                    $(that).selectpicker('val', value)
+                } else {
+                    // normal select
+                    alert('normal select. ');
+                }
+            });
+        } else if (local_name === 'textarea') {
+            $(field).val(value);
+        }
+    },
+    'json': function (model_id) {
+        let json = {};
+        let fields = $("#" + model_id + ' .f-data');
+        let i, field, name;
+
+        for (i = 0; i < fields.length; i++) {
+            field = fields[i];
+            name = field.name;
+
+            let local_name = field.localName;
+            let value;
+            if (local_name === 'input') {
+                value = $(field).val();
+            } else if (local_name === 'span') {
+                value = $(field)[0].textContent;
+            } else if (local_name === 'select') {
+                $(field).each(function () {
+                    let that = this;
+                    if ($(that).hasClass('selectpicker')) {
+                        // todo: 可能会有问题
+                        value = $(that).selectpicker('val');
+                    } else {
+                        // normal select
+                        alert('normal select. ');
+                    }
+                });
+            } else if (local_name === 'textarea') {
+                value = $(field).val();
+            }
+            if (json[name] === undefined) {
+                json[name] = value;
+            } else {
+                if (json[name] instanceof Array) {
+                    json[name].push(value);
+                } else {
+                    let tmp = json[name];
+                    json[name] = [tmp, value]
+                }
+            }
+        }
+        console.log('json', json);
+        return json;
+    }
+};
+
 function confirm_tip(title, content) {
     // 提示信息
     let confirm = $.confirm({
@@ -100,7 +192,7 @@ function request(params) {
             if (btn !== undefined) {
                 btn.attr('disabled', false);
             }
-            console.log(error);
+            // console.log(error);
         });
 }
 
@@ -158,14 +250,14 @@ function get_selected($table, with_version) {
     return {'ids': ids_.join(',')};
 }
 
-function confirm_do_with_table($btn, $table, title, url) {
-    $btn.confirm({
+function confirm_do_with_table(model, Model, title) {
+    model.$btn.confirm({
         closeIcon: true,
         theme: 'supervan',
         title: title,
         content: "",
         onOpenBefore: function () {
-            let select = get_selected($table, false);
+            let select = get_selected(Model.$table, false);
             if (!select.ids) {
                 this.setContent("<h3>PLEASE SELECT ITEM(S)</h3>");
                 this.buttons.doKey.hide();
@@ -177,11 +269,11 @@ function confirm_do_with_table($btn, $table, title, url) {
             doKey: {
                 text: 'YES',
                 action: function () {
-                    let select = get_selected($table, false);
+                    let select = get_selected(Model.$table, false);
                     get({
-                        'url': url, 'btn': $btn, 'data': {'target': select.ids},
+                        'url': model.u, 'btn': model.$btn, 'data': {'target': select.ids},
                         'success': function () {
-                            $table.bootstrapTable('refresh');
+                            Model.$table.bootstrapTable('refresh');
                         }
                     });
                 }
@@ -191,14 +283,14 @@ function confirm_do_with_table($btn, $table, title, url) {
     });
 }
 
-function confirm_do_ns_with_table($btn, $table, title, target, signal, action, ns) {
-    $btn.confirm({
+function confirm_do_ns_with_table(model, Model, title, ns) {
+    model.$btn.confirm({
         closeIcon: true,
         theme: 'supervan',
         title: title,
         content: "",
         onOpenBefore: function () {
-            let select = get_selected($table, false);
+            let select = get_selected(Model.$table, false);
             if (!select.ids) {
                 this.setContent("<h3>PLEASE SELECT ITEM(S)</h3>");
                 this.buttons.doKey.hide();
@@ -210,23 +302,23 @@ function confirm_do_ns_with_table($btn, $table, title, target, signal, action, n
             doKey: {
                 text: 'YES',
                 action: function () {
-                    let select = get_selected($table, false);
+                    let select = get_selected(Model.$table, false);
                     let params;
-                    if (target === undefined) {
+                    if (Model.target === undefined) {
                         params = {
-                            'action': action,
+                            'action': this.action,
                             'IS_PARALLEL': false,
                             'params': {'files': select.ids, 'target': ''}
                         };
                     } else {
                         params = {
-                            'action': action,
+                            'action': this.action,
                             'IS_PARALLEL': false,
-                            'params': {'files': select.ids, 'target': target}
+                            'params': {'files': select.ids, 'target': Model.target}
                         };
                     }
                     console.info(params);
-                    ns.emit(signal, params);
+                    ns.emit(Model.signal, params);
                 }
             },
             cancel: {text: 'CLOSE'}
@@ -234,8 +326,8 @@ function confirm_do_ns_with_table($btn, $table, title, target, signal, action, n
     });
 }
 
-function confirm_do($btn, title, url, data) {
-    $btn.confirm({
+function confirm_do(model, Model, title) {
+    model.$btn.confirm({
         closeIcon: true,
         theme: 'supervan',
         title: title,
@@ -244,7 +336,11 @@ function confirm_do($btn, title, url, data) {
             doKey: {
                 text: 'YES',
                 action: function () {
-                    get({'url': url, 'data': data, 'btn': $btn});
+                    get({
+                        'url': model.u, 'data': {}, 'btn': model.$btn, 'success': function (rsp) {
+                            Model.$table.bootstrapTable('refresh');
+                        }
+                    });
                 }
             },
             cancel: {text: 'CLOSE'}
@@ -252,27 +348,106 @@ function confirm_do($btn, title, url, data) {
     });
 }
 
-function mkdir($btn, $input_dir, url, $table, target) {
-    $btn.on('click', function () {
-        console.info('disabled');
-        let p = $input_dir.val();
-        if (target) {
-            p = target + '/' + p;
+function commit_from_model(model, Model, with_target) {
+    model.$btn.on('click', function () {
+        let params = Model.json(model.modal_id);
+        console.info('params', params);
+        if (with_target) {
+            if (Model.target) {
+                params.target = Model.target + '/' + params.target;
+            }
+        }
+        if (model.suffix) {
+            params.target = params.target + model.suffix;
         }
         get({
-            'url': url,
-            'data': {'target': p},
-            'btn': $(this),
+            'url': model.u,
+            'data': params,
+            'btn': model.$btn,
             'success': function (rsp) {
-                $table.bootstrapTable('refresh');
+                Model.$table.bootstrapTable('refresh');
                 console.log(rsp.data);
             }
         });
     });
 }
 
-function view(view_url, btn) {
-    $("tbody").on('click', btn, function () {
+function commit_from_td(model, Model, success) {
+    $("tbody").on('click', model.btn_class, function () {
+        get({
+            'url': model.u,
+            'data': {'target': this.name},
+            'btn': $(this),
+            'success': success
+        });
+    });
+}
+
+function emit_from_td(model, Model) {
+    $("tbody").on('click', model.btn_class, function () {
+        let params = {
+            'action': model.action,
+            'IS_PARALLEL': false,
+            'params': {'target': this.name}
+        };
+        Model.io.emit(Model.signal, params);
+    });
+}
+
+function emit_from_model(model, Model) {
+    model.$btn.on('click', function () {
+        let params = {
+            'action': model.action,
+            'IS_PARALLEL': false,
+            'params': Model.json(model.modal_id)
+        };
+        console.log('params', params);
+        Model.io.emit(Model.signal, params);
+    });
+}
+
+function list_for_table(model, Model) {
+    Model.$table.bootstrapTable('refreshOptions', {
+        queryParams: function (params) {
+            if (Model.target !== undefined) {
+                params.target = Model.target;
+            }
+            return params
+        },
+        ajax: function (request) {
+            get({
+                'url': model.u,
+                'data': request.data,
+                'success': function (rsp) {
+                    request.success({
+                        row: rsp.data
+                    });
+                    let parents = rsp.data.parents;
+                    let ps = [];
+                    for (let i = 0; i < parents.length; i++) {
+                        ps.push("<a href='" + Model.font.u + "?target=" + parents[i]['i_path'] + "'><strong>" + parents[i]['i'] + "</strong></a>");
+                    }
+                    let $parents = $("#parents");
+                    $parents.empty();
+                    $parents.prepend(ps.join(' / '));
+                    Model.$table.bootstrapTable('load', rsp.data);
+                }
+            });
+        },
+    });
+
+    search_move(Model.$table);
+    $(window).resize(function () {
+        adjust_height(Model.$table);
+    });
+
+    $("#refresh").on('click', function () {
+        Model.$table.bootstrapTable('refresh');
+    });
+}
+
+function view(model) {
+    $("tbody").on('click', model.btn_class, function () {
         let target = this.name;
         let $img = $("#view-modal img");
         let $textarea = $("#view-modal textarea");
@@ -283,11 +458,11 @@ function view(view_url, btn) {
         $img.hide();
         $commit.hide();
         $table.hide();
-        console.log('view:' + view_url);
+        console.log('view:' + model.u);
         console.log('target:' + target);
 
         get({
-            'url': view_url + '?target=' + target,
+            'url': model.u + '?target=' + target,
             'btn': $(this),
             'success': function (rsp) {
                 let type = rsp.data.type;
@@ -322,72 +497,17 @@ function view(view_url, btn) {
     });
 }
 
-function listdir($table, url_index, target, url_item) {
-    $table.bootstrapTable('refreshOptions', {
-        queryParams: function (params) {
-            if (target !== undefined) {
-                params.target = target;
-            }
-            return params
-        },
-        ajax: function (request) {
-            get({
-                'url': url_index,
-                'data': request.data,
-                'success': function (rsp) {
-                    request.success({
-                        row: rsp.data
-                    });
-                    let parents = rsp.data.parents;
-                    let ps = [];
-                    for (let i = 0; i < parents.length; i++) {
-                        ps.push("<a href='" + url_item + "?target=" + parents[i]['i_path'] + "'><strong>" + parents[i]['i'] + "</strong></a>");
-                    }
-                    $("#parents").empty();
-                    $("#parents").prepend(ps.join(' / '));
-                    $table.bootstrapTable('load', rsp.data);
-                }
-            });
-            // axios.request({url: url_index, method: 'get', params: request.data})
-            //     .then(function (response) {
-            //         request.success({
-            //             row: response.data
-            //         });
-            //         let parents = response.data.parents;
-            //         let ps = [];
-            //         for (let i = 0; i < parents.length; i++) {
-            //             ps.push("<a href='" + url_item + "?target=" + parents[i]['i_path'] + "'><strong>" + parents[i]['i'] + "</strong></a>");
-            //         }
-            //         $("#parents").empty();
-            //         $("#parents").prepend(ps.join(' / '));
-            //         $table.bootstrapTable('load', response.data);
-            //     })
-            //     .catch(function (error) {
-            //     });
-        },
-    });
-
-    search_move($table);
-    $(window).resize(function () {
-        adjust_height($table);
-    });
-
-    $("#refresh").on('click', function () {
-        $table.bootstrapTable('refresh');
-    });
-}
-
-function show_modal($btn, $table, modal_id) {
-    $btn.on('click', function () {
-        let select = get_selected($table, false);
+function show_modal_if_select_table(model, Model) {
+    model.$btn.on('click', function () {
+        let select = get_selected(Model.$table, false);
         if (!select.ids) {
             confirm_tip("WARNING", "<h3>PLEASE SELECT ITEM(S)</h3>");
         } else {
-            let $modal = new bootstrap.Modal(document.getElementById(modal_id), {
+            let modal = new bootstrap.Modal(document.getElementById(model.model_id), {
                 keyboard: false
             });
-            $('#' + modal_id + ' input[name=target]').val(select.ids);
-            $modal.show();
+            $('#' + model.model_id + ' input[name=target]').val(select.ids);
+            modal.show();
         }
     })
 }

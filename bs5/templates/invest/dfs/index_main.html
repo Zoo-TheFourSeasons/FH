@@ -7,14 +7,14 @@
         </ol>
     </div>
     <div class="btn-group">
-        <button type="button" id="refresh" class="btn btn-outline-dark"><i class="fas fa-fw fa-refresh"></i>REFRESH
+        <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
         </button>
         <button type="button" id="back" class="btn btn-outline-dark"><i class="fas fa-fw fa-backward"></i>BACK
         </button>
+        <button type="button" id="delete" class="btn btn-outline-danger"><i class="fas fa-fw fa-trash"></i>DELETE
+        </button>
         <button type="button" id="mkdir" class="btn btn-outline-dark" data-bs-toggle="modal"
                 data-bs-target="#mkdir-modal"><i class="fas fa-fw fa-folder"></i>MKDIR
-        </button>
-        <button type="button" id="delete" class="btn btn-outline-dark"><i class="fas fa-fw fa-trash"></i>DELETE
         </button>
     </div>
     <div id="parents" class="ml-0 mb-2 mt-2"></div>
@@ -66,12 +66,67 @@
     let $table = $("#dfs-table");
     let $back = $("#back");
     let target = $.url().param('target');
-    let f_index = '/webs/invest/dfs/index';
-    let b_index = '/invest/dfs/index';
-    let b_view = '/invest/dfs/view';
-    let b_mkdir = '/invest/dfs/mkdir';
-    let b_delete = '/invest/dfs/delete';
-    let b_touch = '/invest/dfs/touch';
+
+    if (!target) {
+        $back.hide();
+    } else {
+        $back.on('click', function () {
+            history.back();
+        });
+    }
+
+    let Model = Object.create(ModelFH);
+    Model.$table = $table;
+    Model.target = target;
+
+    Model.font = {
+        'u': '/webs/invest/dfs/index'
+    };
+    Model.index = {
+        'u': '/invest/dfs/index',
+        'f': function () {
+            list_for_table(this, Model);
+        }
+    };
+    Model.view = {
+        'u': '/invest/dfs/view',
+        'btn_class': '.view-btn',
+        'f': function () {
+            view(this)
+        },
+    };
+    Model.mkdir = {
+        'u': '/invest/dfs/mkdir',
+        'modal_id': 'mkdir-modal',
+        '$btn': $("#mkdir-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        }
+    };
+    Model.deletes = {
+        'u': '/invest/dfs/delete',
+        '$btn': $("#delete"),
+        'f': function () {
+            confirm_do_with_table(this, Model, "DELETE");
+        }
+    };
+    Model.touch = {
+        'u': '/invest/dfs/touch',
+        'suffix': '.yaml',
+        'modal_id': 'touch-modal',
+        '$btn': $("#touch-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        },
+    };
+    Model.edit = {
+        'u': '/invest/dfs/touch',
+        'modal_id': 'view-modal',
+        '$btn': $("#view-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, false)
+        },
+    };
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -82,7 +137,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + Model.font.u + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -95,20 +150,12 @@
             + '</div>';
     }
 
-
-    if (!target) {
-        $back.hide();
-    } else {
-        $back.on('click', function () {
-            history.back();
-        });
-    }
-
     $(document).ready(function () {
-
-        listdir($table, b_index, target, f_index);
-        view(b_view, '.view-btn');
-        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
-        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete);
+        Model.index.f();
+        Model.mkdir.f();
+        Model.view.f();
+        Model.touch.f();
+        Model.deletes.f();
+        Model.edit.f();
     })
 </script>

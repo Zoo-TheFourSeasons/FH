@@ -7,11 +7,17 @@
         </ol>
     </div>
     <div class="btn-group">
-        <button type="button" id="refresh" class="btn btn-outline-dark"><i class="fas fa-fw fa-refresh"></i>REFRESH
+        <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
         </button>
         <button type="button" id="back" class="btn btn-outline-dark"><i class="fas fa-fw fa-backward"></i>BACK
         </button>
-        <button type="button" id="delete" class="btn btn-outline-dark"><i class="fas fa-fw fa-trash"></i>DELETE
+        <button type="button" id="delete" class="btn btn-outline-danger"><i class="fas fa-fw fa-trash"></i>DELETE
+        </button>
+        <button type="button" id="mkdir" class="btn btn-outline-dark" data-bs-toggle="modal"
+                data-bs-target="#mkdir-modal"><i class="fas fa-fw fa-folder"></i>MKDIR
+        </button>
+        <button type="button" id="touch" class="btn btn-outline-dark" data-bs-toggle="modal"
+                data-bs-target="#touch-modal"><i class="fas fa-fw fa-add"></i>TOUCH
         </button>
     </div>
     <div id="parents" class="ml-0 mb-2 mt-2"></div>
@@ -64,12 +70,68 @@
     let $table = $("#tasks-table");
     let $back = $("#back");
     let target = $.url().param('target');
-    let f_index = '/webs/dsp/tasks/index';
-    let b_index = '/dsp/tasks/index';
-    let b_view = '/dsp/tasks/view';
-    let b_mkdir = '/dsp/tasks/mkdir';
-    let b_delete = '/dsp/tasks/delete';
-    let b_touch = '/dsp/tasks/touch';
+
+    if (!target) {
+        $back.hide();
+    } else {
+        $back.on('click', function () {
+            history.back();
+        });
+    }
+
+    let Model = Object.create(ModelFH);
+    Model.$table = $table;
+    Model.target = target;
+    Model.signal = 'yft';
+    Model.io = io_dsp;
+    Model.font = {
+        'u': '/webs/dsp/tasks/index'
+    };
+    Model.index = {
+        'u': '/dsp/tasks/index',
+        'f': function () {
+            list_for_table(this, Model);
+        }
+    };
+    Model.view = {
+        'u': '/dsp/tasks/view',
+        'btn_class': '.view-btn',
+        'f': function () {
+            view(this)
+        },
+    };
+    Model.deletes = {
+        'u': '/dsp/tasks/delete',
+        '$btn': $("#delete"),
+        'f': function () {
+            confirm_do_with_table(this, Model, "DELETE");
+        }
+    };
+    Model.mkdir = {
+        'u': '/dsp/tasks/mkdir',
+        'modal_id': 'mkdir-modal',
+        '$btn': $("#mkdir-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        }
+    };
+    Model.touch = {
+        'u': '/dsp/tasks/touch',
+        'suffix': '.yaml',
+        'modal_id': 'touch-modal',
+        '$btn': $("#touch-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        },
+    };
+    Model.edit = {
+        'u': '/dsp/tasks/touch',
+        'modal_id': 'view-modal',
+        '$btn': $("#view-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, false)
+        },
+    };
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -80,7 +142,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="' + f_index + '?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + Model.font.u + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -93,19 +155,12 @@
             + '</div>';
     }
 
-    if (!target) {
-        $back.hide();
-    } else {
-        $back.on('click', function () {
-            history.back();
-        });
-    }
-
     $(document).ready(function () {
-
-        listdir($table, b_index, target, f_index);
-        view(b_view, '.view-btn');
-        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), b_mkdir, $table, target);
-        confirm_do_with_table($("#delete"), $table, "DELETE", b_delete);
+        Model.index.f();
+        Model.mkdir.f();
+        Model.view.f();
+        Model.touch.f();
+        Model.deletes.f();
+        Model.edit.f();
     })
 </script>
