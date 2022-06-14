@@ -308,13 +308,13 @@ function confirm_do_ns_with_table(model, Model, title, ns) {
                     if (Model.target === undefined) {
                         params = {
                             'action': this.action,
-                            'IS_PARALLEL': false,
+                            'is_parallel': false,
                             'params': {'files': select.ids, 'target': ''}
                         };
                     } else {
                         params = {
                             'action': this.action,
-                            'IS_PARALLEL': false,
+                            'is_parallel': false,
                             'params': {'files': select.ids, 'target': Model.target}
                         };
                     }
@@ -387,10 +387,14 @@ function commit_from_td(model, Model, success) {
 function emit_from_td(model, Model) {
     $("tbody").on('click', model.btn_class, function () {
         let params = {
+            'kid': '',
             'action': model.action,
-            'IS_PARALLEL': false,
+            'is_parallel': false,
             'params': {'target': this.name}
         };
+        if (this.id !== undefined) {
+            params.kid = this.id;
+        }
         Model.io.emit(Model.signal, params);
     });
 }
@@ -398,10 +402,14 @@ function emit_from_td(model, Model) {
 function emit_from_model(model, Model) {
     model.$btn.on('click', function () {
         let params = {
+            'kid': '',
             'action': model.action,
-            'IS_PARALLEL': false,
+            'is_parallel': false,
             'params': Model.json(model.modal_id)
         };
+        if (this.id !== undefined) {
+            params.kid = this.id
+        }
         console.log('params', params);
         Model.io.emit(Model.signal, params);
     });
@@ -511,4 +519,22 @@ function show_modal_if_select_table(model, Model) {
             modal.show();
         }
     })
+}
+
+function escape(srcString) {
+    let result = srcString;
+    // 正则表达式中的特殊字符
+    let chars_js = ["\\", "^", "$", "*", "?", ".", "+", "(", ")", "[", "]", "|", "{", "}"];
+    // 不是正则表达式中的特殊字符
+    let chars_special = ["~", "`", "@", "#", "%", "&", "=", "'", "\"", ":", ";", "<", ">", ",", "/"];
+    for (let i = 0; i < chars_js.length; i++) {
+        result = result.replace(new RegExp("\\"
+            + chars_js[i], "g"), "\\"
+            + chars_js[i]);
+    }
+    for (let i = 0; i < chars_special.length; i++) {
+        result = result.replace(new RegExp(chars_special[i],
+            "g"), "\\" + chars_special[i]);
+    }
+    return result;
 }

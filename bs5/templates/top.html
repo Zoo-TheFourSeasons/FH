@@ -11,21 +11,38 @@
     </form>
 </div>
 <script>
-    let io_security = io.connect(
-        'http://' + document.domain + (location.port ? ":" + location.port : "") + '/security',
-        {'sync disconnect on unload': true});
-    io_security.emit('join', {'room': 'progress'});
-    io_security.on('his', function (data) {
-        $('#his-modal textarea').append(data)
-    });
 
-    let io_dsp = io.connect(
-        'http://' + document.domain + (location.port ? ":" + location.port : "") + '/dsp',
-        {'sync disconnect on unload': true});
-    io_dsp.emit('join', {'room': 'progress'});
-    io_dsp.on('his', function (data) {
+    function progress(data){
+        console.log('progress', data);
+        let kid = escape(data.kid);
+        {#let kid = data.kid;#}
+        {#kid.split("").map(item => {#}
+        {#    arr.includes(item) ? item = "\\" + `\\${item}` : null;#}
+        {#    return item#}
+        {# }).join("");#}
+        let $btn = $(`#${kid}`);
+        if (data.progress === 100){
+            $btn.attr('disabled', false);
+        } else {
+            $btn.attr('disabled', true);
+        }
+    }
+
+    function his(data){
         $('#his-modal textarea').append(data)
-    });
+    }
+
+    let http = 'http://' + document.domain + (location.port ? ":" + location.port : "");
+    let io_security = io.connect(http + '/security',{'sync disconnect on unload': true});
+    let io_dsp = io.connect(http + '/dsp', {'sync disconnect on unload': true});
+
+    io_security.emit('join', {'room': 'progress'});
+    io_security.on('his', his);
+    io_security.on('progress', progress);
+
+    io_dsp.emit('join', {'room': 'progress'});
+    io_dsp.on('his', his);
+    io_dsp.on('progress', progress);
 
     $(document).ready(function () {
         $(".modal").draggable();

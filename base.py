@@ -535,6 +535,7 @@ class WebSocketHelper(Namespace, CodeHelper):
     def __init__(self, *args, **kwargs):
         CodeHelper.__init__(self)
         Namespace.__init__(self, *args, **kwargs)
+        self.actions = {}
 
     def on_connect(self):
         return True
@@ -551,3 +552,19 @@ class WebSocketHelper(Namespace, CodeHelper):
 
     def update_progress(self, data):
         self.emit_signal('progress', data)
+
+    def on_task(self, data):
+        # is_parallel = data['is_parallel']
+        self.socketio.start_background_task(
+            self.backgrounds, data
+        )
+
+    def backgrounds(self, data):
+        kid = data['kid']
+        action = data['action']
+        if kid:
+            self.update_progress({'kid': kid, 'progress': 0})
+        self.actions[action](data)
+        if kid:
+            self.update_progress({'kid': kid, 'progress': 100})
+        pass

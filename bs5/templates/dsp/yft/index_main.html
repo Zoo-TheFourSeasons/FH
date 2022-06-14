@@ -7,12 +7,11 @@
         </ol>
     </div>
     <div class="btn-group">
-        <button type="button" id="refresh" class="btn btn-outline-dark"><i class="fas fa-fw fa-refresh"></i>REFRESH
+        <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
         </button>
-        <button type="button" id="back" class="btn btn-outline-dark"><i
-                class="fas fa-fw fa-backward"></i>BACK
+        <button type="button" id="back" class="btn btn-outline-dark"><i class="fas fa-fw fa-backward"></i>BACK
         </button>
-        <button type="button" id="delete" class="btn btn-outline-dark"><i class="fas fa-fw fa-trash"></i>DELETE
+        <button type="button" id="delete" class="btn btn-outline-danger"><i class="fas fa-fw fa-trash"></i>DELETE
         </button>
         <button type="button" id="mkdir" class="btn btn-outline-dark" data-bs-toggle="modal"
                 data-bs-target="#mkdir-modal"><i class="fas fa-fw fa-folder"></i>MKDIR
@@ -69,18 +68,93 @@
 <!-- end row -->
 {% include 'modal.html' %}
 <script>
-    let Model = {
-        'font': '/webs/dsp/yft/index',
-        'index': '/dsp/yft/index',
-        'view': '/dsp/yft/view',
-        'mkdir': '/dsp/yft/mkdir',
-        'delete': '/dsp/yft/delete',
-        'touch': '/dsp/yft/touch',
-        'his': '/dsp/yft/history',
-    };
     let $table = $("#yft-table");
     let $back = $("#back");
     let target = $.url().param('target');
+
+    if (!target) {
+        $back.hide();
+    } else {
+        $back.on('click', function () {
+            history.back();
+        });
+    }
+
+    let Model = Object.create(ModelFH);
+    Model.$table = $table;
+    Model.target = target;
+    Model.signal = 'task';
+    Model.io = io_dsp;
+
+    Model.font = {
+        'u': '/webs/dsp/yft/index'
+    };
+    Model.index = {
+        'u': '/dsp/yft/index',
+        'f': function () {
+            list_for_table(this, Model);
+        }
+    };
+    Model.view = {
+        'u': '/dsp/yft/view',
+        'btn_class': '.view-btn',
+        'f': function () {
+            view(this)
+        },
+    };
+    Model.mkdir = {
+        'u': '/dsp/yft/mkdir',
+        'modal_id': 'mkdir-modal',
+        '$btn': $("#mkdir-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        }
+    };
+    Model.deletes = {
+        'u': '/dsp/yft/delete',
+        '$btn': $("#delete"),
+        'f': function () {
+            confirm_do_with_table(this, Model, "DELETE");
+        }
+    };
+    Model.executes = {
+        '$btn': $("#execute"),
+        'action': 'yft:execute',
+        'f': function () {
+            confirm_do_ns_with_table(this, Model, "EXECUTE");
+        }
+    };
+    Model.execute = {
+        'btn_class': '.execute-btn',
+        'action': 'yft:execute',
+        'f': function () {
+            emit_from_td(this, Model);
+        }
+    };
+    Model.touch = {
+        'u': '/dsp/yft/touch',
+        'suffix': '.yaml',
+        'modal_id': 'touch-modal',
+        '$btn': $("#touch-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        },
+    };
+    Model.his = {
+        'u': '/dsp/yft/history',
+        'btn_class': '.his-btn',
+        'f': function () {
+            view(this)
+        }
+    };
+    Model.edit = {
+        'u': '/dsp/yft/touch',
+        'modal_id': 'view-modal',
+        '$btn': $("#view-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, false)
+        },
+    };
 
     function iFormatter(value, row, index) {
         let options = $table.bootstrapTable('getOptions');
@@ -91,7 +165,7 @@
         if (!row._isdir) {
             return value
         }
-        return '<a href="' + Model.font + '?target=' + row.id + '">' + value + '</a>'
+        return '<a href="' + Model.font.u + '?target=' + row.id + '">' + value + '</a>'
     }
 
     function operateFormatter(value, row) {
@@ -103,66 +177,22 @@
             + '<i class="fa-solid fa-eye"></i></button>'
             + '<button disabled type="button" name="' + row.id + '" class="btn btn-outline-dark btn-sm download-btn">'
             + '<i class="fa-solid fa-download"></i></button>'
-            + '<button type="button" name="' + row.id + '" class="btn btn-outline-dark btn-sm execute-btn">'
+            + '<button type="button" name="' + row.id + '"id="exe.' + row.id + '" class="btn btn-outline-dark btn-sm execute-btn">'
             + '<i class="fas fa-fw fa-play"></i></button>'
             + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-dark btn-sm his-btn">'
             + '<i class="fas fa-fw fa-history"></i></button>'
             + '</div>';
     }
 
-    if (!target) {
-        $back.hide();
-    } else {
-        $back.on('click', function () {
-            history.back();
-        });
-    }
-
-    let signal = 'yft';
-    let action = 'yft:execute';
-
     $(document).ready(function () {
-
-        listdir($table, Model.index, target, Model.font);
-        view(Model.view, '.view-btn');
-        view(Model.his, '.his-btn');
-
-        mkdir($("#mkdir-modal .commit-btn"), $('#mkdir-modal input[name=dir]'), Model.mkdir, $table, target);
-        confirm_do_with_table($("#delete"), $table, "DELETE",  Model.delete);
-        confirm_do_ns_with_table($("#execute"), $table, "EXECUTE", target, signal, action, io_dsp);
-
-        $("tbody").on('click', '.execute-btn', function () {
-            let params = {
-                'action': action,
-                'IS_PARALLEL': false,
-                'params': {'target': this.name}
-            };
-            io_dsp.emit(signal, params);
-        });
-
-        $("#touch-modal .commit-btn").on('click', function () {
-            let text = $('#touch-modal textarea[name=text]').val();
-            let p = $('#touch-modal input[name=target]').val();
-            if (target) {
-                p = target + '/' + p
-            }
-            get({
-                'url': Model.touch, 'btn': $(this), 'data': {'text': text, 'target': p + '.yaml'},
-                'success': function (rsp) {
-                    $table.bootstrapTable('refresh');
-                }
-            });
-        });
-
-        $("#view-modal .commit-btn").on('click', function () {
-            let text = $('#view-modal textarea[name=text]').val();
-            let p = $('#view-modal input[name=target]').val();
-            get({
-                'url': Model.touch, 'btn': $(this), 'data': {'text': text, 'target': p},
-                'success': function (rsp) {
-                    $table.bootstrapTable('refresh');
-                }
-            });
-        });
+        Model.index.f();
+        Model.mkdir.f();
+        Model.view.f();
+        Model.touch.f();
+        Model.his.f();
+        Model.executes.f();
+        Model.execute.f();
+        Model.deletes.f();
+        Model.edit.f();
     })
 </script>
