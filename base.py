@@ -260,13 +260,17 @@ class CodeHelper(object):
         base = PATH_PROJECT if base is None else base
         target_abs = os.path.join(base, target)
         _index = 0
+
         files = [f for f in os.listdir(target_abs) if not f.startswith('.')]
+        if suffix:
+            files = [f for f in files if f.endswith(suffix) or os.path.isdir(os.path.join(target_abs, f))]
+        else:
+            files = files
         files.sort(reverse=True)
+
         rows = []
         for _file in files:
             _f = os.path.join(target_abs, _file)
-            if suffix and os.path.isfile(_f) and not _file.endswith(suffix):
-                continue
             _index += 1
             if offset and _index <= offset:
                 continue
