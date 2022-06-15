@@ -15,7 +15,7 @@
 
 set -eu
 
-WD="/home/zoo/Desktop/_Y/Zoo-HZ-Media-Volunteers/web/invest/data/pys/SECURITY/tsunami"
+WD="source/tsunami"
 REPOS="${WD}/repos"
 PLUGINS="${WD}/plugins"
 
