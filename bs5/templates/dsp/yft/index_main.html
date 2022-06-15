@@ -97,6 +97,7 @@
     };
     Model.view = {
         'u': '/dsp/yft/view',
+        'modal_id': 'view-exe-modal',
         'btn_class': '.view-btn',
         'f': function () {
             view(this)
@@ -131,6 +132,14 @@
             emit_from_td(this, Model);
         }
     };
+    Model.view.execute = {
+        '$btn': $('#view-exe-modal .execute-btn'),
+        'action': 'yft:execute',
+        'modal_id': 'view-exe-modal',
+        'f': function () {
+            emit_from_model(this, Model, "EXECUTE");
+        }
+    };
     Model.touch = {
         'u': '/dsp/yft/touch',
         'suffix': '.yaml',
@@ -142,6 +151,7 @@
     };
     Model.his = {
         'u': '/dsp/yft/history',
+        'modal_id': 'his-modal',
         'btn_class': '.his-btn',
         'f': function () {
             view(this)
@@ -149,8 +159,8 @@
     };
     Model.edit = {
         'u': '/dsp/yft/touch',
-        'modal_id': 'view-modal',
-        '$btn': $("#view-modal .commit-btn"),
+        'modal_id': 'view-exe-modal',
+        '$btn': $("#view-exe-modal .commit-btn"),
         'f': function () {
             commit_from_model(this, Model, false)
         },
@@ -173,13 +183,13 @@
             return '';
         }
         return '<div class="btn-group" role="group">'
-            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
+            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-exe-modal" class="btn btn-outline-success btn-sm view-btn">'
             + '<i class="fa-solid fa-eye"></i></button>'
             + '<button disabled type="button" name="' + row.id + '" class="btn btn-outline-dark btn-sm download-btn">'
             + '<i class="fa-solid fa-download"></i></button>'
             + '<button type="button" name="' + row.id + '"id="exe.' + row.id + '" class="btn btn-outline-dark btn-sm execute-btn">'
             + '<i class="fas fa-fw fa-play"></i></button>'
-            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-dark btn-sm his-btn">'
+            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#his-modal" class="btn btn-outline-dark btn-sm his-btn">'
             + '<i class="fas fa-fw fa-history"></i></button>'
             + '</div>';
     }
@@ -188,6 +198,7 @@
         Model.index.f();
         Model.mkdir.f();
         Model.view.f();
+        Model.view.execute.f();
         Model.touch.f();
         Model.his.f();
         Model.executes.f();

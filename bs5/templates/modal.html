@@ -5,11 +5,56 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <div class="btn-group">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
                     <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
                             class="fas fa-fw fa-code-commit"></i>COMMIT
                     </button>
+                </div>
+                <h4 class="modal-title text-white" id="mkdir-header">VIEW</h4>
+            </div>
+            <div class="modal-body px-2 pt-2 pb-0">
+                <div class="input-group mb-2">
+                    <span class="input-group-text">TARGET</span>
+                    <input type="text" class="form-control f-data" readonly name="target" aria-label="PATH OUT">
+                </div>
+                <div class="write-mdg-box mb-2">
+                        <textarea class="form-control f-data" rows="40" name="text" spellcheck="false" tabindex="0"
+                                  wrap="off"></textarea>
+                    <img class="img-fluid" src="">
+                </div>
+                <div class="input-group mb-2">
+                    <table style="table-layout: auto"
+                           class="table-striped table-hover table-bordered table-condensed table-centered table-nowrap mb-0">
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer px-2 pb-2">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VIEW EXE Modal -->
+<div id="view-exe-modal" class="modal" tabindex="-1" aria-labelledby="view-exe-header"
+     style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <div class="btn-group">
                     <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
                             class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                    <button type="submit" class="btn btn-outline-warning commit-btn"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
+                    </button>
+                    <button id="view-execute-btn" type="submit" class="btn btn-outline-light execute-btn"><i
+                            class="fas fa-fw fa-play"></i>EXECUTE
+                    </button>
+                    <button type="button" class="btn btn-outline-light" data-bs-toggle="offcanvas"
+                            data-bs-target="#his" aria-controls="offcanvasNavbar">
+                        <i class="fas fa-fw fa-history"></i>
                     </button>
                 </div>
                 <h4 class="modal-title text-white" id="mkdir-header">VIEW</h4>
@@ -43,11 +88,11 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-code-commit"></i>COMMIT
-                    </button>
                     <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
                             class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
                     </button>
                 </div>
                 <h4 class="modal-title text-white" id="mkdir-header">MKDIR</h4>
@@ -70,11 +115,11 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <div class="btn-group">
-                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-code-commit"></i>COMMIT
-                    </button>
                     <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
                             class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
                     </button>
                 </div>
                 <h4 class="modal-title text-white" id="mkdir-header">EN-DECRYPT</h4>
@@ -111,7 +156,7 @@
 </div>
 
 <!-- HIS Modal -->
-<div id="his-modal" class="modal" tabindex="-1" aria-labelledby="view-header"
+<div id="his-modal" class="modal" tabindex="-1" aria-labelledby="his-header"
      style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
@@ -140,11 +185,11 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <div class="btn-group">
-                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-code-commit"></i>COMMIT
-                    </button>
                     <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
                             class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
                     </button>
                 </div>
                 <h4 class="modal-title text-white" id="mkdir-header">TOUCH YAML</h4>
@@ -173,11 +218,11 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <div class="btn-group">
-                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-code-commit"></i>COMMIT
-                    </button>
                     <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
                             class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-code-commit"></i>COMMIT
                     </button>
                 </div>
                 <h4 class="modal-title text-white" id="mkdir-header">IMAGE OPERATE</h4>
@@ -207,11 +252,11 @@
         <div class="modal-content">
             <div class="modal-header bg-dark">
                 <div class="btn-group">
-                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal"><i
-                            class="fas fa-fw fa-code-commit"></i>COMMIT
-                    </button>
                     <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
                             class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                    <button type="submit" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal">
+                        <i class="fas fa-fw fa-search"></i>SCAN
                     </button>
                 </div>
                 <h4 class="modal-title text-white" id="mkdir-header">SCAN</h4>

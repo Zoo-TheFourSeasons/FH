@@ -41,8 +41,13 @@
     border-radius: .2rem
 }
 
-textarea.form-control{
+textarea .form-control{
     line-height: 1.2;
+}
+
+.offcanvas textarea{
+    font-size: 0.82em;
+    line-height: 1.1;
 }
 
 .menu-left .nav li{
@@ -51,4 +56,8 @@ textarea.form-control{
 
 .menu-left span{
     margin-left: 0.2em;
+}
+
+.offcanvas-end {
+    width: 50%;
 }

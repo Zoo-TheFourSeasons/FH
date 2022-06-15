@@ -236,6 +236,10 @@ class CodeHelper(object):
             try:
                 if isinstance(ob, (dict, list, tuple)):
                     ob = json.dumps(ob, indent=4)
+                elif isinstance(ob, str):
+                    ob = ob
+                else:
+                    ob = str(ob)
                 file.write(ob + '\n')
                 print(ob)
                 if self.ns is not None:
@@ -491,6 +495,14 @@ class CodeHelper(object):
                     _quarters.append(_quarter)
         return _quarters
 
+    @staticmethod
+    def read_specified(target: str, start: int, end: int):
+        return [x for i, x in enumerate(open(target, 'r')) if start <= i + 1 <= end]
+
+    @staticmethod
+    def get_file_count(target: str):
+        pass
+
 
 class Pickled(metaclass=TimerMeta):
     pick_ = None
@@ -559,16 +571,17 @@ class WebSocketHelper(Namespace, CodeHelper):
 
     def on_task(self, data):
         # is_parallel = data['is_parallel']
+        kid = data['kid']
+        if kid:
+            self.update_progress({'kid': kid, 'progress': 0})
+            print('progress', 0)
         self.socketio.start_background_task(
             self.backgrounds, data
         )
+        if kid:
+            print('progress', 100)
+            self.update_progress({'kid': kid, 'progress': 100})
 
     def backgrounds(self, data):
-        kid = data['kid']
         action = data['action']
-        if kid:
-            self.update_progress({'kid': kid, 'progress': 0})
         self.actions[action](data)
-        if kid:
-            self.update_progress({'kid': kid, 'progress': 100})
-        pass

@@ -3,8 +3,10 @@
         <div class="input-group">
             <input type="text" class="form-control" id="top-search" placeholder="SEARCH...">
             <button type="submit" class="btn btn-outline-info"><i class="fas fa-fw fa-search"></i></button>
-            <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
-                    data-bs-target="#his-modal"><i class="fas fa-fw fa-circle-exclamation"></i></button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="offcanvas"
+                    data-bs-target="#his" aria-controls="offcanvasNavbar">
+                <i class="fas fa-fw fa-history"></i>
+            </button>
             <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
                     data-bs-target="#"><i class="fas fa-fw fa-lock"></i></button>
         </div>
@@ -29,7 +31,7 @@
     }
 
     function his(data){
-        $('#his-modal textarea').append(data)
+        $('#his textarea').append(data)
     }
 
     let http = 'http://' + document.domain + (location.port ? ":" + location.port : "");
@@ -46,5 +48,19 @@
 
     $(document).ready(function () {
         $(".modal").draggable();
+        let $his = $('#his');
+
+        $his.on('click', '.clean', function () {
+            $('#his textarea').empty();
+        });
+        $his.on('click', '.med', function () {
+            $his.css("width", '50%');
+        });
+        $his.on('click', '.max', function () {
+            $his.css("width", '100%');
+        });
+        $his.on('click', '.min', function () {
+            $his.css("width", '30%');
+        });
     });
 </script>

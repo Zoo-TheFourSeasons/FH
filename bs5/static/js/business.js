@@ -458,11 +458,11 @@ function list_for_table(model, Model) {
 function view(model) {
     $("tbody").on('click', model.btn_class, function () {
         let target = this.name;
-        let $img = $("#view-modal img");
-        let $textarea = $("#view-modal textarea");
-        let $input = $("#view-modal input");
-        let $commit = $("#view-modal .commit-btn");
-        let $table = $("#view-modal table");
+        let $img = $(`#${model.modal_id} img`);
+        let $textarea = $(`#${model.modal_id} textarea`);
+        let $input = $(`#${model.modal_id} input`);
+        let $commit = $(`#${model.modal_id} .commit-btn`);
+        let $table = $(`#${model.modal_id} table`);
         $textarea.hide();
         $img.hide();
         $commit.hide();
