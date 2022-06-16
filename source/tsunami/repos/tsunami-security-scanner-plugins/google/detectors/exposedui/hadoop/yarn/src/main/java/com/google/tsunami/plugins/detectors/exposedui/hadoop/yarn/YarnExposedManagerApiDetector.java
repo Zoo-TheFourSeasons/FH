@@ -74,7 +74,7 @@ public final class YarnExposedManagerApiDetector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting unauthenticated Apache Yarn ResourceManager API detection");
+    // logger.atInfo().log("Starting unauthenticated Apache Yarn ResourceManager API detection");
 
     DetectionReportList detectionReports =
         DetectionReportList.newBuilder()

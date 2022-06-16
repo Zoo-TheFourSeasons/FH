@@ -121,7 +121,7 @@ final class NcrackCredentialTester extends CredentialTester {
       NcrackRun result =
           ncrackClientProvider
               .get()
-              .withTimingTemplate(TimingTemplate.NORMAL)
+              .withTimingTemplate(TimingTemplate.POLITE)  // TimingTemplate.NORMAL
               .withQuitCrackingAfterOneFound()
               .withNetworkEndpoint(networkService.getNetworkEndpoint())
               .usingUsernamePasswordPair(

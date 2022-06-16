@@ -72,7 +72,7 @@ public final class WordPressInstallPageDetector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting unfinished install page detection for WordPress.");
+    // logger.atInfo().log("Starting unfinished install page detection for WordPress.");
     DetectionReportList detectionReports =
         DetectionReportList.newBuilder()
             .addAllDetectionReports(

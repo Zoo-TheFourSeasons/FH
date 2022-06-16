@@ -82,7 +82,7 @@ public final class JenkinsExposedUiDetector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting exposed ui detection for Jenkins");
+    // logger.atInfo().log("Starting exposed ui detection for Jenkins");
     return DetectionReportList.newBuilder()
         .addAllDetectionReports(
             matchedServices.stream()

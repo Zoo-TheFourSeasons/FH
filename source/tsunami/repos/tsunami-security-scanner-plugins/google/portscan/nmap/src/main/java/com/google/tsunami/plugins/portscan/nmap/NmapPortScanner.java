@@ -95,7 +95,7 @@ public final class NmapPortScanner implements PortScanner {
   public PortScanningReport scan(ScanTarget scanTarget) {
     this.scanTarget = scanTarget;
     try {
-      logger.atInfo().log("Starting nmap scan.");
+      // logger.atInfo().log("Starting nmap scan.");
       Stopwatch stopwatch = Stopwatch.createStarted();
       NmapRun result =
           setPortTargets(nmapClient)
@@ -106,7 +106,7 @@ public final class NmapPortScanner implements PortScanner {
               .withServiceAndVersionDetection()
               .withVersionDetectionIntensity(5)
               .withScript("banner")
-              .withTimingTemplate(TimingTemplate.AGGRESSIVE)
+              .withTimingTemplate(TimingTemplate.NORMAL)  // TimingTemplate.AGGRESSIVE
               .withTargetNetworkEndpoint(scanTarget.getNetworkEndpoint())
               .run(commandExecutor);
       logger.atInfo().log(
@@ -173,7 +173,7 @@ public final class NmapPortScanner implements PortScanner {
   }
 
   private PortScanningReport extractServicesFromNmapRun(NmapRun nmapRun) {
-    logger.atInfo().log("Building PortScanningReport from Nmap result.");
+    // logger.atInfo().log("Building PortScanningReport from Nmap result.");
     PortScanningReport.Builder portScanningReportBuilder =
         PortScanningReport.newBuilder().setTargetInfo(buildTargetInfoFromNmaprun(nmapRun));
 

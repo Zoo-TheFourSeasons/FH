@@ -57,6 +57,6 @@ public abstract class PluginBootstrapModule extends AbstractModule {
     tsunamiPluginBinder
         .addBinding(PluginDefinition.forPlugin(tsunamiPluginClazz))
         .to(tsunamiPluginClazz);
-    logger.atInfo().log("Plugin %s is registered.", tsunamiPluginClazz);
+    // logger.atInfo().log("Plugin %s is registered.", tsunamiPluginClazz);
   }
 }

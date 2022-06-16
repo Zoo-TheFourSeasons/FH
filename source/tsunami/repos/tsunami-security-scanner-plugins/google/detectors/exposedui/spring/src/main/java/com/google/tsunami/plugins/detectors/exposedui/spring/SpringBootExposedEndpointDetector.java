@@ -86,7 +86,7 @@ public final class SpringBootExposedEndpointDetector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting exposed ui detection for Spring Boot Actuator endpoint.");
+    // logger.atInfo().log("Starting exposed ui detection for Spring Boot Actuator endpoint.");
     return DetectionReportList.newBuilder()
         .addAllDetectionReports(
             matchedServices.stream()

@@ -52,7 +52,7 @@ final class ResourceFingerprintLoader implements FingerprintLoader {
     ImmutableMap.Builder<SoftwareIdentity, FingerprintData> fingerprintsBuilder =
         ImmutableMap.builder();
     for (Resource resource : fingerprintsResources) {
-      logger.atInfo().log("Loading fingerprints from resource %s.", resource.getPath());
+      // logger.atInfo().log("Loading fingerprints from resource %s.", resource.getPath());
       Fingerprints fingerprints = Fingerprints.parseFrom(resource.load());
       fingerprintsBuilder.put(
           fingerprints.getSoftwareIdentity(), FingerprintData.fromProto(fingerprints));

@@ -256,7 +256,7 @@ public final class NmapResultHandler extends DefaultHandler {
 
   @Override
   public void startDocument() {
-    logger.atInfo().log("Start parsing Nmap result document.");
+    // logger.atInfo().log("Start parsing Nmap result document.");
     pushState(State.INIT);
   }
 

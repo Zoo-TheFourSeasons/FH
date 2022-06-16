@@ -67,7 +67,7 @@ public final class JavaJmxRceDetector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("JavaJmxRceDetector starts detecting.");
+    // logger.atInfo().log("JavaJmxRceDetector starts detecting.");
 
     return DetectionReportList.newBuilder()
         .addAllDetectionReports(

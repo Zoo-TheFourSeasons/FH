@@ -88,7 +88,7 @@ public final class JoomlaCve20158562Detector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting detection for Joomla! CVE-2015-8562.");
+    // logger.atInfo().log("Starting detection for Joomla! CVE-2015-8562.");
 
     return DetectionReportList.newBuilder()
         .addAllDetectionReports(

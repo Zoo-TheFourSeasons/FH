@@ -71,7 +71,7 @@ public final class JupyterExposedUiDetector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting exposed ui detection for Jupyter Notebook");
+    // logger.atInfo().log("Starting exposed ui detection for Jupyter Notebook");
     return DetectionReportList.newBuilder()
         .addAllDetectionReports(
             matchedServices.stream()

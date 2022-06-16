@@ -81,7 +81,7 @@ public final class JoomlaRustyRCEDetector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting detection for Joomla! Rusty RCE.");
+    // logger.atInfo().log("Starting detection for Joomla! Rusty RCE.");
 
     return DetectionReportList.newBuilder()
         .addAllDetectionReports(

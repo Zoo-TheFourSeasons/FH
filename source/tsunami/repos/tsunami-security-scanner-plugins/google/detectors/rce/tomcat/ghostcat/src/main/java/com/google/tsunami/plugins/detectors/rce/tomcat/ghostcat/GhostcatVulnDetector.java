@@ -74,7 +74,7 @@ public final class GhostcatVulnDetector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting Ghostcat vulnerability detection.");
+    // logger.atInfo().log("Starting Ghostcat vulnerability detection.");
 
     return DetectionReportList.newBuilder()
         .addAllDetectionReports(

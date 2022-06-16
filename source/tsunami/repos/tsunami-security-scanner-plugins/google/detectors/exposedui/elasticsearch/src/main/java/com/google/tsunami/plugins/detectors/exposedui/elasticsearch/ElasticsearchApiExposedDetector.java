@@ -68,7 +68,7 @@ public final class ElasticsearchApiExposedDetector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting Elasticsearch API exposed detection.");
+    // logger.atInfo().log("Starting Elasticsearch API exposed detection.");
     return DetectionReportList.newBuilder()
         .addAllDetectionReports(
             matchedServices.stream()

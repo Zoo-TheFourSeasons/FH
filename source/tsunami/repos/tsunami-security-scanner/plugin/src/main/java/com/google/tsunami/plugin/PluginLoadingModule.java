@@ -60,7 +60,7 @@ public final class PluginLoadingModule extends AbstractModule {
             .getClassesImplementing(TSUNAMI_PLUGIN_INTERFACE)
             .filter(classInfo -> !classInfo.isInterface());
     for (ClassInfo tsunamiPluginClass : tsunamiPluginClasses) {
-      logger.atInfo().log("Found plugin class: %s", tsunamiPluginClass.getName());
+      // logger.atInfo().log("Found plugin class: %s", tsunamiPluginClass.getName());
       // PluginInfo annotation is required for TsunamiPlugin.
       if (!tsunamiPluginClass.hasAnnotation(PLUGIN_INFO_ANNOTATION)) {
         throw new IllegalStateException(

@@ -88,7 +88,7 @@ public final class PHPUnitExposedEvalStdinDetector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting exposed ui detection for eval-stdin.php script.");
+    // logger.atInfo().log("Starting exposed ui detection for eval-stdin.php script.");
 
     return DetectionReportList.newBuilder()
         .addAllDetectionReports(

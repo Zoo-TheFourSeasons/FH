@@ -109,7 +109,7 @@ public final class NcrackWeakCredentialDetector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting weak credential detection using ncrack.");
+    // logger.atInfo().log("Starting weak credential detection using ncrack.");
     Stopwatch stopwatch = Stopwatch.createStarted();
     DetectionReportList.Builder detectionReportsBuilder = DetectionReportList.newBuilder();
 

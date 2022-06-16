@@ -129,7 +129,7 @@ public final class DefaultScanningWorkflow {
     checkNotNull(scanTarget);
     scanStartTimestamp = Instant.now(clock);
     executionTracer = ExecutionTracer.startWorkflow();
-    logger.atInfo().log("Staring Tsunami scanning workflow.");
+    // logger.atInfo().log("Staring Tsunami scanning workflow.");
     return FluentFuture.from(scanPorts(scanTarget))
         .transformAsync(this::fingerprintNetworkServices, directExecutor())
         .transformAsync(this::detectVulnerabilities, directExecutor())
@@ -165,7 +165,7 @@ public final class DefaultScanningWorkflow {
                 () -> matchedPortScanner.get().tsunamiPlugin().scan(scanTarget))
             .build();
     executionTracer.startPortScanning(ImmutableList.of(matchedPortScanner.get()));
-    logger.atInfo().log("Starting port scanning phase of the scanning workflow.");
+    // logger.atInfo().log("Starting port scanning phase of the scanning workflow.");
     return FluentFuture.from(pluginExecutorProvider.get().executeAsync(executorConfig))
         .transformAsync(
             pluginExecutionResult ->

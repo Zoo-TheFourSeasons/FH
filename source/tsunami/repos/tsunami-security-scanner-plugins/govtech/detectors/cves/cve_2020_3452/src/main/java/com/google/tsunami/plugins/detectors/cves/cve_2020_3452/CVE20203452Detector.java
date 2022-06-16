@@ -67,7 +67,7 @@ public final class CVE20203452Detector implements VulnDetector {
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting CVE-2020-3452 detection.");
+    // logger.atInfo().log("Starting CVE-2020-3452 detection.");
     return DetectionReportList.newBuilder()
         .addAllDetectionReports(
             matchedServices.stream()

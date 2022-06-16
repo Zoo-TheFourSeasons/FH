@@ -78,7 +78,7 @@ public final class MantisBTAuthenticationBypassDetector implements VulnDetector 
   @Override
   public DetectionReportList detect(
       TargetInfo targetInfo, ImmutableList<NetworkService> matchedServices) {
-    logger.atInfo().log("Starting authentication bypass (CVE-2017-7615) detection for MantisBT.");
+    // logger.atInfo().log("Starting authentication bypass (CVE-2017-7615) detection for MantisBT.");
     DetectionReportList detectionReports =
         DetectionReportList.newBuilder()
             .addAllDetectionReports(

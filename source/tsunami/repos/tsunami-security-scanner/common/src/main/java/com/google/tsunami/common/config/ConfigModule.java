@@ -51,7 +51,7 @@ public final class ConfigModule extends AbstractModule {
         scanResult
             .getClassesWithAnnotation(CONFIG_PROPERTIES_ANNOTATION)
             .filter(classInfo -> !classInfo.isAbstract())) {
-      logger.atInfo().log("Found Tsunami config class: %s", configClass.getName());
+      // logger.atInfo().log("Found Tsunami config class: %s", configClass.getName());
 
       bindConfigClass(getConfigPrefix(configClass), configClass.loadClass());
     }
