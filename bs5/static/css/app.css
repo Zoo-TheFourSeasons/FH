@@ -45,9 +45,10 @@ textarea .form-control{
     line-height: 1.2;
 }
 
-.offcanvas textarea{
+.offcanvas pre{
     font-size: 0.82em;
     line-height: 1.1;
+    height: 98%;
 }
 
 .menu-left .nav li{

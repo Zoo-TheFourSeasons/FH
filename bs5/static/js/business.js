@@ -16,6 +16,7 @@ axios.interceptors.response.use(function (response) {
         // 执行成功
         // 仍然有消息要显示
         if (content) {
+            confirm_tip('INFO! ', content)
         }
     } else {
         // 执行失败
