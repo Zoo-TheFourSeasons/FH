@@ -317,7 +317,7 @@ class CodeHelper(object):
         try:
             with open(target_abs, 'w') as f:
                 f.write(text)
-                return {'status': True, 'target': target}
+            return {'status': True, 'target': target, 'message': 'save successful'}
         except Exception as e:
             return {'status': False, 'message': 'touch failed: %s' % e}
 
@@ -571,17 +571,24 @@ class WebSocketHelper(Namespace, CodeHelper):
 
     def on_task(self, data):
         # is_parallel = data['is_parallel']
+        print('data:', data)
+        self.socketio.start_background_task(
+            self.backgrounds, data
+        )
+
+    def backgrounds(self, data):
         kid = data['kid']
         if kid:
             self.update_progress({'kid': kid, 'progress': 0})
             print('progress', 0)
-        self.socketio.start_background_task(
-            self.backgrounds, data
-        )
+
+        action = data['action']
+        try:
+            self.actions[action](data)
+        except Exception as e:
+            print('his:', e)
+            self.emit_signal('his', str(e))
+
         if kid:
             print('progress', 100)
             self.update_progress({'kid': kid, 'progress': 100})
-
-    def backgrounds(self, data):
-        action = data['action']
-        self.actions[action](data)

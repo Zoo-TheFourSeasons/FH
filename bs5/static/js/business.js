@@ -285,7 +285,7 @@ function confirm_do_with_table(model, Model, title) {
     });
 }
 
-function confirm_do_ns_with_table(model, Model, title, ns) {
+function confirm_do_ns_with_table(model, Model, title) {
     model.$btn.confirm({
         closeIcon: true,
         theme: 'supervan',
@@ -306,21 +306,17 @@ function confirm_do_ns_with_table(model, Model, title, ns) {
                 action: function () {
                     let select = get_selected(Model.$table, false);
                     let params;
-                    if (Model.target === undefined) {
-                        params = {
-                            'action': this.action,
-                            'is_parallel': false,
-                            'params': {'files': select.ids, 'target': ''}
-                        };
-                    } else {
-                        params = {
-                            'action': this.action,
-                            'is_parallel': false,
-                            'params': {'files': select.ids, 'target': Model.target}
-                        };
+                    params = {
+                        'kid': '',
+                        'action': model.action,
+                        'is_parallel': false,
+                        'params': {'target': select.ids}
+                    };
+                    if (this.id !== undefined) {
+                        params.kid = this.id
                     }
                     console.info(params);
-                    ns.emit(Model.signal, params);
+                    Model.io.emit(Model.signal, params);
                 }
             },
             cancel: {text: 'CLOSE'}
