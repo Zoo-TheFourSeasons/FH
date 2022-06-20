@@ -462,10 +462,12 @@ function view(model) {
         let target = this.name;
         let $img = $(`#${model.modal_id} img`);
         let $textarea = $(`#${model.modal_id} textarea`);
+        // let $pre = $(`#${model.modal_id} pre`);
         let $input = $(`#${model.modal_id} input`);
         let $commit = $(`#${model.modal_id} .commit-btn`);
         let $table = $(`#${model.modal_id} table`);
         $textarea.hide();
+        // $pre.hide();
         $img.hide();
         $commit.hide();
         $table.hide();
@@ -484,6 +486,8 @@ function view(model) {
                 } else if (type === 'txt') {
                     $textarea.val(rows);
                     $textarea.show();
+                    // $pre.append(rows);
+                    // $pre.show();
                     $input.val(target);
                     $commit.show()
                 } else if (type === 'xls') {
