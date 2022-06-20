@@ -503,6 +503,13 @@ class CodeHelper(object):
     def get_file_count(target: str):
         pass
 
+    @staticmethod
+    def mkdir_if_not_exist(path: str):
+        if os.path.exists(path) and os.path.isdir(path):
+            return
+        print('makedirs: %s' % path)
+        os.makedirs(path)
+
 
 class Pickled(metaclass=TimerMeta):
     pick_ = None
