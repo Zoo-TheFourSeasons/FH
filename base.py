@@ -259,22 +259,28 @@ class CodeHelper(object):
     @classmethod
     @timer
     def listdir(cls, target: str, base: str = None, args_r: dict = None, suffix=None):
-        _, _, _, offset, limit = cls.__parser_request_args(args_r)
+        search, _, _, offset, limit = cls.__parser_request_args(args_r)
 
         base = PATH_PROJECT if base is None else base
         target_abs = os.path.join(base, target)
-        _index = 0
 
-        files = [f for f in os.listdir(target_abs) if not f.startswith('.')]
-        if suffix:
-            files = [f for f in files if f.endswith(suffix) or os.path.isdir(os.path.join(target_abs, f))]
+        if search is not None:
+            # search
+            files = []
+            for root, dirs, fns in os.walk(target_abs):
+                for fn in fns:
+                    if search.lower() not in fn.lower():
+                        continue
+                    if suffix and not fn.endswith(suffix):
+                        continue
+                    files.append(os.path.join(root, fn))
         else:
-            files = files
+            files = [os.path.join(target_abs, fn) for fn in os.listdir(target_abs) if not fn.startswith('.')]
+            files = [fn for fn in files if fn.endswith(suffix) or os.path.isdir(fn)] if suffix else files
         files.sort(reverse=True)
-
+        _index = 0
         rows = []
-        for _file in files:
-            _f = os.path.join(target_abs, _file)
+        for _f in files:
             _index += 1
             if offset and _index <= offset:
                 continue
@@ -288,13 +294,18 @@ class CodeHelper(object):
                 _size = str(round(_size / 1024.0, 1)) + 'M'
             else:
                 _size = str(round(_size, 1)) + 'K'
+
+            _, fn = os.path.split(_f)
+
+            relative = _f.replace(base, '')
+            relative = relative[1:] if relative.startswith('/') else relative
             rows.append({
-                '_file': _file,
+                '_file': fn,
                 '_isdir': os.path.isdir(_f),
                 '_ctime': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(_ctime)),
                 '_mtime': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(_mtime)),
                 '_size': _size,
-                'id': os.path.join(target, _file),
+                'id': relative,
             })
         # parents of the current path
         parents = []

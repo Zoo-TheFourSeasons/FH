@@ -418,6 +418,7 @@ function list_for_table(model, Model) {
             if (Model.target !== undefined) {
                 params.target = Model.target;
             }
+            params.search = $('#top-search').val();
             return params
         },
         ajax: function (request) {
@@ -438,7 +439,7 @@ function list_for_table(model, Model) {
                     $parents.prepend(ps.join(' / '));
                     Model.$table.bootstrapTable('load', rsp.data);
                 }
-            });
+            })
         },
     });
 
@@ -448,6 +449,10 @@ function list_for_table(model, Model) {
     });
 
     $("#refresh").on('click', function () {
+        Model.$table.bootstrapTable('refresh');
+    });
+
+    $("#search").on('click', function () {
         Model.$table.bootstrapTable('refresh');
     });
 }
