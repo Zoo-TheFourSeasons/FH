@@ -87,7 +87,12 @@ let ModelFH = {
             let local_name = field.localName;
             let value;
             if (local_name === 'input') {
-                value = $(field).val();
+                // checkbox
+                if (field.type === 'checkbox'){
+                    value = field.checked;
+                } else {
+                    value = $(field).val();
+                }
             } else if (local_name === 'span') {
                 value = $(field)[0].textContent;
             } else if (local_name === 'select') {
@@ -324,6 +329,38 @@ function confirm_do_ns_with_table(model, Model, title) {
     });
 }
 
+function confirm_do_ns(model, Model, title) {
+    model.$btn.confirm({
+        closeIcon: true,
+        theme: 'supervan',
+        title: title,
+        content: "",
+        onOpenBefore: function () {
+            this.setContent("ARE YOU SURE TO " + title + "?");
+        },
+        buttons: {
+            doKey: {
+                text: 'YES',
+                action: function () {
+                    let params;
+                    params = {
+                        'kid': '',
+                        'action': model.action,
+                        'is_parallel': false,
+                        'params': {'target': ''}
+                    };
+                    if (this.id !== undefined) {
+                        params.kid = this.id
+                    }
+                    console.info(params);
+                    Model.io.emit(Model.signal, params);
+                }
+            },
+            cancel: {text: 'CLOSE'}
+        }
+    });
+}
+
 function confirm_do(model, Model, title) {
     model.$btn.confirm({
         closeIcon: true,
@@ -454,6 +491,28 @@ function list_for_table(model, Model) {
 
     $("#search").on('click', function () {
         Model.$table.bootstrapTable('refresh');
+    });
+}
+
+function view_txt_only(model) {
+    $("tbody").on('click', model.btn_class, function () {
+        let target = this.name;
+        let $pre = $(`#${model.modal_id} pre`);
+        let $input = $(`#${model.modal_id} input`);
+        $pre.hide();
+        console.log('view:' + model.u);
+        console.log('target:' + target);
+
+        get({
+            'url': model.u + '?target=' + target,
+            'btn': $(this),
+            'success': function (rsp) {
+                let rows = rsp.data.rows;
+                $pre.append(rows);
+                $pre.show();
+                $input.val(target);
+            }
+        });
     });
 }
 

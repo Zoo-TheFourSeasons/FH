@@ -4,22 +4,24 @@ import sys
 import json
 import time
 import base64
-import pickle
 import shutil
 import logging
 import datetime
 import importlib
 import threading
+import traceback
 import subprocess
-from datetime import date
+import multiprocessing
 
+import yaml
 import pandas
+import paramiko
 from flask import make_response
 from flask_socketio import Namespace
 from flask_socketio import join_room
 
-from independence import timer, TimerMeta
 import ins
+from independence import timer
 
 PATH_PROJECT = os.path.dirname(os.path.abspath(__file__))
 logging.getLogger('paramiko.transport').setLevel(logging.CRITICAL)
@@ -183,41 +185,6 @@ class CodeHelper(object):
         return 'linux' in sys.platform.lower()
 
     @staticmethod
-    def get_output_file_split_by_time(
-            path_output: str, folder: str = None,
-            precision: str = 'ns', suffix: str = '.info'):
-        """
-        :param path_output: str, folder name
-        :param folder: str, folder name
-        :param precision: str, choice of ['day', 'hour', 'minute', 'second']
-        :param suffix: str, file type
-        :return: str, file path
-        """
-        if precision not in ('day', 'hour', 'minute', 'second', 'ns'):
-            raise ValueError('precision error')
-        now = str(datetime.datetime.now()). \
-            replace(' ', '').replace(':', '').replace('-', '').replace('.', '')
-        name_map = {
-            'day': now[:8],
-            'hour': now[:10],
-            'minute': now[:12],
-            'second': now[:14],
-            'ns': now,
-        }
-        name_file = name_map[precision] + suffix
-        path_folder = os.path.join(path_output, folder)
-
-        # makedirs
-        if not os.path.exists(path_folder):
-            os.makedirs(path_folder)
-
-        # get new file
-        path_file = os.path.join(path_folder, name_file)
-        if not os.path.exists(path_file):
-            print('get a new file: ', path_file)
-        return path_file
-
-    @staticmethod
     def get_output_file(path_output: str, tid: str):
         folder = str(datetime.datetime.now())[:10].replace(' ', '').replace('-', '')
 
@@ -248,7 +215,7 @@ class CodeHelper(object):
                 file.write(json.dumps({'error': str(err), 'op': str(ob)}, indent=4) + '\n')
 
     @staticmethod
-    def __parser_request_args(args_r):
+    def __request_parser_args(args_r):
         search = args_r['search'] if 'search' in args_r and args_r['search'] else None
         sort = args_r['sort'] if 'sort' in args_r and args_r['sort'] else None
         order = args_r['order'] if 'order' in args_r and args_r['order'] else None
@@ -259,7 +226,7 @@ class CodeHelper(object):
     @classmethod
     @timer
     def listdir(cls, target: str, base: str = None, args_r: dict = None, suffix=None):
-        search, _, _, offset, limit = cls.__parser_request_args(args_r)
+        search, _, _, offset, limit = cls.__request_parser_args(args_r)
 
         base = PATH_PROJECT if base is None else base
         target_abs = os.path.join(base, target)
@@ -365,7 +332,7 @@ class CodeHelper(object):
                 print('update ins_dfs_cache: %s' % target_abs)
             pass
         df = ins.ins_xls_cache[target_abs]['df']
-        _, _, _, offset, limit = cls.__parser_request_args(args_r)
+        _, _, _, offset, limit = cls.__request_parser_args(args_r)
 
         rows = []
         for _index, _row in df.iterrows():
@@ -395,6 +362,16 @@ class CodeHelper(object):
             rows.append(tmp)
         columns = [{'title': c, 'field': c, 'sortable': True, 'switchable': True} for c in df.columns]
         return {'status': True, 'rows': rows, 'total': df.shape[0], 'columns': columns, 'type': 'xls'}
+
+    @classmethod
+    def __yaml_to_json(cls, target_abs):
+        with open(target_abs, 'r', encoding='utf-8') as fm:
+            data = yaml.safe_load(fm.read())
+
+        jn = '.'.join((target_abs, 'json'))
+        with open(jn, 'w') as fm:
+            json.dump(data, fm, indent=4)
+        return jn
 
     @classmethod
     @timer
@@ -496,7 +473,7 @@ class CodeHelper(object):
     @staticmethod
     def quarters():
         _quarters = []
-        today = date.today()
+        today = datetime.date.today()
         current_year = today.year
         current = str(today).replace('-', '')
         for year in range(2010, current_year + 1, 1):
@@ -506,13 +483,29 @@ class CodeHelper(object):
                     _quarters.append(_quarter)
         return _quarters
 
-    @staticmethod
-    def read_specified(target: str, start: int, end: int):
-        return [x for i, x in enumerate(open(target, 'r')) if start <= i + 1 <= end]
+    @classmethod
+    def get_executor(cls, host, user, psw):
+        if host in ('127.0.0.1', 'localhost', ''):
+            return lambda cmd: subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(host, username=user, password=psw, timeout=3)
+        return ssh.exec_command
+
+    def file_read_specified(self, target: str, start: int, end: int, executor=None):
+        # return [x for i, x in enumerate(open(target, 'r')) if start <= i + 1 <= end]
+        _, stdout, stderr = executor("sed -n '%s,%sp' %s" % (start, end, target))
+        rsp = stdout.read().decode()
+        self.print('  LOG: %s\n%s\n' % (target, rsp))
+        return rsp
 
     @staticmethod
-    def get_file_count(target: str):
-        pass
+    def file_get_count(target: str, executor=None):
+        _, stdout, stderr = executor('grep -c "" %s' % target)
+        rsp = stdout.read().decode()
+        rsp = int(rsp.strip())
+        # self.print('file_get_count: %s' % rsp)
+        return rsp
 
     @staticmethod
     def mkdir_if_not_exist(path: str):
@@ -521,47 +514,97 @@ class CodeHelper(object):
         print('makedirs: %s' % path)
         os.makedirs(path)
 
+    @staticmethod
+    def _yaml_func_replace(__v, __running):
+        # replace {{}}
+        if '{{' not in __v or '}}' not in __v:
+            return __v
+        prefix, suffix = __v.split('{{', 1)
+        c = 0
+        while '}}' in suffix:
+            target, suffix = suffix.split('}}', 1)
+            value = {}
+            value.update(__running)
+            targets = target.split('.')
+            for i, key in enumerate(targets):
+                print('i, c', i, c)
+                if i < c:
+                    continue
 
-class Pickled(metaclass=TimerMeta):
-    pick_ = None
+                if key in value:
+                    value = value[key]
+                    print('match', key)
+                    continue
+                # key contains '.', such as 12.EPG.12-1R1N1S-N1S1.LOCAL.id
+                matched = False
+                key_n = key
+                for n in range(i + 1, len(targets), 1):
+                    key_n = '.'.join((key_n, targets[n]))
+                    if key_n in value:
+                        value = value[key_n]
+                        c = n + 1
+                        matched = True
+                        print('match .', key_n)
+                        break
+                if matched:
+                    continue
+                # []
+                if '[' in key and key.endswith(']'):
+                    key, index = key.split('[', 1)
+                    index, _ = index.split(']', 1)
+                    value = value[key]
+                    value = value[int(index)]
+                    print('match []', key)
+                else:
+                    raise ValueError('CANNOT FIND: %s, %s in __running' % (target, key))
+            prefix += value
+        return prefix + suffix
 
-    def __init__(self, key, value):
-        self.key = key
-        self.value = value
+    @staticmethod
+    def _yaml_func_transform(__v, __running):
+        # transform --
+        if '--' not in __v:
+            return __v
+        __v = __v.strip()
+        values = {}
+        # --name vpn.01.ext1 --shared True --router:external True
+        items = __v.split('--')
+        items = [i.strip() for i in items if i.strip()]
+        for i in items:
+            kv = i.strip().split(' ', 1)
+            if len(kv) != 2:
+                key, value = kv[0], ''
+            else:
+                key, value = kv
+            # print('key: "%s", value: "%s"' % (key, value))
+            values[key] = value
+        return values
 
     @classmethod
-    def dumps(cls, picks):
-        if isinstance(cls.pick_, (tuple, list)):
-            length = len(cls.pick_)
-            picks_ = dict([(x, {}) for x in range(length)])
-            i = 0
-            for key in picks:
-                picks_[i][key] = picks[key]
-                i += 1
-                i = i % length
+    def _yaml_display_params(cls, __params, __running, __yaml_func):
+        if isinstance(__params, str):
+            return __yaml_func(__params, __running)
+        if isinstance(__params, (list, tuple, dict)):
+            items = __params.items() if isinstance(__params, dict) else enumerate(__params)
+            for i, v in items:
+                if isinstance(v, str):
+                    __params[i] = __yaml_func(v, __running)
+                elif isinstance(v, (dict, list, tuple)):
+                    __params[i] = cls._yaml_display_params(v, __running, __yaml_func)
+                else:
+                    pass
+        return __params
 
-            for i, key in enumerate(picks_.keys()):
-                with open(cls.pick_[i], 'wb') as f:
-                    pickle.dump(picks_[key], f, protocol=pickle.HIGHEST_PROTOCOL)
-        else:
-            with open(cls.pick_, 'wb') as f:
-                pickle.dump(picks, f, protocol=pickle.HIGHEST_PROTOCOL)
+    @classmethod
+    def yaml_to_g6_tree(cls, target: str, base: str = None):
+        base = PATH_PROJECT if base is None else base
+        target_abs = os.path.join(base, target)
+        print('yaml_to_g6_tree', target_abs)
+        with open(target_abs, 'r', encoding='utf-8') as f:
+            meta_scanned_resources = yaml.safe_load(f)
 
-    def add_item(self, key, value):
-        picks = self.loads()
-        if key not in picks:
-            picks[key] = value
-
-        with open(self.pick_, 'wb') as f:
-            pickle.dump(picks, f)
-
-    def add(self):
-        picks = self.loads()
-        if self.key not in picks:
-            picks[self.key] = self.value
-
-        with open(self.pick_, 'wb') as f:
-            pickle.dump(picks, f)
+        for host in meta_scanned_resources.keys():
+            pass
 
 
 class WebSocketHelper(Namespace, CodeHelper):
@@ -605,8 +648,26 @@ class WebSocketHelper(Namespace, CodeHelper):
             self.actions[action](data)
         except Exception as e:
             print('his:', e)
+            print(traceback.print_exc())
             self.emit_signal('his', str(e))
+            self.emit_signal('his', traceback.print_exc())
 
         if kid:
             print('progress', 100)
             self.update_progress({'kid': kid, 'progress': 100})
+
+
+class ProcessHelper(multiprocessing.Process):
+
+    def __init__(self, func, *args, **kwargs):
+        super(ProcessHelper, self).__init__()
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
+
+    def run(self) -> None:
+        self.func(*self.args, **self.kwargs)
+
+
+if __name__ == '__main__':
+    pass

@@ -12,7 +12,7 @@
                             class="fas fa-fw fa-code-commit"></i>COMMIT
                     </button>
                 </div>
-                <h4 class="modal-title text-white" id="mkdir-header">VIEW</h4>
+                <h4 class="modal-title text-white" id="view-header">VIEW</h4>
             </div>
             <div class="modal-body px-2 pt-2 pb-0">
                 <div class="input-group mb-2">
@@ -20,7 +20,7 @@
                     <input type="text" class="form-control f-data" readonly name="target" aria-label="PATH OUT">
                 </div>
                 <div class="write-mdg-box mb-2">
-{#                    <pre name="text" class="form-control"></pre>#}
+                    {#                    <pre name="text" class="form-control"></pre>#}
                     <textarea class="form-control f-data" rows="40" name="text" spellcheck="false" tabindex="0"
                               wrap="off"></textarea>
                     <img class="img-fluid" src="">
@@ -58,7 +58,7 @@
                         <i class="fas fa-fw fa-history"></i>
                     </button>
                 </div>
-                <h4 class="modal-title text-white" id="mkdir-header">VIEW</h4>
+                <h4 class="modal-title text-white" id="view-exe-header">VIEW</h4>
             </div>
             <div class="modal-body px-2 pt-2 pb-0">
                 <div class="input-group mb-2">
@@ -66,7 +66,7 @@
                     <input type="text" class="form-control f-data" readonly name="target" aria-label="PATH OUT">
                 </div>
                 <div class="write-mdg-box mb-2">
-{#                    <pre name="text" class="form-control"></pre>#}
+                    {#                    <pre name="text" class="form-control"></pre>#}
                     <textarea class="form-control f-data" rows="40" name="text" spellcheck="false" tabindex="0"
                               wrap="off"></textarea>
                     <img class="img-fluid" src="">
@@ -124,7 +124,7 @@
                             class="fas fa-fw fa-code-commit"></i>COMMIT
                     </button>
                 </div>
-                <h4 class="modal-title text-white" id="mkdir-header">EN-DECRYPT</h4>
+                <h4 class="modal-title text-white" id="en-decrypt-header">EN-DECRYPT</h4>
             </div>
             <div class="modal-body px-2 pt-2 pb-0">
                 <div class="mb-2">
@@ -157,30 +157,6 @@
     </div>
 </div>
 
-<!-- HIS Modal -->
-<div id="his-modal" class="modal" tabindex="-1" aria-labelledby="his-header"
-     style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header bg-dark">
-                <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
-                        class="fas fa-fw fa-close"></i>CLOSE
-                </button>
-                <h4 class="modal-title text-white" id="mkdir-header">HISTORY</h4>
-            </div>
-            <div class="modal-body px-2 pt-2 pb-0">
-                <div class="write-mdg-box mb-2">
-{#                    <pre name="text" class="form-control"></pre>#}
-                    <textarea readonly class="form-control" rows="45" name="text" spellcheck="false" tabindex="0"
-                              wrap="off"></textarea>
-                </div>
-            </div>
-            <div class="modal-footer px-2 pb-2">
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- TOUCH Modal -->
 <div id="touch-modal" class="modal" tabindex="-1" aria-labelledby="touch-header"
      style="display: none;" aria-hidden="true">
@@ -195,7 +171,7 @@
                             class="fas fa-fw fa-code-commit"></i>COMMIT
                     </button>
                 </div>
-                <h4 class="modal-title text-white" id="mkdir-header">TOUCH YAML</h4>
+                <h4 class="modal-title text-white" id="touch-header">TOUCH YAML</h4>
             </div>
             <div class="modal-body px-2 pt-2 pb-0">
                 <div class="input-group mb-2">
@@ -228,7 +204,7 @@
                             class="fas fa-fw fa-code-commit"></i>COMMIT
                     </button>
                 </div>
-                <h4 class="modal-title text-white" id="mkdir-header">IMAGE OPERATE</h4>
+                <h4 class="modal-title text-white" id="operates-header">IMAGE OPERATE</h4>
             </div>
             <div class="modal-body px-2 pt-2 pb-0">
                 <input type="text" hidden name="target" class="f-data">
@@ -263,7 +239,7 @@
                         <i class="fas fa-fw fa-search"></i>SCAN
                     </button>
                 </div>
-                <h4 class="modal-title text-white" id="mkdir-header">SCAN</h4>
+                <h4 class="modal-title text-white" id="scan-header">SCAN</h4>
             </div>
             <div class="modal-body px-2 pt-2 pb-0">
                 <div class="mb-2">
@@ -282,6 +258,86 @@
                 <div class="mb-2">
                     <label class="form-label">--scan-results-local-output-format*</label>
                     <input type="text" class="form-control f-data" name="output_format" value="JSON">
+                </div>
+            </div>
+            <div class="modal-footer px-2 pb-2">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- VIEW-ONLY Modal -->
+<div id="view-only-modal" class="modal" tabindex="-1" aria-labelledby="view-only-header"
+     style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                </div>
+                <h4 class="modal-title text-white" id="view-only-header">VIEW-ONLY</h4>
+            </div>
+            <div class="modal-body px-2 pt-2 pb-0">
+                <div class="input-group mb-2">
+                    <span class="input-group-text">TARGET</span>
+                    <input type="text" class="form-control f-data" readonly name="target" aria-label="PATH OUT">
+                </div>
+                <div class="write-mdg-box mb-2">
+                    <pre name="text"></pre>
+                </div>
+            </div>
+            <div class="modal-footer px-2 pb-2">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="fh-restart-modal" class="modal" tabindex="-1" aria-labelledby="fh-restart-header"
+     style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-dark">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><i
+                            class="fas fa-fw fa-close"></i>CLOSE
+                    </button>
+                    <button type="button" class="btn btn-outline-warning commit-btn" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-fw fa-retweet"></i>RESTART FH
+                    </button>
+                </div>
+                <h4 class="modal-title text-white" id="fh-restart-header">RESTART</h4>
+            </div>
+            <div class="modal-body px-2 pt-2 pb-0 m-2">
+                <div class="form-check form-switch">
+                    <input class="form-check-input f-data" type="checkbox" name="dsp" role="switch">
+                    <label class="form-check-label">DSP</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input f-data" type="checkbox" name="know" role="switch">
+                    <label class="form-check-label">KNOW</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input f-data" type="checkbox" name="history" role="switch">
+                    <label class="form-check-label">HISTORY</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input f-data" type="checkbox" name="zoo" role="switch">
+                    <label class="form-check-label">ZOO</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input f-data" type="checkbox" name="invest" role="switch">
+                    <label class="form-check-label">INVEST</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input f-data" type="checkbox" name="security" role="switch">
+                    <label class="form-check-label">SECURITY</label>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input f-data" type="checkbox" name="en_decrypt" role="switch">
+                    <label class="form-check-label">EN-DECRYPT</label>
                 </div>
             </div>
             <div class="modal-footer px-2 pb-2">

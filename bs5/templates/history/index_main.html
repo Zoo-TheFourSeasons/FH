@@ -86,10 +86,10 @@
     };
     Model.view = {
         'u': '/history/view',
-        'modal_id': 'view-modal',
+        'modal_id': 'view-only-modal',
         'btn_class': '.view-btn',
         'f': function () {
-            view(this)
+            view_txt_only(this)
         },
     };
     Model.deletes = {
@@ -117,7 +117,7 @@
             return '';
         }
         return '<div class="btn-group" role="group">'
-            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
+            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-only-modal" class="btn btn-outline-success btn-sm view-btn">'
             + '<i class="fa-solid fa-eye"></i></button>'
             + '</div>';
     }

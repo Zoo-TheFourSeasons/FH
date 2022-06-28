@@ -8,13 +8,17 @@
                 <i class="fas fa-fw fa-history"></i>
             </button>
             <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+                    data-bs-target="#fh-restart-modal">
+                <i class="fa-solid fa-fw fa-retweet"></i>
+            </button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
                     data-bs-target="#"><i class="fas fa-fw fa-lock"></i></button>
         </div>
     </form>
 </div>
 <script>
 
-    function progress(data){
+    function progress(data) {
         console.log('progress', data);
         let kid = escape(data.kid);
         {#let kid = data.kid;#}
@@ -23,19 +27,19 @@
         {#    return item#}
         {# }).join("");#}
         let $btn = $(`#${kid}`);
-        if (data.progress === 100){
+        if (data.progress === 100) {
             $btn.attr('disabled', false);
         } else {
             $btn.attr('disabled', true);
         }
     }
 
-    function his(data){
+    function his(data) {
         $('#his pre').append(data)
     }
 
     let http = 'http://' + document.domain + (location.port ? ":" + location.port : "");
-    let io_security = io.connect(http + '/security',{'sync disconnect on unload': true});
+    let io_security = io.connect(http + '/security', {'sync disconnect on unload': true});
     let io_dsp = io.connect(http + '/dsp', {'sync disconnect on unload': true});
 
     io_security.emit('join', {'room': 'progress'});
@@ -47,7 +51,7 @@
     io_dsp.on('progress', progress);
 
     $(document).ready(function () {
-        $(".modal").draggable();
+        {#$(".modal").draggable();#}
         let $his = $('#his');
 
         $his.on('click', '.clean', function () {
@@ -62,5 +66,16 @@
         $his.on('click', '.min', function () {
             $his.css("width", '30%');
         });
+
+        let MFH = Object.create(ModelFH);
+        MFH.restart = {
+            'u': '/restart',
+            'modal_id': 'fh-restart-modal',
+            '$btn': $("#fh-restart-modal .commit-btn"),
+            'f': function () {
+                commit_from_model(this, Model, false)
+            }
+        };
+        MFH.restart.f();
     });
 </script>
