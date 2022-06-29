@@ -28,6 +28,7 @@
         {# }).join("");#}
         let $btn = $(`#${kid}`);
         if (data.progress === 100) {
+            $('#his pre').append('END!');
             $btn.attr('disabled', false);
         } else {
             $btn.attr('disabled', true);

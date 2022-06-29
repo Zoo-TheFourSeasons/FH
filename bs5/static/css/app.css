@@ -41,24 +41,26 @@
     border-radius: .2rem
 }
 
-textarea .form-control{
-    line-height: 1.2;
-}
 
-pre {
-    font-size: 0.86em;
-    line-height: 1.1;
-    height: 98%;
-}
-
-.menu-left .nav li{
+.menu-left .nav li {
     padding-left: 1em;
 }
 
-.menu-left span{
+.menu-left span {
     margin-left: 0.2em;
 }
 
 .offcanvas-end {
     width: 50%;
+}
+
+pre {
+    font-size: 0.86em;
+    line-height: 1.2;
+    height: 98%;
+}
+
+textarea {
+    font-size: 0.86em !important;
+    line-height: 1.4 !important;
 }

@@ -496,7 +496,7 @@ class CodeHelper(object):
         # return [x for i, x in enumerate(open(target, 'r')) if start <= i + 1 <= end]
         _, stdout, stderr = executor("sed -n '%s,%sp' %s" % (start, end, target))
         rsp = stdout.read().decode()
-        self.print('  LOG: %s\n%s\n' % (target, rsp))
+        self.print('  LOG: %s\n%s' % (target, rsp))
         return rsp
 
     @staticmethod

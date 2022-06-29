@@ -349,8 +349,8 @@ function confirm_do_ns(model, Model, title) {
                         'is_parallel': false,
                         'params': {'target': ''}
                     };
-                    if (this.id !== undefined) {
-                        params.kid = this.id
+                    if (model.$btn.id !== undefined) {
+                        params.kid = model.$btn.id
                     }
                     console.info(params);
                     Model.io.emit(Model.signal, params);

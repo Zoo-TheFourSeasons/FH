@@ -47,26 +47,6 @@ def app_launcher(_ip, _port, _bps):
     socket_io.run(app_, host=_ip, port=int(_port), use_reloader=False)
 
 
-def start_app_and_guard(_app_launcher, _ip, _port, _bps):
-    print('start_app_and_guard')
-
-    app = ProcessHelper(_app_launcher, *(_ip, _port, _bps))
-    app.start()
-
-    while True:
-        if not ins.ins_que.empty():
-            _bps_new = ins.ins_que.get()
-            print('bps_new:', _bps_new)
-            app.kill()
-
-            while app.is_alive():
-                time.sleep(1)
-                print('app.is_alive')
-            app = ProcessHelper(_app_launcher, *(_ip, _port, _bps_new))
-            app.start()
-        time.sleep(1.5)
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--ip', help='ip', type=str, default='0.0.0.0')
@@ -76,5 +56,25 @@ if __name__ == '__main__':
     ars = parser.parse_args()
     bps_ = BPS if ars.bps == BP_ALL else ars.bps.split(',')
 
-    guard = ProcessHelper(start_app_and_guard, *(app_launcher, ars.ip, ars.port, bps_))
-    guard.start()
+    app = ProcessHelper(app_launcher, *(ars.ip, ars.port, bps_))
+    app.start()
+    if not app.is_alive():
+        print('failed in launch app by bps:', bps_)
+        exit(0)
+    while True:
+        if not ins.ins_que.empty():
+            _bps_new = ins.ins_que.get()
+            print('bps_new:', _bps_new)
+            app.kill()
+
+            while app.is_alive():
+                time.sleep(1)
+                print('app.is_alive')
+            app = ProcessHelper(app_launcher, *(ars.ip, ars.port, _bps_new))
+            app.start()
+            time.sleep(1)
+            if not app.is_alive():
+                print('failed in launch app by new bps, reversed:', bps_)
+                app = ProcessHelper(app_launcher, *(ars.ip, ars.port, bps_))
+                app.start()
+        time.sleep(1.5)
