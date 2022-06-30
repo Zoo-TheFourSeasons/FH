@@ -21,14 +21,8 @@
     function progress(data) {
         console.log('progress', data);
         let kid = escape(data.kid);
-        {#let kid = data.kid;#}
-        {#kid.split("").map(item => {#}
-        {#    arr.includes(item) ? item = "\\" + `\\${item}` : null;#}
-        {#    return item#}
-        {# }).join("");#}
         let $btn = $(`#${kid}`);
         if (data.progress === 100) {
-            $('#his pre').append('END!');
             $btn.attr('disabled', false);
         } else {
             $btn.attr('disabled', true);
@@ -74,7 +68,7 @@
             'modal_id': 'fh-restart-modal',
             '$btn': $("#fh-restart-modal .commit-btn"),
             'f': function () {
-                commit_from_model(this, Model, false)
+                commit_from_model(this, MFH, false)
             }
         };
         MFH.restart.f();

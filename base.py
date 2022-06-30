@@ -484,13 +484,31 @@ class CodeHelper(object):
         return _quarters
 
     @classmethod
-    def get_executor(cls, host, user, psw):
+    def get_ssh_executor(cls, host: str, user: str, psw: str):
         if host in ('127.0.0.1', 'localhost', ''):
             return lambda cmd: subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(host, username=user, password=psw, timeout=3)
         return ssh.exec_command
+
+    @classmethod
+    def execute_cmd(cls, cmd, executor, with_stdout=True):
+        _, stdout, stderr = executor('date')
+        date = stdout.read().decode()
+        print('date: %s' % date)
+        print('cmd: %s' % cmd)
+        _, stdout, stderr = executor(cmd, get_pty=True)
+        if not with_stdout:
+            return None
+        result = stdout.read().decode()
+        print(result)
+        return result
+
+    @staticmethod
+    def has_path_on_host(executor, path):
+        out = executor('ls %s' % path)
+        return 'No such file or directory' not in out
 
     def file_read_specified(self, target: str, start: int, end: int, executor=None):
         # return [x for i, x in enumerate(open(target, 'r')) if start <= i + 1 <= end]
@@ -515,25 +533,22 @@ class CodeHelper(object):
         os.makedirs(path)
 
     @staticmethod
-    def _yaml_func_replace(__v, __running):
-        # replace {{}}
+    def _yaml_func_replace(__v: str, __running: dict):
+        # replace {{A}}, {{A.B}}, {{A.B[0]}}, {{A.B[0].C}}, {{A}},{{B}}, {{A.{{B}}}}
         if '{{' not in __v or '}}' not in __v:
             return __v
-        prefix, suffix = __v.split('{{', 1)
-        c = 0
-        while '}}' in suffix:
-            target, suffix = suffix.split('}}', 1)
+        mix, c = __v, 0
+        while '{{' in mix and '}}' in mix:
+            targets_s, _ = mix.split('}}', 1)
+            _, targets_i = targets_s.rsplit('{{', 1)
             value = {}
             value.update(__running)
-            targets = target.split('.')
+            targets = targets_s.split('.')
             for i, key in enumerate(targets):
-                print('i, c', i, c)
                 if i < c:
                     continue
-
                 if key in value:
                     value = value[key]
-                    print('match', key)
                     continue
                 # key contains '.', such as 12.EPG.12-1R1N1S-N1S1.LOCAL.id
                 matched = False
@@ -545,6 +560,7 @@ class CodeHelper(object):
                         c = n + 1
                         matched = True
                         print('match .', key_n)
+                        # print('match: %s, suffix: %s' % (key, suffix))
                         break
                 if matched:
                     continue
@@ -556,12 +572,13 @@ class CodeHelper(object):
                     value = value[int(index)]
                     print('match []', key)
                 else:
-                    raise ValueError('CANNOT FIND: %s, %s in __running' % (target, key))
-            prefix += value
-        return prefix + suffix
+                    raise ValueError('CANNOT FIND, target: %s, key: %s in __running' % (targets_s, key))
+            mix = mix.replace('{{%s}}' % targets_s, value)
+            print('mix: %s' % mix)
+        return mix
 
     @staticmethod
-    def _yaml_func_transform(__v, __running):
+    def _yaml_func_transform(__v: str, __running: dict):
         # transform --
         if '--' not in __v:
             return __v
@@ -655,6 +672,7 @@ class WebSocketHelper(Namespace, CodeHelper):
         if kid:
             print('progress', 100)
             self.update_progress({'kid': kid, 'progress': 100})
+            print('his:', 'END!')
 
 
 class ProcessHelper(multiprocessing.Process):

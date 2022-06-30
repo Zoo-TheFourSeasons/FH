@@ -88,7 +88,7 @@ let ModelFH = {
             let value;
             if (local_name === 'input') {
                 // checkbox
-                if (field.type === 'checkbox'){
+                if (field.type === 'checkbox') {
                     value = field.checked;
                 } else {
                     value = $(field).val();
@@ -400,8 +400,14 @@ function commit_from_model(model, Model, with_target) {
             'data': params,
             'btn': model.$btn,
             'success': function (rsp) {
-                Model.$table.bootstrapTable('refresh');
-                console.log(rsp.data);
+                if (Model.$table !== undefined) {
+                    Model.$table.bootstrapTable('refresh');
+                    console.log(rsp.data);
+                } else {
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 2000);
+                }
             }
         });
     });
