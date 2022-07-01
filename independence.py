@@ -36,4 +36,31 @@ def decorate_meta(decorator):
     return MetaDecorate
 
 
+def warp_requests_for_json(func):
+    def warp(*args, **kwargs):
+        def _warp():
+            try:
+                rsp = func(*args, **kwargs)
+            except Exception as e:
+                result = {'message': 'failed in requests: %s' % e}
+                # print(traceback.print_exc())
+                return result
+            if not str(rsp.status_code).startswith('20'):
+                result = {'status_code': rsp.status_code, 'rsp': rsp.text}
+                print(rsp.status_code, result)
+                return result
+            try:
+                result = rsp.json()
+                # print(rsp.status_code)
+                # print(rsp.status_code, 'rsp json:', json.dumps(result, indent=4))
+            except Exception as _:
+                print(rsp.status_code, 'rsp text:', rsp.text)
+                return rsp
+            return result
+
+        return _warp()
+
+    return warp
+
+
 TimerMeta = decorate_meta(timer)
