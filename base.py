@@ -539,11 +539,13 @@ class CodeHelper(object):
             return __v
         mix, c = __v, 0
         while '{{' in mix and '}}' in mix:
-            targets_s, _ = mix.split('}}', 1)
-            _, targets_i = targets_s.rsplit('{{', 1)
+            print('mix', mix)
+            targets_i, _ = mix.split('}}', 1)
+            _, targets_i = targets_i.rsplit('{{', 1)
+            print('targets_i', targets_i)
             value = {}
             value.update(__running)
-            targets = targets_s.split('.')
+            targets = targets_i.split('.')
             for i, key in enumerate(targets):
                 if i < c:
                     continue
@@ -572,8 +574,8 @@ class CodeHelper(object):
                     value = value[int(index)]
                     print('match []', key)
                 else:
-                    raise ValueError('CANNOT FIND, target: %s, key: %s in __running' % (targets_s, key))
-            mix = mix.replace('{{%s}}' % targets_s, value)
+                    raise ValueError('CANNOT FIND, target: %s, key: %s in __running: \n%s' % (targets_i, key, json.dumps(__running, indent=4)))
+            mix = mix.replace('{{%s}}' % targets_i, value)
             print('mix: %s' % mix)
         return mix
 
