@@ -146,6 +146,10 @@ class CodeHelper(object):
         self.task_id = None
         self.current_his = None
 
+    @staticmethod
+    def get_task_id(fn_yaml):
+        return '.'.join((str(datetime.datetime.now())[10:].replace('-', '').replace(' ', '').replace(':', ''), fn_yaml))
+
     @classmethod
     def run_in_subprocess(cls, _cmd, _cwd):
         shell = subprocess.Popen(
