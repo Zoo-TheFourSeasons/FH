@@ -24,20 +24,16 @@
             <li class="shadow-lg {% if category == 'dsp' %}active{% endif %}">
                 <a data-bs-toggle="collapse" href="#sidebarDSP" aria-expanded="false" class="nav-link fw-bold text-info"
                    aria-controls="sidebarDSP">
-                    <i class="fas fa-fw fa-gear"></i><span>DSP</span></a>
+                    <i class="fas fa-fw fa-gear"></i><span>DP&TT</span></a>
                 <div class="collapse {% if category == 'dsp' %}show{% endif %}" id="sidebarDSP">
                     <ul class="nav flex-column">
-                        <li class="{% if link == 'agents' %}active{% endif %}">
-                            <a class="nav-link fw-bold text-white" href="/webs/dsp/nodes/index">
-                                <i class="fas fa-fw fa-server"></i><span>NODES</span></a>
-                        </li>
                         <li class="{% if link == 'tasks' %}active{% endif %}">
-                            <a class="nav-link fw-bold text-white" href="/webs/dsp/tasks/index">
-                                <i class="fas fa-fw fa-tasks"></i><span>TASKS</span></a>
+                            <a class="nav-link fw-bold text-white" href="/webs/dsp/yfd/index">
+                                <i class="fas fa-fw fa-tasks"></i><span>DEPLOY</span></a>
                         </li>
                         <li class="{% if link == 'yft' %}active{% endif %}">
                             <a class="nav-link fw-bold text-white" href="/webs/dsp/yft/index">
-                                <i class="fas fa-fw fa-vials"></i><span>YFT</span></a>
+                                <i class="fas fa-fw fa-vials"></i><span>TEST</span></a>
                         </li>
                     </ul>
                 </div>
