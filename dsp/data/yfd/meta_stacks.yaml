@@ -1,27 +1,3 @@
-NODES:
-  '12':
-    device: 192.168.4.12
-    ssh_user: root
-    ssh_psw: daemon
-  '50':
-    device: 192.168.50.50
-    ssh_user: root
-    ssh_psw: '123456'
-  '51':
-    device: 192.168.51.51
-    ssh_user: root
-    ssh_psw: '123456'
-  '3.250':
-    device: 192.168.3.250
-    ssh_user: root
-    ssh_psw: '123456'
-ROLES:
-  CONTROLLER:
-    - '12'
-    - '50'
-  COMPUTE:
-    - '51'
-  MYSQL-RABBIT-MEMC-NTP:
-    - '51'
-  VIRSH:
-    - '3.250'
+encrypted:SkMÙ
+=UÖvs]é`~>¨º©²ûêPò¨Él‡g‹ˆ——%k³âV7_/N_"0BÛÃ9pÐnº’ÇŸä‚ºåÆ‚K–ï¥lî^.Óy¬iwaòåAžt§Í¤RÓ1,òmržBe½U­:'á”P•‰:`â.ió(•Ô”Ò0S¿B˜úT6™zh·Ýç”xô¶ñO. n—YÝ½ä®™­UŒ;E5Ä…óÁÎóGÁUaQú¡ÿ}àDuï=1³9÷>¶(Å\’
+èÒñ©ã¿I€-6ó»'wÀO¾°g-ÎÖñ‘`ÞtÁs £›œŠ$ì¸%¼ÄihµÖÝ;V]*BíËÀ¡E#0 ‰\’5ÑHh	µµõÐNøð0©Ø$ßx**kÈß¨…Ä°ËoÝVVÈ¶WÃhŽ_ÕËÇsy´byúHâr¹,vÛc|ò½r€yBüAA&nK=>nºï‹¾~p¥™ñå*'ÉÍø+¬Ö–¦5**`£¥àf[ØdyÒ‡Æ°EB)‚Òõ¬\vÍæ‘1–]-Åóa3U}ŽYÓò3Õòª!fSVU/ã†&Äm°[%â×mm¾

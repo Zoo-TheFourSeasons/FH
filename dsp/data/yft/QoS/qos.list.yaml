@@ -1,14 +1,2 @@
-TITLE: "regression test for qos"
-STACKS:
-  device: '192.168.2.90'
-  name: 'administrator'
-  password: '123456'
-  domain: 'default'
-  tn_installed: 'True'
-COMMANDS:
-  - RESOURCE: 'network,list,qos_policies'
-    PARAM: '--name qos.05.policy100M'
-    ID: policy1
-  - RESOURCE: 'network,delete,qos_policies'
-    PARAM: '--id {{policy1.policies[0].id}}'
-    ID: policy-delete
+encrypted:Im]†Ï ?” 3 7qæº¹·¸Ú¸Aºõ”»ñýúíD[™¦@•6c?w;š{BÞ`£Ñ“ý›Ò§ó‘ÇLÔã¦â"§
+o‘?â%fØå‹c½ßñUÐ#%òiy„Bc´j½9~h¬ÕJˆÛE2õ.}¨}‹ÏÜ¬SëçàI-²kw¬‚£‰iáÑ·} nô6h¥ÍÐÀ·Œ;pà©Ãë¡5½[w	§û½#¼hj¦ne±%ì>³4ÌGËCÿÎ¹×É¿I€]Ò’5=“©½.}‘€åÕG4údÔzcâÅÀÙzÖ¨H»î--Yüüü;V|ª™¨a0>BÆ/ý@£x^[ÊçèÐHµAð4O¹~”a‹=u(läð«Hô“8EiÞ±}±wƒHÇ{ûÇtÖEIˆ|ÕN“%²:müíO>Î+¾8:6m*gT)Cï‹ÝxylÐ½Û³IdÀ¼cà”×ò¥oáÔm¼·†c)ËÅNš“

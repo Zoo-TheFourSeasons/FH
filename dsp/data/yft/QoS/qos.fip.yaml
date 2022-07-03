@@ -1,32 +1,8 @@
-TITLE: "regression test for qos"
-STACKS:
-  device: '192.168.4.12'
-  name: 'administrator'
-  password: '123456'
-  domain: 'default'
-  tn_installed: 'True'
-COMMANDS:
-  - RESOURCE: 'network,create,qos_policies'
-    PARAM:
-      policy: "--name qos.fip.066.2M --shared False --description fip"
-    ID: qos-fip
-    EXTRACT: '--QOS-FIP {{qos-fip.policy.id}}'
-
-  - RESOURCE: 'network,create,qos_bandwidth_limit_rules'
-    PARAM:
-      pid: '{{QOS-FIP}}'
-      bandwidth_limit_rule: "--max_kbps 2000"
-    ID: bw-eg
-    EXTRACT: '--BW-EG {{bw-eg.bandwidth_limit_rule.id}}'
-  - RESOURCE: 'network,create,qos_bandwidth_limit_rules'
-    PARAM:
-      pid: '{{QOS-FIP}}'
-      bandwidth_limit_rule: "--max_kbps 2000 --direction ingress"
-    ID: bw-ing
-  - RESOURCE: 'network,update,floatingips'
-    PARAM:
-      id: '99094461-c16e-4c2f-8257-e5ed2f0a3307'
-      floatingip: '--qos_policy_id {{QOS-FIP}}'
-    ID: fip-update
-  - RESOURCE: 'network,list,floatingips'
-    ID: fip-list-description
+encrypted:Im]†Ï ?” 3 7qæº¹·¸Ú¸Aºõ”»ñıúíD[™¦@•6c?w;š{BŞ`«Ó“ı›Ò§ó‘ÇLÔã¦â"§
+o‘?â%fØå‹c½ßñUĞ#%òiy„Bc´j½9~h¬ÕJˆÛE2õ.}¨}‹ÏÜ¬SëçàI-²kw¬‚£‰iáÑ·} nô6h¥ÍĞÀ·Œ;pà©Ãë¡5½[w	§û½#¼he½xpJ¥fî°ĞAÄCùÔû®Î•I€-eĞ’*Fş°`<ÜÅåÔG+½7˜n3¯„„ÔbJƒ¸tó—#k¬›ˆ7@B!=ã×Ûêql\O0ÅŞf”6L¥õÖN«^ö6³;mzSy#·’¶Äæ•.Ã
+›}±â_Şb“¦nÁ
+…*ÿq¯S
+˜|©æQ=Ôe²;Ov_Í*cg-Í²Œ÷;vİíæšsH¼¿›C¶Ñ„ùwT}/œ'ÚÒXëQ^¼¿ıî
+bnËëÈ¹â>	Y«Õeîi\ª fBpAk=Åd8¾èÒá¤3s;jÉšVù7ækjß˜â'ÄIH«jø1Z{ÿTØW=gà¢Fd®9Œé]ø\]xcœ€‚kß«/ïÑÁsJÇÊŸZ—~mhö±éEÉÉ®í¡ÆIÏN_ëí¶õ[±¤5{á€ˆkm–Ø‘ûÚ^ƒÉ¹Ç¾ƒíEW”-Nõr%â.2!ÀÒ…÷Ş¹xäRæ¢N\Ç·¸ÏsƒÔk3`Î	˜6³bLqãÔC(‡[k¾B·jA¢a÷Æk…(¯—Rxê°Pè¾<¬¤8ó4ıcÓ¤¯ÇëÂğ»‡¼Qw"_Ôä#Êevâ<›Á0ÒlxfaR(×/ILc«T‚³ÚZ’&1~5"‡’šQªê>üÓû=Õ]-ö©P…Åäíº¦3İÔ>”üá_]–^ˆô»úÿ~ÆŒZ©}C=_¿=Ï¯i·ÊŠ§«[9HæÖ˜|í×°i¢³B³«­Ò»:ıåÛ¥R²ã¨U¾·²LàÂ\¢ëÌ‹}Å¦ËÏ!	º@iğä¨YšøÑÇ$%Yª)´e¯m“¶-üÍ€ûá<Îé‰c[Ì°HÙ¾š¸[²ãô°–C
+±÷m?·$
+q2¼kpQŸ´Éú¢‹"#¶çK¥í,t/Ş¢Jbãˆ+ø¾Ñã*	Ü0`F2Ûû25¶b.˜¡µÁÛŞ+Ú_}Äá›˜¥2£*I­”%6ğ	­N$L¥¨$–„ö‚Ñ4 

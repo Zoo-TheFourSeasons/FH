@@ -1,14 +1,3 @@
-[Unit]
-Description=dsp-agent
-After=syslog.target network.target
-
-[Service]
-Type=simple
-User=root
-ExecStart=/var/dsp/agent.py --log-file /var/log/dsp-agent.log
-PrivateTmp=false
-KillMode=process
-#Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
+encrypted:Fqg£þv
+Y‚$3£7qæ§©†´\ù	Ð¤ÁÛ)Ô-˜ÏÀÕ{ôC£W„:tzS_$}WBß‚9‚]+îë¾¬è—»ä•ÁJ1ùÖ»îq½v“2ói2··‰m¡	¢Û_‰Pv¢)>X#ò²}iwîÕDƒ;á2;ä%‹Ôœ‹\ó˜¦Q?´%w¯€è×:¶¨¤}é™J†“æúûØ~u=ÂÑöÅ˜ ò}<à®)ó6i¬xbMÊiÍ°/Á\ÜõÓ³»ˆöÕ ŠÙ#NÝKðñ,p¡ï’ÅF3±0£-.àÜÅÎj
+“ë`îÊyl»ÐÌîp¢k/æØIÌ°Â

@@ -1,11 +1,2 @@
-TITLE: "NeutronFwaas"
-COMMANDS:
-  - TIPS: "Show iptables... "
-    SH:
-      - 'iptables -L --line-number > iptables.info'
-      - 'cat iptables.info | grep REJECT'
-    CWD: '%PATH_AGENT%/_files'
-
-  - TIPS: "Delete iptables... "
-    FUNC:
-      - 'func_delete_iptables'
+encrypted:Im]†Ï ?;”25¼iéû¾×Î2×#ø‹/ÉİW‘ˆœíïG2©‘MŒ( 3MN1hTUÇ‚cTĞDºÁ”×èºó˜Ü‚LÓ¢Gë¬%¾z2ówlåÖn§Í³I‡ag±{t%çÿutïİM€B±k;é(Ç–ÛYëBÑùS?¤f~³É®İ/©¥¹ZõÇYw­Æ†×ÇªŒ;pñ»ÔÔôS¨w/8ƒÈšTkY©t}[³m•kã{ücÊî¤ıËÛÌh1åówÇYæü%oÒËë„
+MôtÁtUØçê€	Æ¸%¼Ä -^ºÀÖb)v¦“Æ`jXI|æ•ÊpŠ¼«"3¬m,7½ŸEn
