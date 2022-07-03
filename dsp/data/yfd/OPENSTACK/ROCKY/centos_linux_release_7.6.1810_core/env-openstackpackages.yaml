@@ -1,1 +1,6 @@
-encrypted:Im]†Ï ?Ÿ45¿~Qøÿ£¦°ûå« û€8Âq‹’™„"Üyzƒk§:P}*lyäÿwZÒ'ô’À–×éİŒÇA?‡ã	 Û-­z„;åMyoòç/Û"î]ûÖiÊ#"ã{jWrêğ97~áİM••yıkk°|Ô•‹UúËıF=­iw©‚©ÇnÌ¥åZ8§DšY‘ù®´¾ôUÅuR$Ó€ü„›£–E1©¢¹)¢*s·:68- ª‚í—Ó^PÀ§H
+TITLE: "install OpenStackPackages... "
+COMMANDS:
+  - TIPS: " install OpenStackPackages... "
+    SH:
+      - 'yum -y install python-openstackclient'
+      - 'yum -y install openstack-selinux'

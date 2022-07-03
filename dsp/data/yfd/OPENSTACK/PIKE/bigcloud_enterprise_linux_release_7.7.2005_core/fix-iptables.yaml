@@ -1,2 +1,11 @@
-encrypted:Im]†Ï ?;”25¼iéû¾×Î2×#ø‹/ÉÝW‘ˆœíïG2©‘MŒ( 3MN1hTUÇ‚cTÐDºÁ”×èºó˜Ü‚LÓ¢Gë¬%¾z2ówlžåÖn§Í³I‡ag±{t%çÿutïÝM€ŽB±k;é(Ç–ÛYëBÑùS?¤f~³É®Ý/©¥¹ZõÇYw­Æ†×ÇªŒ;pñ»ÔžÔôS¨w/8ƒÈšTkY©t}[³m•kã{ücÊî¤ýËÛÌh1åówÇYæü%oÒËë„
-MôtÁtUØçê€	Æ¸%¼Ä -^ºÀÖb)v¦Ž“Æ`jXI|æ•ÊpŠ¼«"3¬m,7½ŸEn
+TITLE: "NeutronFwaas"
+COMMANDS:
+  - TIPS: "Show iptables... "
+    SH:
+      - 'iptables -L --line-number > iptables.info'
+      - 'cat iptables.info | grep REJECT'
+    CWD: '%PATH_AGENT%/_files'
+
+  - TIPS: "Delete iptables... "
+    FUNC:
+      - 'func_delete_iptables'

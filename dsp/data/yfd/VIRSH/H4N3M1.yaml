@@ -1,0 +1,177 @@
+TITLE: "VIRSH"
+RUNNING:
+  COUNTER: '001'
+  IP-H4N3M1-N1: '192/168.4.61'
+  IP-H4N3M1-N2: '192/168.4.62'
+  IP-H4N3M1-N3: '192/168.4.63'
+  IP-H4N3M1-M1: '192/168.4.64'
+  IP-H4N3M1: '192/168.4.60'
+  ME-N: '12'
+  ME-M: '24'
+  PWD: '/zl/zbb/VMS/'
+
+COMMANDS:
+  - TIPS: "cp xml"
+    CWD: '{{PWD}}'
+    SH:
+      - 'mkdir C-{{COUNTER}}-4N3M1'
+      - 'cp TEMPLATES/H4N3M1-N.xml C-{{COUNTER}}-H4N3M1/C-{{COUNTER}}-H4N3M1-N1.xml'
+      - 'cp TEMPLATES/H4N3M1-N.xml C-{{COUNTER}}-H4N3M1/C-{{COUNTER}}-H4N3M1-N2.xml'
+      - 'cp TEMPLATES/H4N3M1-N.xml C-{{COUNTER}}-H4N3M1/C-{{COUNTER}}-H4N3M1-N3.xml'
+      - 'cp TEMPLATES/H4N3M1-M.xml C-{{COUNTER}}-H4N3M1/C-{{COUNTER}}-H4N3M1-M1.xml'
+
+  - TIPS: "vi N1.xml"
+    CWD: '{{PWD}}/C-{{COUNTER}}-H4N3M1'
+    TEXT:
+      - __IF_NOT_EXIST: '<name>C-{{COUNTER}}-H4N3M1-N1</name>'
+        __REPLACE_THIS: '<name></name>'
+        __BY: '<name>C-{{COUNTER}}-H4N3M1-N1</name>'
+      - __IF_NOT_EXIST: "GiB'>{{ME-N}}</memory>"
+        __REPLACE_THIS: "GiB'>ME</memory>"
+        __BY: "GiB'>{{ME-N}}</memory>"
+      - __IF_NOT_EXIST: "GiB'>{{ME-N}}</currentMemory>"
+        __REPLACE_THIS: "GiB'>ME</currentMemory>"
+        __BY: "GiB'>{{ME-N}}</currentMemory>"
+      - __IF_NOT_EXIST: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N1.qcow2'"
+        __REPLACE_THIS: "file='VDA'"
+        __BY: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N1.qcow2'"
+      - __IF_NOT_EXIST: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N1.data1.qcow2'"
+        __REPLACE_THIS: "file='VDB'"
+        __BY: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N1.data1.qcow2'"
+      - __IF_NOT_EXIST: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N1.data2.qcow2'"
+        __REPLACE_THIS: "file='VDC'"
+        __BY: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N1.data2.qcow2'"
+    FILE: 'C-{{COUNTER}}-H4N3M1-N1.xml'
+
+  - TIPS: "vi N2.xml"
+    CWD: '{{PWD}}/C-{{COUNTER}}-H4N3M1'
+    TEXT:
+      - __IF_NOT_EXIST: '<name>C-{{COUNTER}}-H4N3M1-N2</name>'
+        __REPLACE_THIS: '<name></name>'
+        __BY: '<name>C-{{COUNTER}}-H4N3M1-N2</name>'
+      - __IF_NOT_EXIST: "GiB'>{{ME-N}}</memory>"
+        __REPLACE_THIS: "GiB'>ME</memory>"
+        __BY: "GiB'>{{ME-N}}</memory>"
+      - __IF_NOT_EXIST: "GiB'>{{ME-N}}</currentMemory>"
+        __REPLACE_THIS: "GiB'>ME</currentMemory>"
+        __BY: "GiB'>{{ME-N}}</currentMemory>"
+      - __IF_NOT_EXIST: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N2.qcow2'"
+        __REPLACE_THIS: "file='VDA'"
+        __BY: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N2.qcow2'"
+      - __IF_NOT_EXIST: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N2.data1.qcow2'"
+        __REPLACE_THIS: "file='VDB'"
+        __BY: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N2.data1.qcow2'"
+      - __IF_NOT_EXIST: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N2.data2.qcow2'"
+        __REPLACE_THIS: "file='VDC'"
+        __BY: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N2.data2.qcow2'"
+    FILE: 'C-{{COUNTER}}-H4N3M1-N2.xml'
+
+  - TIPS: "vi N3.xml"
+    CWD: '{{PWD}}/C-{{COUNTER}}-H4N3M1'
+    TEXT:
+      - __IF_NOT_EXIST: '<name>C-{{COUNTER}}-H4N3M1-N3</name>'
+        __REPLACE_THIS: '<name></name>'
+        __BY: '<name>C-{{COUNTER}}-H4N3M1-N3</name>'
+      - __IF_NOT_EXIST: "GiB'>{{ME-N}}</memory>"
+        __REPLACE_THIS: "GiB'>ME</memory>"
+        __BY: "GiB'>{{ME-N}}</memory>"
+      - __IF_NOT_EXIST: "GiB'>{{ME-N}}</currentMemory>"
+        __REPLACE_THIS: "GiB'>ME</currentMemory>"
+        __BY: "GiB'>{{ME-N}}</currentMemory>"
+      - __IF_NOT_EXIST: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N3.qcow2'"
+        __REPLACE_THIS: "file='VDA'"
+        __BY: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N3.qcow2'"
+      - __IF_NOT_EXIST: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N3.data1.qcow2'"
+        __REPLACE_THIS: "file='VDB'"
+        __BY: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N3.data1.qcow2'"
+      - __IF_NOT_EXIST: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N3.data2.qcow2'"
+        __REPLACE_THIS: "file='VDC'"
+        __BY: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-N3.data2.qcow2'"
+    FILE: 'C-{{COUNTER}}-H4N3M1-N3.xml'
+
+  - TIPS: "vi M1.xml"
+    CWD: '{{PWD}}/C-{{COUNTER}}-H4N3M1'
+    TEXT:
+      - __IF_NOT_EXIST: '<name>C-{{COUNTER}}-H4N3M1-M1</name>'
+        __REPLACE_THIS: '<name></name>'
+        __BY: '<name>C-{{COUNTER}}-H4N3M1-M1</name>'
+      - __IF_NOT_EXIST: "GiB'>{{ME-M}}</memory>"
+        __REPLACE_THIS: "GiB'>ME</memory>"
+        __BY: "GiB'>{{ME-M}}</memory>"
+      - __IF_NOT_EXIST: "GiB'>{{ME-M}}</currentMemory>"
+        __REPLACE_THIS: "GiB'>ME</currentMemory>"
+        __BY: "GiB'>{{ME-M}}</currentMemory>"
+      - __IF_NOT_EXIST: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-M1.qcow2'"
+        __REPLACE_THIS: "file='VDA'"
+        __BY: "file='{{PWD}}/C-{{COUNTER}}-H4N3M1-M1.qcow2'"
+    FILE: 'C-{{COUNTER}}-H4N3M1-M1.xml'
+
+  - TIPS: "img create"
+    CWD: '{{PWD}}/C-{{COUNTER}}-H4N3M1'
+    SH:
+      - 'qemu-img create -f qcow2 C-{{COUNTER}}-H4N3M1-N1.data1.qcow2 -o size=50G,preallocation=metadata'
+      - 'qemu-img create -f qcow2 C-{{COUNTER}}-H4N3M1-N1.data2.qcow2 -o size=50G,preallocation=metadata'
+      - 'qemu-img create -f qcow2 C-{{COUNTER}}-H4N3M1-N2.data1.qcow2 -o size=50G,preallocation=metadata'
+      - 'qemu-img create -f qcow2 C-{{COUNTER}}-H4N3M1-N2.data2.qcow2 -o size=50G,preallocation=metadata'
+      - 'qemu-img create -f qcow2 C-{{COUNTER}}-H4N3M1-N3.data1.qcow2 -o size=50G,preallocation=metadata'
+      - 'qemu-img create -f qcow2 C-{{COUNTER}}-H4N3M1-N3.data2.qcow2 -o size=50G,preallocation=metadata'
+
+  - TIPS: "virsh define"
+    CWD: '{{PWD}}/C-{{COUNTER}}-H4N3M1'
+    SH:
+      - 'virsh define C-{{COUNTER}}-H4N3M1-N1.xml'
+      - 'virsh define C-{{COUNTER}}-H4N3M1-N2.xml'
+      - 'virsh define C-{{COUNTER}}-H4N3M1-N3.xml'
+      - 'virsh define C-{{COUNTER}}-H4N3M1-M1.xml'
+
+  - TIPS: "start N1"
+    CWD: '{{PWD}}/C-{{COUNTER}}-H4N3M1'
+    SH:
+      - 'cp TEMPLATES/H4N3M1.qcow2 C-{{COUNTER}}-H4N3M1/C-{{COUNTER}}-H4N3M1-N1.qcow2'
+      - 'virsh start C-{{COUNTER}}-H4N3M1-N1'
+
+  - TIPS: "vi N1.ip.hostname"
+    SH:
+      - 'echo "C-{{COUNTER}}-H4N3M1-N1" > /etc/hostname'
+      - 'sed /etc/sysconfig/network-script/ifc'
+      - 'wget '
+      - 'tar -zxf '
+      - './only_install_package.sh'
+      - 'cd ceph_http && sh fix.sh'
+      - 'poweroff'
+    NODES:
+      - TMP
+
+  - TIPS: "start N2"
+    CWD: '{{PWD}}/C-{{COUNTER}}-H4N3M1'
+    SH:
+      - 'cp C-{{COUNTER}}-H4N3M1/C-{{COUNTER}}-H4N3M1-N1.qcow2 C-{{COUNTER}}-H4N3M1/C-{{COUNTER}}-H4N3M1-N2.qcow2'
+      - 'virsh start C-{{COUNTER}}-H4N3M1-N2'
+
+  - TIPS: "vi N2.ip.hostname"
+    SH:
+      - 'echo "C-{{COUNTER}}-H4N3M1-N2" > /etc/hostname'
+      - 'sed /etc/sysconfig/network-script/ifc'
+      - 'reboot'
+    NODES:
+      - N1
+
+  - TIPS: "start N3"
+    CWD: '{{PWD}}/C-{{COUNTER}}-H4N3M1'
+    SH:
+      - 'cp C-{{COUNTER}}-H4N3M1/C-{{COUNTER}}-H4N3M1-N1.qcow2 C-{{COUNTER}}-H4N3M1/C-{{COUNTER}}-H4N3M1-N3.qcow2'
+      - 'virsh start C-{{COUNTER}}-H4N3M1-N3'
+
+  - TIPS: "vi N3.ip.hostname"
+    SH:
+      - 'echo "C-{{COUNTER}}-H4N3M1-N3" > /etc/hostname'
+      - 'sed /etc/sysconfig/network-script/ifc'
+      - 'reboot'
+    NODES:
+      - N1
+
+  - TIPS: "disable  N1N2N3"
+    SH:
+      - 'pcs resource disable octavia-health-manager octavia-housekeeping octavia-worker octavia-api openstack-senlin-engine openstack-senlin-api openstack-ceilometer-compute openstack-ceilometer-central openstack-ceilometer-notification openstack-gnocchi-metricd openstack-gnocchi-api'
+    NODES:
+      - N1

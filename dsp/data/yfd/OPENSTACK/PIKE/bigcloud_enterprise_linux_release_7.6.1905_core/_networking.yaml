@@ -1,2 +1,4 @@
-encrypted:Im]†Ï ?+a½J1pí´ãÛäS’#ú4‡ß´g»…œ™…7üZC°J3e(7p*”‹*µtÎ ÷¼”¢€Ù¹M”á¤ş(‘u—;ä%(¡ z—k ĞÁU†fc°>‡Yb½R­)/X¢ÛQƒÎ:{ô?l¦zŒÒ•Á
-şÔ®-—`’Ëlc™ÀôVµ=“²,
+TITLE: "all in one... "
+MODULES:
+    # controller
+    - 'OPENSTACK/PIKE/bigcloud_enterprise_linux_release_7.7.2005_core/_networking.yaml'

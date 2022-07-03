@@ -1,0 +1,62 @@
+TITLE: "all in one... "
+META:
+  - MODULE: 'VIRSH/H4N3M1.yaml'
+    ROLES:
+      - VIRSH
+  - MODULE: 'OPENSTACK/PIKE/bigcloud_enterprise_linux_release_7.7.2005_core/env-firewalld.yaml'
+    ROLES:
+      - CONTROLLER
+      - COMPUTE
+  - MODULE: 'OPENSTACK/PIKE/bigcloud_enterprise_linux_release_7.7.2005_core/env-selinux.yaml'
+    ROLES:
+      - CONTROLLER
+      - COMPUTE
+  - MODULE: 'OPENSTACK/PIKE/centos_linux_release_7.6.1810_core/env-openstackpackages.yaml'
+    ROLES:
+      - CONTROLLER
+      - COMPUTE
+  - MODULE: 'OPENSTACK/ROCKY/centos_linux_release_7.6.1810_core/env-openrc.yaml'
+    ROLES:
+      - CONTROLLER
+  - MODULE: 'OPENSTACK/PIKE/bigcloud_enterprise_linux_release_7.7.2005_core/service-ntp.controller.yaml'
+    ROLES:
+      - MYSQL-RABBIT-MEMC-NTP
+  - MODULE: 'OPENSTACK/ROCKY/centos_linux_release_7.6.1810_core/service-mysql.yaml'
+    ROLES:
+      - MYSQL-RABBIT-MEMC-NTP
+  - MODULE: 'OPENSTACK/PIKE/bigcloud_enterprise_linux_release_7.7.2005_core/service-rabbit.yaml'
+    ROLES:
+      - MYSQL-RABBIT-MEMC-NTP
+  - MODULE: 'OPENSTACK/PIKE/bigcloud_enterprise_linux_release_7.7.2005_core/service-memcached.yaml'
+    ROLES:
+      - MYSQL-RABBIT-MEMC-NTP
+  - MODULE: 'OPENSTACK/ROCKY/centos_linux_release_7.6.1810_core/service-keystone.yaml'
+    ROLES:
+      - CONTROLLER
+  - MODULE: 'OPENSTACK/ROCKY/centos_linux_release_7.6.1810_core/service-glance.yaml'
+    ROLES:
+      - CONTROLLER
+  - MODULE: 'OPENSTACK/ROCKY/centos_linux_release_7.6.1810_core/service-nova.controller.part1.yaml'
+    ROLES:
+      - CONTROLLER
+  - MODULE: 'OPENSTACK/PIKE/bigcloud_enterprise_linux_release_7.7.2005_core/service-ntp.compute.yaml'
+    ROLES:
+      - COMPUTE
+  - MODULE: 'OPENSTACK/ROCKY/centos_linux_release_7.6.1810_core/service-nova.compute.yaml'
+    ROLES:
+      - COMPUTE
+  - MODULE: 'OPENSTACK/ROCKY/centos_linux_release_7.6.1810_core/service-neutron-self-service.compute.yaml'
+    ROLES:
+      - COMPUTE
+  # controller
+  - MODULE: 'OPENSTACK/PIKE/bigcloud_enterprise_linux_release_7.7.2005_core/service-nova.controller.part2.yaml'
+    ROLES:
+      - CONTROLLER
+  - MODULE: 'OPENSTACK/ROCKY/centos_linux_release_7.6.1810_core/service-neutron-self-service.controller.yaml'
+    ROLES:
+      - CONTROLLER
+  - MODULE: 'OPENSTACK/PIKE/bigcloud_enterprise_linux_release_7.7.2005_core/service-horizon.yaml'
+    ROLES:
+      - CONTROLLER
+#    - 'OPENSTACK/PIKE/bigcloud_enterprise_linux_release_7.7.2005_core/fix-project_id.yaml'
+#    - 'OPENSTACK/PIKE/bigcloud_enterprise_linux_release_7.7.2005_core/fix-fwaas.yaml'

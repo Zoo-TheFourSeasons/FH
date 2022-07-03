@@ -1,2 +1,4 @@
-encrypted:{Hh¹á&
-mƒ&,¸SØã”´‰=•dÇ¯¾ÿ”)ÂKü$àËã4dr¬ÜS
+flask
+paramiko
+PyYAML
+requests

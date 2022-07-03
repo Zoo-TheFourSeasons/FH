@@ -1,8 +1,32 @@
-encrypted:Im]†Ï ?” 3 7qæº¹·¸Ú¸Aºõ”»ñýúíD[™¦@•6c?w;š{BÞ`«Ó“ý›Ò§ó‘ÇLÔã¦â"§
-o‘?â%fØå‹c½ßñUÐ#%òiy„Bc´j½9~h¬ÕJˆÛE2õ.}¨}‹ÏÜ¬SëçàI-²kw¬‚£‰iáÑ·} nô6h¥ÍÐÀ·Œ;pà©Ãë¡5½[w	§û½#¼he½xpJ¥fî°ÐAÄCùÔû®Î•I€-eÐ’*FþŽ°`<ÜÅåÔG+½7˜n3¯„„ÔbJƒ¸tó—#k¬›ˆ7@B!=ã×Ûêql\O0ÅÞf”6LŽ¥õÖN«^ö6³;žmzSy#·’¶Äæ•.Ã
-Ž›}±â_Þb“¦nÁ
-…*ÿq¯S
-˜|©æQ=Ôe²;Ov_Í*cg-Í²Œ÷;vÝíæšsH¼¿›C¶Ñ„ùwT}/œ'ÚÒXëQ^¼¿ýî
-bnËëÈ¹â>	Y«Õeîi\ª fBpAk=Åd8¾èÒá¤3s;jÉšVù7ækjß˜â'ÄIH«jø1Z{ÿTØW=gà¢Fd®9Œé]ø\]xcœ€‚kß«/ïÑÁsJÇÊŸZ—~mhö±éEÉÉ®í¡ÆIÏN_ëí¶õ[±¤5{á€ˆkm–Ø‘ûÚ^ƒÉ¹Ç¾ƒíEW”-Nõr%â.2!ÀÒ…÷Þ¹xäRæ¢N\Ç·¸ÏsƒÔk3ž`Î	˜6³bLqãÔC(‡[k¾B·jA¢a÷Æk…(¯—Rxê°Pè¾<¬¤8ó4ýcÓ¤¯ÇëÂð»‡¼Qw"_Ôä#Êevâ<›Á0ÒlxfaR(×/ILc«T‚ž³ÚZ’&1~ž5"‡’šQªê>üÓû=Õ]-ö©P…Åäíº¦3ÝÔ>”üá_]–^ˆô»úÿ~ÆŒZ©}C=_¿=Ï¯i·ÊŠ§«[9HæÖ˜|í×°i¢³B³«­Ò»:ýåÛ¥R²ã¨U¾·²LàÂ\¢ëÌ‹}Å¦ËÏ!	º@iðä¨YšøÑÇ$%ŽYª)´e¯m“¶-üÍ€ûá<Îé‰c[Ì°HÙ¾š¸[²ãô°–C
-±÷m?·$
-q2¼kpQŸ´Éú¢‹"#¶çK¥í,t/Þ¢Jbãˆ+ø¾Ñã*	Ü0`F2Ûû25¶Žb.˜¡µÁÛÞ+Ú_}Äá›˜¥2£*I­”%6ð	­N$L¥¨$–„ö‚Ñ4 
+TITLE: "regression test for qos"
+STACKS:
+  device: '192.168.4.12'
+  name: 'administrator'
+  password: '123456'
+  domain: 'default'
+  tn_installed: 'True'
+COMMANDS:
+  - RESOURCE: 'network,create,qos_policies'
+    PARAM:
+      policy: "--name qos.fip.066.2M --shared False --description fip"
+    ID: qos-fip
+    EXTRACT: '--QOS-FIP {{qos-fip.policy.id}}'
+
+  - RESOURCE: 'network,create,qos_bandwidth_limit_rules'
+    PARAM:
+      pid: '{{QOS-FIP}}'
+      bandwidth_limit_rule: "--max_kbps 2000"
+    ID: bw-eg
+    EXTRACT: '--BW-EG {{bw-eg.bandwidth_limit_rule.id}}'
+  - RESOURCE: 'network,create,qos_bandwidth_limit_rules'
+    PARAM:
+      pid: '{{QOS-FIP}}'
+      bandwidth_limit_rule: "--max_kbps 2000 --direction ingress"
+    ID: bw-ing
+  - RESOURCE: 'network,update,floatingips'
+    PARAM:
+      id: '99094461-c16e-4c2f-8257-e5ed2f0a3307'
+      floatingip: '--qos_policy_id {{QOS-FIP}}'
+    ID: fip-update
+  - RESOURCE: 'network,list,floatingips'
+    ID: fip-list-description
