@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <meta name="renderer" content="webkit"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta name="keywords"
+          content="Editor.md,editor,Markdown Editor,Markdown,编辑器,Markdown编辑器,Markdown在线编辑器,在线编辑器,开源编辑器,开源Markdown编辑器"/>
+    <meta name="description" content="Editor.md: a simple online markdown editor. 开源在线 Markdown 编辑器"/>
+    <title>Simple example - Editor.md examples</title>
+    <link href="/static/editor.md/examples/css/style.css" rel="stylesheet" type="text/css">
+    <link href="/static/editor.md/css/editormd.min.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="layout">
+    <header>
+        <h1>Simple example</h1>
+    </header>
+    <div id="editor">
+        <textarea style="display:none;"></textarea>
+    </div>
+</div>
+<script src="/static/editor.md/examples/js/jquery.min.js"></script>
+<script src="/static/purl-v2.3.1/purl.js"></script>
+<script src="/static/axios-0.27.2/dist/axios.min.js"></script>
+
+<script src="/static/editor.md/src/editormd.js"></script>
+<script src="/static/fh/business.js"></script>
+<script type="text/javascript">
+
+    $(function () {
+
+        let target = $.url().param('target');
+        get({
+            'url': '/dsp/yfd/view?target=' + target,
+            'btn': $(this),
+            'success': function (rsp) {
+                let testEditor = editormd("editor", {
+                    width: "100%",
+                    height: "100%",
+                    watch: false,
+                    theme: "dark",
+                    mode: "text/html",
+                    toolbar: false,
+                    value: rsp.data.rows,
+                    searchReplace: true,
+                    codeFold: true,
+                    syncScrolling: "single",
+                    path: "/static/editor.md/lib/"
+                 });
+            }
+        });
+
+    });
+</script>
+</body>
+</html>
