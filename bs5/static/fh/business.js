@@ -505,9 +505,9 @@ function list_for_table(model, Model) {
 function view_txt_only(model) {
     $("tbody").on('click', model.btn_class, function () {
         let target = this.name;
-        let $pre = $(`#${model.modal_id} pre`);
+        let $textarea = $(`#${model.modal_id} textarea`);
         let $input = $(`#${model.modal_id} input`);
-        $pre.hide();
+        $textarea.hide();
         console.log('view:' + model.u);
         console.log('target:' + target);
 
@@ -516,8 +516,25 @@ function view_txt_only(model) {
             'btn': $(this),
             'success': function (rsp) {
                 let rows = rsp.data.rows;
-                $pre.append(rows);
-                $pre.show();
+
+                if (model.editor !== undefined) {
+                    editormd(model.editor, {
+                        width: "100%",
+                        height: "92%",
+                        watch: false,
+                        theme: "dark",
+                        mode: "python",
+                        toolbar: false,
+                        value: rows,
+                        searchReplace: true,
+                        codeFold: true,
+                        syncScrolling: "single",
+                        path: "/static/editor.md/lib/"
+                    });
+                } else {
+                    $textarea.val(rows);
+                    $textarea.show();
+                }
                 $input.val(target);
             }
         });
