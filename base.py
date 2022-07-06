@@ -543,10 +543,10 @@ class CodeHelper(object):
             return __v
         mix, c = __v, 0
         while '{{' in mix and '}}' in mix:
-            print('mix', mix)
+            # print('mix', mix)
             targets_i, _ = mix.split('}}', 1)
             _, targets_i = targets_i.rsplit('{{', 1)
-            print('targets_i', targets_i)
+            # print('targets_i', targets_i)
             value = {}
             value.update(__running)
             targets = targets_i.split('.')
@@ -565,7 +565,7 @@ class CodeHelper(object):
                         value = value[key_n]
                         c = n + 1
                         matched = True
-                        print('match .', key_n)
+                        # print('match .', key_n)
                         # print('match: %s, suffix: %s' % (key, suffix))
                         break
                 if matched:
@@ -576,11 +576,13 @@ class CodeHelper(object):
                     index, _ = index.split(']', 1)
                     value = value[key]
                     value = value[int(index)]
-                    print('match []', key)
+                    # print('match []', key)
                 else:
-                    raise ValueError('CANNOT FIND, target: %s, key: %s in __running: \n%s' % (targets_i, key, json.dumps(__running, indent=4)))
+                    raise ValueError('CANNOT FIND, target: %s, key: %s in __running: \n%s' % (
+                        targets_i, key, json.dumps(__running, indent=4)))
             mix = mix.replace('{{%s}}' % targets_i, value)
-            print('mix: %s' % mix)
+            # print('mix: %s' % mix)
+        print('mix:', mix)
         return mix
 
     @staticmethod
@@ -628,6 +630,14 @@ class CodeHelper(object):
 
         for host in meta_scanned_resources.keys():
             pass
+
+    @staticmethod
+    def get_tmp_file_path(base, suffix):
+        tmp = os.path.join(base, '_'.join(
+            (str(datetime.datetime.now()).replace('-', '').replace(' ', '').replace(':', ''), suffix)))
+        print('tmp:', tmp)
+        time.sleep(0.01)
+        return tmp
 
 
 class WebSocketHelper(Namespace, CodeHelper):
