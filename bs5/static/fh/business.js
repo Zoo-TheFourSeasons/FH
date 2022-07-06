@@ -386,7 +386,7 @@ function confirm_do(model, Model, title) {
 function commit_from_model(model, Model, with_target) {
     model.$btn.on('click', function () {
         let params = Model.json(model.modal_id);
-        console.info('params', params);
+
         if (with_target) {
             if (Model.target) {
                 params.target = Model.target + '/' + params.target;
@@ -395,6 +395,8 @@ function commit_from_model(model, Model, with_target) {
         if (model.suffix) {
             params.target = params.target + model.suffix;
         }
+
+        console.info('params', params);
         get({
             'url': model.u,
             'data': params,
@@ -527,12 +529,10 @@ function view(model) {
         let target = this.name;
         let $img = $(`#${model.modal_id} img`);
         let $textarea = $(`#${model.modal_id} textarea`);
-        // let $pre = $(`#${model.modal_id} pre`);
         let $input = $(`#${model.modal_id} input`);
         let $commit = $(`#${model.modal_id} .commit-btn`);
         let $table = $(`#${model.modal_id} table`);
         $textarea.hide();
-        // $pre.hide();
         $img.hide();
         $commit.hide();
         $table.hide();
@@ -549,12 +549,27 @@ function view(model) {
                     $img.attr("src", rows);
                     $img.show();
                 } else if (type === 'txt') {
-                    $textarea.val(rows);
-                    $textarea.show();
-                    // $pre.append(rows);
-                    // $pre.show();
+                    if (model.editor !== undefined) {
+                        editormd(model.editor, {
+                            width: "100%",
+                            height: "92%",
+                            watch: false,
+                            theme: "dark",
+                            mode: "python",
+                            toolbar: false,
+                            value: rows,
+                            searchReplace: true,
+                            codeFold: true,
+                            syncScrolling: "single",
+                            path: "/static/editor.md/lib/"
+                        });
+                    } else {
+                        $textarea.val(rows);
+                        $textarea.show();
+                    }
                     $input.val(target);
                     $commit.show()
+
                 } else if (type === 'xls') {
                     $table.bootstrapTable('destroy');
                     $table.bootstrapTable({

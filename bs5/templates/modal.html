@@ -19,9 +19,8 @@
                     <span class="input-group-text">TARGET</span>
                     <input type="text" class="form-control f-data" readonly name="target" aria-label="PATH OUT">
                 </div>
-                <div class="write-mdg-box mb-2">
-                    {#                    <pre name="text" class="form-control"></pre>#}
-                    <textarea class="form-control f-data" rows="40" name="text" spellcheck="false" tabindex="0"
+                <div class="write-mdg-box mb-2" id="view-editor">
+                    <textarea style="display:none;" class="form-control f-data" name="text" spellcheck="false" tabindex="0"
                               wrap="off"></textarea>
                     <img class="img-fluid" src="">
                 </div>
@@ -65,8 +64,7 @@
                     <span class="input-group-text">TARGET</span>
                     <input type="text" class="form-control f-data" readonly name="target" aria-label="PATH OUT">
                 </div>
-                <div class="write-mdg-box mb-2">
-                    {#                    <pre name="text" class="form-control"></pre>#}
+                <div class="write-mdg-box mb-2" id="view-exe-editor">
                     <textarea class="form-control f-data" rows="40" name="text" spellcheck="false" tabindex="0"
                               wrap="off"></textarea>
                     <img class="img-fluid" src="">

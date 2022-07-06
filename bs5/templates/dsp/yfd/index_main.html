@@ -97,6 +97,7 @@
         'u': '/dsp/yfd/view',
         'modal_id': 'view-modal',
         'btn_class': '.view-btn',
+        'editor': 'view-editor',
         'f': function () {
             view(this)
         },
@@ -128,6 +129,7 @@
     Model.edit = {
         'u': '/dsp/yfd/touch',
         'modal_id': 'view-modal',
+        'editor': 'view-editor',
         '$btn': $("#view-modal .commit-btn"),
         'f': function () {
             commit_from_model(this, Model, false)
@@ -151,8 +153,8 @@
             return '';
         }
         return '<div class="btn-group" role="group">'
-            + '<a target="_blank" href="view?target=' + row.id + '" class="btn btn-outline-success btn-sm">'
-            + '<i class="fa-solid fa-eye"></i></a>'
+            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
+            + '<i class="fa-solid fa-eye"></i></button>'
             + '</div>';
     }
 
