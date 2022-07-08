@@ -16,6 +16,9 @@
         <button type="button" id="mkdir" class="btn btn-outline-dark" data-bs-toggle="modal"
                 data-bs-target="#mkdir-modal"><i class="fas fa-fw fa-folder"></i>MKDIR
         </button>
+        <button type="button" id="rename" class="btn btn-outline-dark" data-bs-toggle="modal"
+                data-bs-target="#rename-modal"><i class="fas fa-fw fa-comment"></i>RENAME
+        </button>
         <button type="button" id="touch" class="btn btn-outline-dark" data-bs-toggle="modal"
                 data-bs-target="#touch-modal"><i class="fas fa-fw fa-add"></i>TOUCH
         </button>
@@ -95,12 +98,20 @@
     };
     Model.view = {
         'u': '/dsp/yfd/view',
-        'modal_id': 'view-modal',
+        'modal_id': 'view-exe-modal',
         'btn_class': '.view-btn',
-        'editor': 'view-editor',
+        'editor': 'view-exe-editor',
         'f': function () {
             view(this)
         },
+    };
+    Model.view.execute = {
+        '$btn': $('#view-exe-modal .execute-btn'),
+        'action': 'yfd:execute',
+        'modal_id': 'view-exe-modal',
+        'f': function () {
+            emit_from_model(this, Model, "EXECUTE");
+        }
     };
     Model.deletes = {
         'u': '/dsp/yfd/delete',
@@ -153,7 +164,7 @@
             return '';
         }
         return '<div class="btn-group" role="group">'
-            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
+            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-exe-modal" class="btn btn-outline-success btn-sm view-btn">'
             + '<i class="fa-solid fa-eye"></i></button>'
             + '</div>';
     }
@@ -162,6 +173,7 @@
         Model.index.f();
         Model.mkdir.f();
         Model.view.f();
+        Model.view.execute.f();
         Model.touch.f();
         Model.deletes.f();
         Model.edit.f();

@@ -20,7 +20,8 @@
                     <input type="text" class="form-control f-data" readonly name="target" aria-label="PATH OUT">
                 </div>
                 <div class="write-mdg-box mb-2" id="view-editor">
-                    <textarea style="display:none;" class="form-control f-data" name="text" spellcheck="false" tabindex="0"
+                    <textarea style="display:none;" class="form-control f-data" name="text" spellcheck="false"
+                              tabindex="0"
                               wrap="off"></textarea>
                     <img class="img-fluid" src="">
                 </div>
@@ -158,7 +159,7 @@
 <!-- TOUCH Modal -->
 <div id="touch-modal" class="modal" tabindex="-1" aria-labelledby="touch-header"
      style="display: none;" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header bg-dark p-2">
                 <div class="btn-group">
@@ -177,9 +178,9 @@
                     <input type="text" class="form-control f-data" name="target" aria-label="PATH OUT">
                     <span class="input-group-text">.yaml</span>
                 </div>
-                <div class="mb-2">
-                    <textarea type="text" rows="18" class="form-control f-data" name="text"
-                              placeholder="REPTILE"></textarea>
+                <div class="mb-2" id="touch-editor">
+                     <textarea class="form-control f-data" rows="40" name="text" spellcheck="false"
+                               tabindex="0" wrap="off"></textarea>
                 </div>
             </div>
             <div class="modal-footer px-2 pb-2">
@@ -343,3 +344,4 @@
         </div>
     </div>
 </div>
+

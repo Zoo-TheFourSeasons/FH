@@ -16,6 +16,9 @@
         <button type="button" id="mkdir" class="btn btn-outline-dark" data-bs-toggle="modal"
                 data-bs-target="#mkdir-modal"><i class="fas fa-fw fa-folder"></i>MKDIR
         </button>
+        <button type="button" id="rename" class="btn btn-outline-dark" data-bs-toggle="modal"
+                data-bs-target="#rename-modal"><i class="fas fa-fw fa-comment"></i>RENAME
+        </button>
         <button type="button" id="touch" class="btn btn-outline-dark" data-bs-toggle="modal"
                 data-bs-target="#touch-modal"><i class="fas fa-fw fa-add"></i>TOUCH
         </button>
@@ -164,6 +167,7 @@
     Model.his = {
         'u': '/dsp/yft/history',
         'modal_id': 'view-only-modal',
+        'editor': 'view-only-editor',
         'btn_class': '.his-btn',
         'f': function () {
             view_txt_only(this)
