@@ -428,6 +428,7 @@ class CodeHelper(object):
     @classmethod
     def __execute_py(cls, fp):
         me = importlib.import_module(fp.replace(PATH_PROJECT, '').replace('/', '.')[1:-3])
+        importlib.reload(me)
         getattr(me, 'run')()
 
     @classmethod
@@ -448,6 +449,7 @@ class CodeHelper(object):
                     cls.__execute_py(fp)
             except Exception as e:
                 failed.append(fn)
+                print(traceback.format_exc())
                 message = 'failed in execute: %s' % e
         return {'status': False if failed else True, 'message': message}
 
@@ -638,6 +640,19 @@ class CodeHelper(object):
         print('tmp:', tmp)
         time.sleep(0.01)
         return tmp
+
+    @classmethod
+    def func_on_folder(cls, path: str, func):
+        for root, dirs, files in os.walk(path):
+            for _file in files:
+                _path = os.path.join(root, _file)
+                cls.func_on_file(_path, func)
+
+    @staticmethod
+    def func_on_file(path: str, func):
+        # pd = pandas.read_excel(path)
+        func(path)
+        # pd.apply(func=func, axis=1)
 
 
 class WebSocketHelper(Namespace, CodeHelper):
