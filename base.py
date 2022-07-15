@@ -582,8 +582,11 @@ class CodeHelper(object):
                 else:
                     raise ValueError('CANNOT FIND, target: %s, key: %s in __running: \n%s' % (
                         targets_i, key, json.dumps(__running, indent=4)))
+            if isinstance(value, (dict, list, tuple)):
+                raise ValueError('value type error: %s' % value)
+            # print('before mix: %s, targets_i: %s, value: %s' % (mix, targets_i, value))
             mix = mix.replace('{{%s}}' % targets_i, value)
-            # print('mix: %s' % mix)
+            # print('after mix: %s' % mix)
         print('mix:', mix)
         return mix
 
