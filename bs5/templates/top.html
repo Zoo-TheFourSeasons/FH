@@ -36,6 +36,7 @@
     let http = 'http://' + document.domain + (location.port ? ":" + location.port : "");
     let io_security = io.connect(http + '/security', {'sync disconnect on unload': true});
     let io_dsp = io.connect(http + '/dsp', {'sync disconnect on unload': true});
+    let io_zoo = io.connect(http + '/zoo', {'sync disconnect on unload': true});
 
     io_security.emit('join', {'room': 'progress'});
     io_security.on('his', his);
@@ -44,6 +45,10 @@
     io_dsp.emit('join', {'room': 'progress'});
     io_dsp.on('his', his);
     io_dsp.on('progress', progress);
+
+    io_zoo.emit('join', {'room': 'progress'});
+    io_zoo.on('his', his);
+    io_zoo.on('progress', progress);
 
     $(document).ready(function () {
         {#$(".modal").draggable();#}

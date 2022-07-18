@@ -84,6 +84,9 @@
     let Model = Object.create(ModelFH);
     Model.$table = $table;
     Model.target = target;
+    Model.signal = 'task';
+    Model.io = io_zoo;
+
     Model.font = {
         'u': '/webs/zoo/images/index'
     };
@@ -135,25 +138,25 @@
         },
     };
     Model.render = {
-        'u': '/zoo/images/render',
         '$btn': $("#render"),
+        'action': 'images:render',
         'f': function () {
-            confirm_do(this, Model, "RENDER")
-        },
+            confirm_do_ns(this, Model, "RENDER");
+        }
     };
     Model.generate_pages = {
-        'u': '/zoo/images/generate-pages',
         '$btn': $("#generate"),
+        'action': 'images:generate_pages',
         'f': function () {
-            confirm_do(this, Model, "GENERATE-PAGES")
-        },
+            confirm_do_ns(this, Model, "GENERATE-PAGES");
+        }
     };
     Model.operate = {
-        'u': '/zoo/images/operate',
         '$btn': $("#operates-modal .commit-btn"),
+        'action': 'images:operate',
         'modal_id': 'operates-modal',
         'f': function () {
-            commit_from_model(this, Model, false);
+            emit_from_model(this, Model);
         }
     };
     Model.operate.show = {

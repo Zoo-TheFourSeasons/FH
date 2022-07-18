@@ -195,6 +195,7 @@ class CodeHelper(object):
         path_folder = os.path.join(path_output, folder)
         if not os.path.exists(path_folder):
             os.makedirs(path_folder)
+        print('path_folder: %s, tid: %s' % (path_folder, tid))
 
         path_file = os.path.join(path_folder, tid + '.his')
         if not os.path.exists(path_file):
@@ -202,7 +203,11 @@ class CodeHelper(object):
         return path_file
 
     def print(self, ob):
-        # f = self.get_output_file(path_output, tid=tid)
+        if not self.current_his:
+            print('WARNING: there is no current_his')
+            print(ob)
+            return
+
         with open(self.current_his, 'a') as file:
             try:
                 if isinstance(ob, (dict, list, tuple)):
