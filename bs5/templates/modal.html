@@ -212,27 +212,38 @@
                     <select class="form-control f-data" name="operate">
                         <option selected value="IMAGES_TO_VIDEO">IMAGES TO VIDEO</option>
                         <option selected value="ROTATE+RESIZE+INK">ROTATE + RESIZE + INK</option>
-                        <option selected value="RECTANGLE">RECTANGLE</option>
+                        <option selected value="RECTANGLE">RECTANGLE(INNER)</option>
                     </select>
                 </div>
-                <div class="mb-2">
-                    <label class="form-label">SIZE-MAX(IMAGES)</label>
-                    <input type="number" class="form-control f-data" name="size_max" value="3600">
+                <div class="row">
+                    <div class="col-6">
+                        <label class="form-label">SIZE-MAX(IMAGES)</label>
+                        <input type="number" class="form-control f-data" name="size_max" value="3600">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">INK-RATIO(IMAGES)</label>
+                        <input type="number" class="form-control f-data" name="ratio_ink" value="500">
+                    </div>
                 </div>
-                <div class="mb-2">
-                    <label class="form-label">INK-POSITION(IMAGES)</label>
-                    <select class="form-control f-data" name="position_ink">
-                        <option selected value="bottom right">BOTTOM RIGHT</option>
-                        <option selected value="bottom center">BOTTOM CENTER</option>
-                        <option selected value="bottom left">BOTTOM LEFT</option>
-                        <option selected value="top right">TOP RIGHT</option>
-                        <option selected value="top center">TOP CENTER</option>
-                        <option selected value="top left">TOP LEFT</option>
-                    </select>
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">INK-RATIO(IMAGES)</label>
-                    <input type="number" class="form-control f-data" name="ratio_ink" value="500">
+                <div class="row">
+                    <div class="col-6">
+                        <label class="form-label">INK-POSITION(IMAGES)</label>
+                        <select class="form-control f-data" name="position_ink">
+                            <option selected value="bottom right">BOTTOM RIGHT</option>
+                            <option selected value="bottom center">BOTTOM CENTER</option>
+                            <option selected value="bottom left">BOTTOM LEFT</option>
+                            <option selected value="top right">TOP RIGHT</option>
+                            <option selected value="top center">TOP CENTER</option>
+                            <option selected value="top left">TOP LEFT</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">INK-FULL(IMAGES)</label>
+                        <select class="form-control f-data" name="full_ink">
+                            <option selected value="ON">ON</option>
+                            <option selected value="OFF">OFF</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="mb-2">
                     <label class="form-label">PREFIX(VIDEO)</label>
@@ -244,11 +255,17 @@
                 </div>
                 <div class="mb-2">
                     <label class="form-label">FPS(VIDEO)</label>
-                    <input type="text" class="form-control f-data" name="fps" >
+                    <input type="text" class="form-control f-data" name="video_fps" value="0.75">
                 </div>
-                <div class="mb-2">
-                    <label class="form-label">WIDTH(RECTANGLE)</label>
-                    <input type="number" class="form-control f-data" name="rectangle_width" >
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <label class="form-label">WIDTH(RECTANGLE)</label>
+                        <input type="number" value="20" class="form-control f-data" name="rectangle_width">
+                    </div>
+                    <div class="col-6 mb-2">
+                        <label class="form-label">COLOR(RECTANGLE)</label>
+                        <input type="text" value="255, 255, 255" class="form-control f-data" name="rectangle_color">
+                    </div>
                 </div>
             </div>
             <div class="modal-footer px-2 pb-2">
