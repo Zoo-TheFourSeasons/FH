@@ -24,6 +24,8 @@
         let $btn = $(`#${kid}`);
         if (data.progress === 100) {
             $btn.attr('disabled', false);
+        } else if (data.progress === 0){
+            $('#his pre').empty();
         } else {
             $btn.attr('disabled', true);
         }
