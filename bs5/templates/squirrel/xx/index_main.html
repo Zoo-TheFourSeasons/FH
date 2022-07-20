@@ -1,0 +1,174 @@
+<!-- start page title -->
+<div class="page-title-box">
+    <div class="page-title-right">
+        <ol class="breadcrumb m-0">
+            <li><h3>SECURITY></h3></li>
+            <li><h3><strong>TSUNAMI</strong></h3></li>
+        </ol>
+    </div>
+    <div class="btn-group">
+        <button type="button" id="refresh" class="btn btn-outline-info"><i class="fas fa-fw fa-refresh"></i>REFRESH
+        </button>
+        <button type="button" id="back" class="btn btn-outline-dark"><i class="fas fa-fw fa-backward"></i>BACK
+        </button>
+        <button type="button" id="delete" class="btn btn-outline-danger"><i class="fas fa-fw fa-trash"></i>DELETE
+        </button>
+        <button type="button" id="scan" class="btn btn-outline-dark" data-bs-toggle="modal"
+                data-bs-target="#scan-modal"><i class="fas fa-fw fa-search"></i>SCAN
+        </button>
+    </div>
+    <div id="parents" class="ml-0 mb-2 mt-2"></div>
+</div>
+<!-- end page title -->
+<div class="card">
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered table-condensed table-no-bordered table-centered table-nowrap mb-0"
+               id="scan-table"
+               data-toggle="table"
+               data-locale="zh-CN"
+               data-sticky-header="true"
+               data-show-jumpto="true"
+               data-icon-size="sm"
+               data-page-size="20"
+               data-side-pagination="server"
+               data-click-to-select="true"
+               data-pagination="true"
+               data-falign="center"
+               data-search="true"
+               data-id-field="id"
+               data-sort-name="id"
+               data-sort-order="desc"
+               data-pagination-h-align="left"
+               data-pagination-detail-h-align="right"
+               data-unique-id="id"
+               data-page-list="[20, 50, 500]">
+            <thead class="table-light">
+            <tr>
+                <th data-align="center" data-field="state" data-width="52px" data-checkbox="true"></th>
+                <th data-align="center" data-width="52px" data-formatter="iFormatter">NUM</th>
+                <th data-align="center" data-field="id" data-visible="false">ID</th>
+                <th data-align="left" data-formatter="operateFormatter" data-width="140px">OPERATION</th>
+                <th data-align="left" data-field="_file" data-formatter="fileFormatter">FILE</th>
+                <th data-align="center" data-field="_isdir" data-visible="false">ISDIR</th>
+                <th data-align="right" data-field="_ctime">CTIME</th>
+                <th data-align="right" data-field="_mtime">MTIME</th>
+                <th data-align="right" data-field="_size">SIZE</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div> <!-- end card-body-->
+</div> <!-- end card-->
+<!-- end row -->
+{% include 'modal.html' %}
+<script>
+
+    let $table = $("#scan-table");
+    let $back = $("#back");
+    let target = $.url().param('target');
+    
+    if (!target) {
+        $back.hide();
+    } else {
+        $back.on('click', function () {
+            history.back();
+        });
+    }
+
+    let Model = Object.create(ModelFH);
+    Model.$table = $table;
+    Model.target = target;
+    Model.signal = 'task';
+    Model.io = io_squirrel;
+    Model.font = {
+        'u': '/webs/squirrel/xx/index'
+    };
+    Model.index = {
+        'u': '/squirrel/xx/index',
+        'f': function () {
+            list_for_table(this, Model);
+        }
+    };
+    Model.view = {
+        'u': '/squirrel/xx/view',
+        'modal_id': 'view-modal',
+        'btn_class': '.view-btn',
+        'editor': 'view-editor',
+        'f': function () {
+            view(this)
+        },
+    };
+    Model.mkdir = {
+        'u': '/squirrel/xx/mkdir',
+        'modal_id': 'mkdir-modal',
+        '$btn': $("#mkdir-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        }
+    };
+    Model.deletes = {
+        'u': '/squirrel/xx/delete',
+        '$btn': $("#delete"),
+        'f': function () {
+            confirm_do_with_table(this, Model, "DELETE");
+        }
+    };
+    Model.touch = {
+        'u': '/squirrel/xx/touch',
+        'suffix': '.py',
+        'modal_id': 'touch-modal',
+        '$btn': $("#touch-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, true)
+        },
+    };
+    Model.edit = {
+        'u': '/squirrel/xx/touch',
+        'modal_id': 'view-modal',
+        '$btn': $("#view-modal .commit-btn"),
+        'f': function () {
+            commit_from_model(this, Model, false)
+        },
+    };
+    Model.scan = {
+        '$btn': $("#scan-modal .commit-btn"),
+        'action': 'xx:scan',
+        'modal_id': 'scan-modal',
+        'f': function () {
+            emit_from_model(this, Model);
+        }
+    };
+
+    function iFormatter(value, row, index) {
+        let options = $table.bootstrapTable('getOptions');
+        return options.pageSize * (options.pageNumber - 1) + index + 1;
+    }
+
+    function fileFormatter(value, row) {
+        if (!row._isdir) {
+            return value
+        }
+        return '<a href="' + Model.font.u + '?target=' + row.id + '">' + value + '</a>'
+    }
+
+    function operateFormatter(value, row) {
+        if (row._isdir) {
+            return '';
+        }
+        return '<div class="btn-group" role="group">'
+            + '<button type="button" name="' + row.id + '" data-bs-toggle="modal" data-bs-target="#view-modal" class="btn btn-outline-success btn-sm view-btn">'
+            + '<i class="fa-solid fa-eye"></i></button>'
+            + '</div>';
+    }
+
+    $(document).ready(function () {
+        Model.index.f();
+        Model.mkdir.f();
+        Model.view.f();
+        Model.touch.f();
+        Model.deletes.f();
+        Model.scan.f();
+        Model.edit.f();
+    })
+</script>

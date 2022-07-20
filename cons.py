@@ -5,14 +5,15 @@ PATH_HISTORY = os.path.join(PATH_PROJECT, 'history')
 
 BP_ALL = 'all'
 BP_ZOO = 'zoo'
-BP_SECURITY = 'security'
-BP_INVEST = 'invest'
-BP_KNOW = 'know'
+BP_SEC = 'security'
+BP_INV = 'invest'
+BP_KNO = 'know'
 BP_DSP = 'dsp'
 BP_HIS = 'history'
 BP_ENC = 'en_decrypt'
+BP_SQU = 'squirrel'
 
-BPS = (BP_SECURITY, BP_ZOO, BP_INVEST, BP_KNOW, BP_DSP, BP_HIS, BP_ENC)
+BPS = (BP_SEC, BP_ZOO, BP_INV, BP_KNO, BP_DSP, BP_HIS, BP_ENC, BP_SQU)
 
 ROUNDS = {
     0.001: [

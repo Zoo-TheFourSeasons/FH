@@ -12,6 +12,8 @@ import threading
 import traceback
 import subprocess
 import multiprocessing
+import asyncio
+from aiohttp import ClientSession
 
 import yaml
 import pandas
@@ -145,6 +147,7 @@ class CodeHelper(object):
         self.ns = None
         self.task_id = None
         self.current_his = None
+        self.squirrels = []
 
     @staticmethod
     def get_task_id(fn_yaml):
@@ -650,17 +653,94 @@ class CodeHelper(object):
         return tmp
 
     @classmethod
-    def func_on_folder(cls, path: str, func):
+    def invest_func_on_folder(cls, path: str, func):
         for root, dirs, files in os.walk(path):
             for _file in files:
                 _path = os.path.join(root, _file)
-                cls.func_on_file(_path, func)
+                cls.invest_func_on_file(_path, func)
 
     @staticmethod
-    def func_on_file(path: str, func):
+    def invest_func_on_file(path: str, func):
         # pd = pandas.read_excel(path)
         func(path)
         # pd.apply(func=func, axis=1)
+
+    @staticmethod
+    def squirrel_base64_to_image(path_file):
+        with open(path_file, 'r') as f:
+            content = f.read()
+            if not content.startswith('data:image'):
+                return
+            content = content[content.find(',') + 1:]
+        with open(path_file, 'wb') as f:
+            f.write(base64.b64decode(content))
+
+    @classmethod
+    async def squirrel_http_cb(cls, param, cb_param, cb_parse):
+        if not param:
+            return
+
+        data = cb_param(param)
+        url = data.pop('URL')
+        wb = data.get('WB', None)
+        ap = data.get('A', None)
+        is_base64 = data.get('IS_BASE64', False)
+
+        print('squirrel:', url)
+
+        async with ClientSession() as session:
+            try:
+                async with session.get(url, verify_ssl=False) as resp:
+                    rsp = await resp.read()
+                    # parse rsp
+                    if cb_parse:
+                        cb_parse(rsp, param)
+                    # save new file
+                    if wb:
+                        print('wb: %s' % wb)
+                        with open(wb, 'wb') as fw:
+                            fw.write(rsp)
+                        print('save:', wb)
+                        if is_base64:
+                            cls.squirrel_base64_to_image(wb)
+                    # append
+                    if ap:
+                        print('ap: %s' % ap)
+                        with open(ap, 'a') as fa:
+                            fa.write(rsp)
+                        print('append:', ap)
+            except Exception as e:
+                print('failed in squirrel_http_cb: ', url, e)
+
+    @classmethod
+    def squirrel_http(cls, params, cb_param, cb_parse=None, tasks_max=1000):
+        tasks = []
+        # while True:
+        #     if que.empty() is False:
+        #         param = que.get()
+        #         if param.get('is_end', False):
+        #             break
+        #     else:
+        #         time.sleep(1)
+        #         continue
+        for param in params:
+            task = asyncio.ensure_future(cls.squirrel_http_cb(param, cb_param, cb_parse))
+            tasks.append(task)
+            if len(tasks) > tasks_max:
+                print('loop tasks_max: %s' % tasks_max)
+                loop = asyncio.get_event_loop()
+                loop.run_until_complete(asyncio.wait(tasks))
+                tasks = []
+        if tasks:
+            print('loop rest')
+            loop = asyncio.get_event_loop()
+            loop.run_until_complete(asyncio.wait(tasks))
+
+    @staticmethod
+    def if_not_exist_dump_empty_dict(path):
+        if not os.path.exists(path):
+            with open(path, 'w') as f:
+                json.dump({}, f)
 
 
 class WebSocketHelper(Namespace, CodeHelper):
