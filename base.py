@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 import sys
 import json
 import time
 import base64
 import shutil
+import asyncio
 import logging
 import datetime
 import importlib
@@ -12,7 +14,6 @@ import threading
 import traceback
 import subprocess
 import multiprocessing
-import asyncio
 from aiohttp import ClientSession
 
 import yaml
@@ -141,13 +142,26 @@ def make_response_with_headers(data):
     return response
 
 
+class ProcessHelper(multiprocessing.Process):
+
+    def __init__(self, func, *args, **kwargs):
+        super(ProcessHelper, self).__init__()
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
+
+    def run(self) -> None:
+        self.func(*self.args, **self.kwargs)
+
+
 class CodeHelper(object):
 
     def __init__(self):
         self.ns = None
         self.task_id = None
         self.current_his = None
-        self.squirrels = []
+
+        self.__squirrels = multiprocessing.Queue()
 
     @staticmethod
     def get_task_id(fn_yaml):
@@ -675,8 +689,7 @@ class CodeHelper(object):
         with open(path_file, 'wb') as f:
             f.write(base64.b64decode(content))
 
-    @classmethod
-    async def squirrel_http_cb(cls, param, cb_param, cb_parse):
+    async def squirrel_http_cb(self, param, cb_param, cb_parse):
         if not param:
             return
 
@@ -686,7 +699,7 @@ class CodeHelper(object):
         ap = data.get('A', None)
         is_base64 = data.get('IS_BASE64', False)
 
-        print('squirrel:', url)
+        # print('squirrel:', url)
 
         async with ClientSession() as session:
             try:
@@ -700,9 +713,9 @@ class CodeHelper(object):
                         print('wb: %s' % wb)
                         with open(wb, 'wb') as fw:
                             fw.write(rsp)
-                        print('save:', wb)
+                        # print('save:', wb)
                         if is_base64:
-                            cls.squirrel_base64_to_image(wb)
+                            self.squirrel_base64_to_image(wb)
                     # append
                     if ap:
                         print('ap: %s' % ap)
@@ -711,36 +724,66 @@ class CodeHelper(object):
                         print('append:', ap)
             except Exception as e:
                 print('failed in squirrel_http_cb: ', url, e)
+                self.squirrels_put(([param], cb_param, cb_parse))
 
-    @classmethod
-    def squirrel_http(cls, params, cb_param, cb_parse=None, tasks_max=1000):
-        tasks = []
-        # while True:
-        #     if que.empty() is False:
-        #         param = que.get()
-        #         if param.get('is_end', False):
-        #             break
-        #     else:
-        #         time.sleep(1)
-        #         continue
-        for param in params:
-            task = asyncio.ensure_future(cls.squirrel_http_cb(param, cb_param, cb_parse))
-            tasks.append(task)
-            if len(tasks) > tasks_max:
-                print('loop tasks_max: %s' % tasks_max)
+    def squirrels_put(self, ob):
+        print('squirrels_put:', len(ob[0]))
+        self.__squirrels.put(ob)
+
+    def squirrels_get(self):
+        return self.__squirrels.get()
+
+    def squirrels_is_empty(self):
+        return self.__squirrels.empty()
+
+    def squirrels_start(self, tasks_max=1000):
+
+        def run(_ins, _max):
+            tasks = []
+            breaks = 3
+            while True:
+                if _ins.squirrels_is_empty():
+                    time.sleep(3)
+                    print('break_i --')
+                    breaks -= 1
+                    if not breaks:
+                        break
+                    continue
+
+                breaks = 3
+                tasks_count = 0
+                obs = []
+                ob = _ins.squirrels_get()
+                obs.append(ob)
+                tasks_count += len(ob[0])
+                while not _ins.squirrels_is_empty():
+                    ob = _ins.squirrels_get()
+                    obs.append(ob)
+                    tasks_count += len(ob[0])
+                    if tasks_count > tasks_max:
+                        break
+
+                for params, cb_param, cb_parse in obs:
+                    for param in params:
+                        task = asyncio.ensure_future(_ins.squirrel_http_cb(param, cb_param, cb_parse))
+                        tasks.append(task)
+                if tasks:
+                    loop = asyncio.get_event_loop()
+                    loop.run_until_complete(asyncio.wait(tasks))
+                    tasks = []
+            if tasks:
                 loop = asyncio.get_event_loop()
                 loop.run_until_complete(asyncio.wait(tasks))
-                tasks = []
-        if tasks:
-            print('loop rest')
-            loop = asyncio.get_event_loop()
-            loop.run_until_complete(asyncio.wait(tasks))
+
+        sp = ProcessHelper(run, self, tasks_max)
+        sp.start()
 
     @staticmethod
     def if_not_exist_dump_empty_dict(path):
-        if not os.path.exists(path):
-            with open(path, 'w') as f:
-                json.dump({}, f)
+        if os.path.exists(path):
+            return
+        with open(path, 'w') as f:
+            json.dump({}, f)
 
 
 class WebSocketHelper(Namespace, CodeHelper):
@@ -794,17 +837,40 @@ class WebSocketHelper(Namespace, CodeHelper):
             print('his:', 'END!')
 
 
-class ProcessHelper(multiprocessing.Process):
-
-    def __init__(self, func, *args, **kwargs):
-        super(ProcessHelper, self).__init__()
-        self.func = func
-        self.args = args
-        self.kwargs = kwargs
-
-    def run(self) -> None:
-        self.func(*self.args, **self.kwargs)
-
-
 if __name__ == '__main__':
-    pass
+    def cb_param_pyt(_param):
+        return {
+            'URL': _param,
+        }
+
+
+    def cb_parse_pyt(_rsp, _param):
+        items = re.findall(re.compile(r'href="(/downloads/release/.*?)">P'), _rsp.decode())
+
+        ch.squirrels_put((items, cb_param_rel, cb_parse_rel))
+
+
+    def cb_param_rel(_param):
+        return {
+            'URL': 'https://www.python.org' + _param,
+        }
+
+
+    def cb_parse_rel(_rsp, _param):
+        items = re.findall(re.compile(r'href="(https://www.python.org/ftp/python/.*?)">XZ'), _rsp.decode())
+        if not items:
+            return
+        ch.squirrels_put((items, cb_xz_param, None))
+
+    def cb_xz_param(_param):
+        fn = _param.split('/')[-1]
+        return {
+            'URL': _param,
+            'WB': os.path.join('/home/zoo/Desktop/_Y/FH/squirrel/data', fn)
+        }
+
+
+    ch = CodeHelper()
+
+    ch.squirrels_start()
+    ch.squirrels_put((['https://www.python.org/downloads/', ], cb_param_pyt, cb_parse_pyt))
