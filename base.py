@@ -12,7 +12,7 @@ import importlib
 import threading
 import traceback
 import subprocess
-import multiprocessing
+from multiprocessing.dummy import Process
 
 import yaml
 import pandas
@@ -140,7 +140,7 @@ def make_response_with_headers(data):
     return response
 
 
-class ProcessHelper(multiprocessing.Process):
+class ProcessHelper(Process):
 
     def __init__(self, func, *args, **kwargs):
         super(ProcessHelper, self).__init__()
@@ -737,7 +737,12 @@ class WebSocketHelper(Namespace, CodeHelper):
 
 
 if __name__ == '__main__':
-    def do(path):
+
+    funcs = {}
+
+
+    def collect_funcs(path):
+        print(path)
         import re
 
         if not path.endswith('.py'):
@@ -750,8 +755,30 @@ if __name__ == '__main__':
         items = re.findall(re.compile(r'\sdef\s(.*?)\('), context)
         if not items:
             return
-        print(set(items))
+        for i in items:
+            if i not in funcs:
+                funcs[i] = 0
+            funcs[i] += 1
+        z = list(funcs.items())
+        z.sort(key=lambda o: o[1], reverse=True)
+        print(z)
+        # print(dict([(i, "_('%s')" % i) for i, _ in z]))
 
 
-    CodeHelper.invest_func_on_folder('/home/zoo/Desktop/_Y/tristack-api/tri_api/tri_stack', do)
+    def collect_op_call(path):
+        # print(path)
+        import re
 
+        if not path.endswith('.py'):
+            return
+
+        with open(path, 'r') as f:
+            context = f.read()
+            if 'Oplog(' not in context:
+                return
+        items = re.findall(re.compile(r'\s(Oplog\(.*project.*\))'), context)
+        for i in items:
+            print(i)
+
+
+    CodeHelper.invest_func_on_folder('/home/zoo/Desktop/_Y/tristack-api/tri_api/tri_stack', collect_op_call)
