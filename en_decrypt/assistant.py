@@ -7,13 +7,13 @@ import ctypes
 
 from Crypto.Cipher import AES
 
-from base import CodeHelper
+from base import MetaCode
 
 
 PATH_PROJECT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-class EncryptHelper(CodeHelper):
+class EncryptHelper(MetaCode):
     # 已加密文件头部特征
     header_encrypt = 'encrypted:'
     bin_header_encrypt = bytes(header_encrypt.encode('utf-8'))

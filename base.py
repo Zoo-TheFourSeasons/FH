@@ -5,7 +5,6 @@ import json
 import time
 import base64
 import shutil
-
 import logging
 import datetime
 import importlib
@@ -148,11 +147,56 @@ class ProcessHelper(Process):
         self.args = args
         self.kwargs = kwargs
 
-    def run(self) -> None:
+    def start(self) -> None:
         self.func(*self.args, **self.kwargs)
 
 
-class CodeHelper(object):
+class MetaStacks(object):
+
+    def __init__(self, path_stacks):
+        self.nodes = {}
+        self.roles = {}
+        self.sshes = {}
+        self.sftps = {}
+        self._parser(path_stacks)
+
+    def _parser(self, path_stacks):
+        with open(path_stacks, 'r', encoding='utf-8') as f:
+            try:
+                stacks = yaml.safe_load(f.read())
+            except Exception as e:
+                raise ValueError('parser stacks error: %s, e: %s' % (path_stacks, e))
+        self.nodes = stacks[F_NODES]
+        self.roles = stacks[F_ROLES] if F_ROLES in stacks else {}
+
+    def validate_nodes(self, nodes):
+        for node in nodes:
+            if node not in self.nodes:
+                raise ValueError('invalidate node: %s' % node)
+
+    def get_ssh(self, node):
+        if node in self.sshes:
+            return self.sshes[node]
+
+        nd = self.nodes[node]
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(nd['device'], username=nd['ssh_user'], password=nd['ssh_psw'], timeout=3)
+        self.sshes[node] = ssh
+        return self.sshes[node]
+
+    def get_sftp(self, node):
+        if node in self.sftps:
+            return self.sftps[node]
+        nd = self.nodes[node]
+        ftp = paramiko.Transport(nd['device'])
+        ftp.connect(username=nd['ssh_user'], password=nd['ssh_psw'])
+        sftp = paramiko.SFTPClient.from_transport(ftp)
+        self.sftps[node] = sftp
+        return self.sftps[node]
+
+
+class MetaFile(object):
 
     def __init__(self):
         self.debug = False
@@ -160,62 +204,6 @@ class CodeHelper(object):
         self.ns = None
         self.task_id = None
         self.current_his = None
-
-    @staticmethod
-    def get_task_id(fn_yaml):
-        return '.'.join((str(datetime.datetime.now())[10:].replace('-', '').replace(' ', '').replace(':', ''), fn_yaml))
-
-    @classmethod
-    def run_in_subprocess(cls, _cmd, _cwd):
-        shell = subprocess.Popen(
-            _cmd,
-            cwd=_cwd,
-            shell=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            encoding='utf-8'
-        )
-        return shell
-
-    @staticmethod
-    def get_file_name_by_datetime(cls, _type: str):
-        pass
-
-    @staticmethod
-    def run_threads(_func, _params: list, _max: int = 50):
-
-        _threads = []
-        for _param in _params:
-            print('_param:', _param)
-            _td = threading.Thread(target=_func, args=_param)
-            _threads.append(_td)
-
-        for _td in _threads:
-            _td.start()
-
-            while sum([1 for _i in _threads if _i.is_alive()]) > _max:
-                time.sleep(0.5)
-
-        for _td in _threads:
-            _td.join()
-
-    @staticmethod
-    def is_linux():
-        return 'linux' in sys.platform.lower()
-
-    @staticmethod
-    def get_output_file(path_output: str, tid: str):
-        folder = str(datetime.datetime.now())[:10].replace(' ', '').replace('-', '')
-
-        path_folder = os.path.join(path_output, folder)
-        if not os.path.exists(path_folder):
-            os.makedirs(path_folder)
-        print('path_folder: %s, tid: %s' % (path_folder, tid))
-
-        path_file = os.path.join(path_folder, tid + '.his')
-        if not os.path.exists(path_file):
-            print('get a new file: ', path_file)
-        return path_file
 
     def print(self, ob):
         if not self.current_his:
@@ -246,82 +234,6 @@ class CodeHelper(object):
         offset = int(args_r['offset']) if 'offset' in args_r and args_r['offset'] else None
         limit = int(args_r['limit']) if 'limit' in args_r and args_r['limit'] else None
         return search, sort, order, offset, limit
-
-    @classmethod
-    @timer
-    def listdir(cls, target: str, base: str = None, args_r: dict = None, suffix=None):
-        search, _, _, offset, limit = cls.__request_parser_args(args_r)
-
-        base = PATH_PROJECT if base is None else base
-        target_abs = os.path.join(base, target)
-
-        if search is not None:
-            # search
-            files = []
-            for root, dirs, fns in os.walk(target_abs):
-                for fn in fns:
-                    if search.lower() not in fn.lower():
-                        continue
-                    if suffix and not fn.endswith(suffix):
-                        continue
-                    files.append(os.path.join(root, fn))
-        else:
-            files = [os.path.join(target_abs, fn) for fn in os.listdir(target_abs) if not fn.startswith('.')]
-            files = [fn for fn in files if fn.endswith(suffix) or os.path.isdir(fn)] if suffix else files
-        files.sort(reverse=True)
-        _index = 0
-        rows = []
-        for _f in files:
-            _index += 1
-            if offset and _index <= offset:
-                continue
-            if limit and _index > offset + limit:
-                break
-            _stat = os.stat(_f)
-            _ctime = _stat.st_ctime
-            _mtime = _stat.st_mtime
-            _size = os.path.getsize(_f) / 1024.0
-            if _size > 2048:
-                _size = str(round(_size / 1024.0, 1)) + 'M'
-            else:
-                _size = str(round(_size, 1)) + 'K'
-
-            _, fn = os.path.split(_f)
-
-            relative = _f.replace(base, '')
-            relative = relative[1:] if relative.startswith('/') else relative
-            rows.append({
-                '_file': fn,
-                '_isdir': os.path.isdir(_f),
-                '_ctime': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(_ctime)),
-                '_mtime': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(_mtime)),
-                '_size': _size,
-                'id': relative,
-            })
-        # parents of the current path
-        parents = []
-        target = '../' + target
-        target_split = target.split('/')
-        for index in range(len(target_split)):
-            parents.append({'i': target_split[index], 'i_path': '/'.join(target_split[1:index + 1])})
-        return {'status': True, 'rows': rows, 'target': target, 'parents': parents, 'total': len(files)}
-
-    @classmethod
-    @timer
-    def touch(cls, text: str, target: str, base: str = None):
-        if not target:
-            return {'status': False, 'message': 'target is required'}
-        base = PATH_PROJECT if base is None else base
-        target_abs = os.path.join(base, target)
-        _dir = os.path.dirname(target_abs)
-        if not os.path.exists(_dir):
-            os.makedirs(_dir)
-        try:
-            with open(target_abs, 'w') as f:
-                f.write(text)
-            return {'status': True, 'target': target, 'message': 'save successful'}
-        except Exception as e:
-            return {'status': False, 'message': 'touch failed: %s' % e}
 
     @classmethod
     def __view_img(cls, target_abs):
@@ -388,14 +300,20 @@ class CodeHelper(object):
         return {'status': True, 'rows': rows, 'total': df.shape[0], 'columns': columns, 'type': 'xls'}
 
     @classmethod
-    def __yaml_to_json(cls, target_abs):
-        with open(target_abs, 'r', encoding='utf-8') as fm:
-            data = yaml.safe_load(fm.read())
-
-        jn = '.'.join((target_abs, 'json'))
-        with open(jn, 'w') as fm:
-            json.dump(data, fm, indent=4)
-        return jn
+    def touch(cls, text: str, target: str, base: str = None):
+        if not target:
+            return {'status': False, 'message': 'target is required'}
+        base = PATH_PROJECT if base is None else base
+        target_abs = os.path.join(base, target)
+        _dir = os.path.dirname(target_abs)
+        if not os.path.exists(_dir):
+            os.makedirs(_dir)
+        try:
+            with open(target_abs, 'w') as f:
+                f.write(text)
+            return {'status': True, 'target': target, 'message': 'save successful'}
+        except Exception as e:
+            return {'status': False, 'message': 'touch failed: %s' % e}
 
     @classmethod
     @timer
@@ -474,18 +392,6 @@ class CodeHelper(object):
         return {'status': False if failed else True, 'message': message}
 
     @classmethod
-    def mkdir(cls, target: str, base: str = None):
-        base = PATH_PROJECT if base is None else base
-        target_abs = os.path.join(base, target)
-        if os.path.exists(target_abs):
-            return {'status': False, 'message': 'there is exist: %s' % target}
-        try:
-            os.makedirs(target_abs)
-        except Exception as e:
-            return {'status': False, 'message': 'failed in mkdir: %s' % e}
-        return {'status': True, 'message': 'mkdir success: %s' % target}
-
-    @classmethod
     @timer
     def download(cls, target: str):
         target_abs = os.path.join(PATH_PROJECT, target)
@@ -495,46 +401,6 @@ class CodeHelper(object):
     @timer
     def upload(cls, target: str):
         pass
-
-    @staticmethod
-    def quarters():
-        _quarters = []
-        today = datetime.date.today()
-        current_year = today.year
-        current = str(today).replace('-', '')
-        for year in range(2010, current_year + 1, 1):
-            for _date in ('0331', '0630', '0930', '1231'):
-                _quarter = str(year) + _date
-                if _quarter < current:
-                    _quarters.append(_quarter)
-        return _quarters
-
-    @classmethod
-    def get_ssh_executor(cls, host: str, user: str, psw: str):
-        if host in ('127.0.0.1', 'localhost', ''):
-            return lambda cmd: subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        ssh = paramiko.SSHClient()
-        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(host, username=user, password=psw, timeout=3)
-        return ssh.exec_command
-
-    @classmethod
-    def execute_cmd(cls, cmd, executor, with_stdout=True):
-        _, stdout, stderr = executor('date')
-        date = stdout.read().decode()
-        print('date: %s' % date)
-        print('cmd: %s' % cmd)
-        _, stdout, stderr = executor(cmd, get_pty=True)
-        if not with_stdout:
-            return None
-        result = stdout.read().decode()
-        print(result)
-        return result
-
-    @staticmethod
-    def has_path_on_host(executor, path):
-        out = executor('ls %s' % path)
-        return 'No such file or directory' not in out
 
     def file_read_specified(self, target: str, start: int, end: int, executor=None):
         # return [x for i, x in enumerate(open(target, 'r')) if start <= i + 1 <= end]
@@ -552,11 +418,210 @@ class CodeHelper(object):
         return rsp
 
     @staticmethod
+    def dump_empty_dict_if_not_exist(path):
+        if os.path.exists(path):
+            return
+        with open(path, 'w') as f:
+            json.dump({}, f)
+
+    @staticmethod
+    def func_on_file(path: str, func):
+        # pd = pandas.read_excel(path)
+        func(path)
+        # pd.apply(func=func, axis=1)
+
+    @staticmethod
+    def get_tmp_file_path(base, suffix):
+        tmp = os.path.join(base, '_'.join(
+            (str(datetime.datetime.now()).replace('-', '').replace(' ', '').replace(':', ''), suffix)))
+        print('tmp:', tmp)
+        time.sleep(0.01)
+        return tmp
+
+    @staticmethod
+    def get_output_file(path_output: str, tid: str):
+        folder = str(datetime.datetime.now())[:10].replace(' ', '').replace('-', '')
+
+        path_folder = os.path.join(path_output, folder)
+        if not os.path.exists(path_folder):
+            os.makedirs(path_folder)
+        print('path_folder: %s, tid: %s' % (path_folder, tid))
+
+        path_file = os.path.join(path_folder, tid + '.his')
+        if not os.path.exists(path_file):
+            print('get a new file: ', path_file)
+        return path_file
+
+
+class MetaFolder(MetaFile):
+
+    @staticmethod
+    def __request_parser_args(args_r):
+        search = args_r['search'] if 'search' in args_r and args_r['search'] else None
+        sort = args_r['sort'] if 'sort' in args_r and args_r['sort'] else None
+        order = args_r['order'] if 'order' in args_r and args_r['order'] else None
+        offset = int(args_r['offset']) if 'offset' in args_r and args_r['offset'] else None
+        limit = int(args_r['limit']) if 'limit' in args_r and args_r['limit'] else None
+        return search, sort, order, offset, limit
+
+    @classmethod
+    def listdir(cls, target: str, base: str = None, args_r: dict = None, suffix=None):
+        search, _, _, offset, limit = cls.__request_parser_args(args_r)
+
+        base = PATH_PROJECT if base is None else base
+        target_abs = os.path.join(base, target)
+
+        if search is not None:
+            # search
+            files = []
+            for root, dirs, fns in os.walk(target_abs):
+                for fn in fns:
+                    if search.lower() not in fn.lower():
+                        continue
+                    if suffix and not fn.endswith(suffix):
+                        continue
+                    files.append(os.path.join(root, fn))
+        else:
+            files = [os.path.join(target_abs, fn) for fn in os.listdir(target_abs) if not fn.startswith('.')]
+            files = [fn for fn in files if fn.endswith(suffix) or os.path.isdir(fn)] if suffix else files
+        files.sort(reverse=True)
+        _index = 0
+        rows = []
+        for _f in files:
+            _index += 1
+            if offset and _index <= offset:
+                continue
+            if limit and _index > offset + limit:
+                break
+            _stat = os.stat(_f)
+            _ctime = _stat.st_ctime
+            _mtime = _stat.st_mtime
+            _size = os.path.getsize(_f) / 1024.0
+            if _size > 2048:
+                _size = str(round(_size / 1024.0, 1)) + 'M'
+            else:
+                _size = str(round(_size, 1)) + 'K'
+
+            _, fn = os.path.split(_f)
+
+            relative = _f.replace(base, '')
+            relative = relative[1:] if relative.startswith('/') else relative
+            rows.append({
+                '_file': fn,
+                '_isdir': os.path.isdir(_f),
+                '_ctime': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(_ctime)),
+                '_mtime': time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(_mtime)),
+                '_size': _size,
+                'id': relative,
+            })
+        # parents of the current path
+        parents = []
+        target = '../' + target
+        target_split = target.split('/')
+        for index in range(len(target_split)):
+            parents.append({'i': target_split[index], 'i_path': '/'.join(target_split[1:index + 1])})
+        return {'status': True, 'rows': rows, 'target': target, 'parents': parents, 'total': len(files)}
+
+    @classmethod
+    def mkdir(cls, target: str, base: str = None):
+        base = PATH_PROJECT if base is None else base
+        target_abs = os.path.join(base, target)
+        if os.path.exists(target_abs):
+            return {'status': False, 'message': 'there is exist: %s' % target}
+        try:
+            os.makedirs(target_abs)
+        except Exception as e:
+            return {'status': False, 'message': 'failed in mkdir: %s' % e}
+        return {'status': True, 'message': 'mkdir success: %s' % target}
+
+    @staticmethod
     def mkdir_if_not_exist(path: str):
         if os.path.exists(path) and os.path.isdir(path):
             return
         print('makedirs: %s' % path)
         os.makedirs(path)
+
+    @classmethod
+    def func_on_dir(cls, path: str, file_func):
+        for root, dirs, files in os.walk(path):
+            for _file in files:
+                _path = os.path.join(root, _file)
+                cls.func_on_file(_path, file_func)
+
+
+class MetaCode(MetaFolder):
+
+    def __init__(self):
+        super(MetaCode, self).__init__()
+        self.debug = False
+        self.ns = None
+        self.task_id = None
+        self.current_his = None
+
+    @staticmethod
+    def get_task_id(fn_yaml):
+        return '.'.join((str(datetime.datetime.now())[10:].replace('-', '').replace(' ', '').replace(':', ''), fn_yaml))
+
+    @classmethod
+    def run_in_subprocess(cls, _cmd, _cwd):
+        shell = subprocess.Popen(
+            _cmd,
+            cwd=_cwd,
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            encoding='utf-8'
+        )
+        return shell
+
+    @staticmethod
+    def get_file_name_by_datetime(cls, _type: str):
+        pass
+
+    @staticmethod
+    def run_threads(_func, _params: list, _max: int = 50):
+
+        _threads = []
+        for _param in _params:
+            print('_param:', _param)
+            _td = threading.Thread(target=_func, args=_param)
+            _threads.append(_td)
+
+        for _td in _threads:
+            _td.start()
+
+            while sum([1 for _i in _threads if _i.is_alive()]) > _max:
+                time.sleep(0.5)
+
+        for _td in _threads:
+            _td.join()
+
+    @staticmethod
+    def is_linux():
+        return 'linux' in sys.platform.lower()
+
+    @classmethod
+    def __yaml_to_json(cls, target_abs):
+        with open(target_abs, 'r', encoding='utf-8') as fm:
+            data = yaml.safe_load(fm.read())
+
+        jn = '.'.join((target_abs, 'json'))
+        with open(jn, 'w') as fm:
+            json.dump(data, fm, indent=4)
+        return jn
+
+    @staticmethod
+    def quarters():
+        _quarters = []
+        today = datetime.date.today()
+        current_year = today.year
+        current = str(today).replace('-', '')
+        for year in range(2010, current_year + 1, 1):
+            for _date in ('0331', '0630', '0930', '1231'):
+                _quarter = str(year) + _date
+                if _quarter < current:
+                    _quarters.append(_quarter)
+        return _quarters
 
     @staticmethod
     def _yaml_func_replace(__v: str, __running: dict):
@@ -645,50 +710,11 @@ class CodeHelper(object):
                     pass
         return __params
 
-    @classmethod
-    def yaml_to_g6_tree(cls, target: str, base: str = None):
-        base = PATH_PROJECT if base is None else base
-        target_abs = os.path.join(base, target)
-        print('yaml_to_g6_tree', target_abs)
-        with open(target_abs, 'r', encoding='utf-8') as f:
-            meta_scanned_resources = yaml.safe_load(f)
 
-        for host in meta_scanned_resources.keys():
-            pass
-
-    @staticmethod
-    def get_tmp_file_path(base, suffix):
-        tmp = os.path.join(base, '_'.join(
-            (str(datetime.datetime.now()).replace('-', '').replace(' ', '').replace(':', ''), suffix)))
-        print('tmp:', tmp)
-        time.sleep(0.01)
-        return tmp
-
-    @classmethod
-    def invest_func_on_folder(cls, path: str, file_func):
-        for root, dirs, files in os.walk(path):
-            for _file in files:
-                _path = os.path.join(root, _file)
-                cls.invest_func_on_file(_path, file_func)
-
-    @staticmethod
-    def invest_func_on_file(path: str, func):
-        # pd = pandas.read_excel(path)
-        func(path)
-        # pd.apply(func=func, axis=1)
-
-    @staticmethod
-    def if_not_exist_dump_empty_dict(path):
-        if os.path.exists(path):
-            return
-        with open(path, 'w') as f:
-            json.dump({}, f)
-
-
-class WebSocketHelper(Namespace, CodeHelper):
+class WebSocketHelper(Namespace, MetaCode):
 
     def __init__(self, *args, **kwargs):
-        CodeHelper.__init__(self)
+        MetaCode.__init__(self)
         Namespace.__init__(self, *args, **kwargs)
         self.actions = {}
 
@@ -781,4 +807,4 @@ if __name__ == '__main__':
             print(i)
 
 
-    CodeHelper.invest_func_on_folder('/home/zoo/Desktop/_Y/tristack-api/tri_api/tri_stack', collect_op_call)
+    MetaCode.func_on_dir('/home/zoo/Desktop/_Y/tristack-api/tri_api/tri_stack', collect_op_call)
