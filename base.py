@@ -11,6 +11,7 @@ import importlib
 import threading
 import traceback
 import subprocess
+import multiprocessing
 from multiprocessing.dummy import Process
 
 import yaml
@@ -139,10 +140,22 @@ def make_response_with_headers(data):
     return response
 
 
-class ProcessHelper(Process):
+class ProcessHelper(multiprocessing.Process):
 
     def __init__(self, func, *args, **kwargs):
         super(ProcessHelper, self).__init__()
+        self.func = func
+        self.args = args
+        self.kwargs = kwargs
+
+    def run(self) -> None:
+        self.func(*self.args, **self.kwargs)
+
+
+class DummyProcessHelper(Process):
+
+    def __init__(self, func, *args, **kwargs):
+        super(DummyProcessHelper, self).__init__()
         self.func = func
         self.args = args
         self.kwargs = kwargs
@@ -152,6 +165,8 @@ class ProcessHelper(Process):
 
 
 class MetaStacks(object):
+    F_NODES = 'NODES'
+    F_ROLES = 'ROLES'
 
     def __init__(self, path_stacks):
         self.nodes = {}
@@ -166,8 +181,8 @@ class MetaStacks(object):
                 stacks = yaml.safe_load(f.read())
             except Exception as e:
                 raise ValueError('parser stacks error: %s, e: %s' % (path_stacks, e))
-        self.nodes = stacks[F_NODES]
-        self.roles = stacks[F_ROLES] if F_ROLES in stacks else {}
+        self.nodes = stacks[self.F_NODES]
+        self.roles = stacks[self.F_ROLES] if self.F_ROLES in stacks else {}
 
     def validate_nodes(self, nodes):
         for node in nodes:
