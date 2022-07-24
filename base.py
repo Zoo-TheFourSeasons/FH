@@ -189,6 +189,28 @@ class MetaStacks(object):
             if node not in self.nodes:
                 raise ValueError('invalidate node: %s' % node)
 
+    def wait_online(self, node, timeout, ins_dsp):
+        nd = self.nodes[node]
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        remain = int(timeout)
+        unit = 5
+        online = False
+        while remain > 0:
+            try:
+                ssh.connect(nd['device'], username=nd['ssh_user'], password=nd['ssh_psw'], timeout=unit)
+                online = True
+                break
+            except Exception as e:
+                ins_dsp.print(str(e))
+                ins_dsp.print('node is offline, wait in: %s' % remain)
+            remain -= unit
+            time.sleep(unit)
+        if online:
+            ins_dsp.print('online: %s' % node)
+        else:
+            ins_dsp.print('online failed: %s' % node)
+
     def get_ssh(self, node):
         if node in self.sshes:
             return self.sshes[node]
